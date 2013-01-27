@@ -1,0 +1,11 @@
+Häuptling mit Zauberkräften (auch welt verändern)
+Änderbare Welt
+Zauber können gefunden/erobert werden.
+Feinde werden stärker generiert, wenn das Spiel weiter fortgeschritten ist.
+Zauber kombinieren / Eigene Zauber (?)
+verschiedene einheitenklassen
+Einheiten selbst konfigurierbar
+Häuser können importiert/selbst gebaut werden (Hat wenig mit Gameplay zu tun, später) (Felk)
+Verschiedene Gegnerarten (Wasserfölker, Wald, Wüste, etc.)
+Bündnisse, durch Hilfe bei verteidigung (?)
+Wenige Einheiten (100 soll viel sein -> besseres Gameplay)
