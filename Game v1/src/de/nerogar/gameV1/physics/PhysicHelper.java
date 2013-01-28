@@ -53,30 +53,30 @@ public final class PhysicHelper {
 		double sxy = 0, sxz = 0, syz = 0;
 
 		double nenner1 = xd2 * yd1 - xd1 * yd2;
-		System.out.println("Nenner1: "+String.valueOf(nenner1));
+		//System.out.println("Nenner1: "+String.valueOf(nenner1));
 		if (nenner1 != 0)
 			sxy = -1 * (xd1 * ys1 - xd1 * ys2 - yd1 * xs1 + yd1 * xs2) / nenner1;
-		System.out.println("sxy: "+String.valueOf(sxy));
+		//System.out.println("sxy: "+String.valueOf(sxy));
 		if (line2 instanceof Ray) {
 			if (sxy < 0) return null;
 			if (line2 instanceof LineSegment && sxy >= 1) return null;
 		}
 
 		double nenner2 = xd2 * zd1 - xd1 * zd2;
-		System.out.println("Nenner2: "+String.valueOf(nenner2));
+		//System.out.println("Nenner2: "+String.valueOf(nenner2));
 		if (nenner2 != 0)
 			sxz = -1 * (xd1 * zs1 - xd1 * zs2 - zd1 * xs1 + zd1 * xs2) / nenner2;
-		System.out.println("sxz: "+String.valueOf(sxz));
+		//System.out.println("sxz: "+String.valueOf(sxz));
 		if (line2 instanceof Ray) {
 			if (sxz < 0) return null;
 			if (line2 instanceof LineSegment && sxz >= 1) return null;
 		}
 
 		double nenner3 = yd2 * zd1 - yd1 * zd2;
-		System.out.println("Nenner3: "+String.valueOf(nenner3));
+		//System.out.println("Nenner3: "+String.valueOf(nenner3));
 		if (nenner3 != 0)
 			syz = -1 * (yd1 * zs1 - yd1 * zs2 - zd1 * ys1 + zd1 * ys2) / nenner3;
-		System.out.println("syz: "+String.valueOf(syz));
+		//System.out.println("syz: "+String.valueOf(syz));
 		if (line2 instanceof Ray) {
 			if (syz < 0) return null;
 			if (line2 instanceof LineSegment && syz >= 1) return null;
@@ -95,7 +95,8 @@ public final class PhysicHelper {
 		if (value == 0)
 			return null;
 
-		if (sxy != sxz || sxz != syz)
+		double tolerance = 0.0000000001;
+		if (Math.abs(sxy - sxz) > tolerance || Math.abs(sxz - syz) > tolerance)
 			return null;
 
 		Vector3d candidate = Vector3d.add(s2, Vector3d.multiply(d2, sxy));

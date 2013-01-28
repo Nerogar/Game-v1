@@ -226,10 +226,10 @@ public class CollisionComparer {
 		}
 		
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		System.out.println("Kandidat: " + candidate.toString());
+		//System.out.println("Kandidat: " + candidate.toString());
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
 		Vector3d pointInPlane = plane.getRandomPoint();
-		System.out.println("HALBVEKTOR: "+pointInPlane.toString());
+		//System.out.println("HALBVEKTOR: "+pointInPlane.toString());
 		int intersections = 0;
 		Vector3d a, b, intersection;
 		Line halfVector, edge;
@@ -242,9 +242,9 @@ public class CollisionComparer {
 			intersection = PhysicHelper.getLineLineIntersection(halfVector, edge);
 			if (intersection != null) {
 				intersections++;
-				System.out.println("Intersection between "+halfVector.toString()+" and "+edge.toString());
+				//System.out.println("Intersection between "+halfVector.toString()+" and "+edge.toString());
 			} else {
-				System.out.println("No intersection between "+halfVector.toString()+" and "+edge.toString());
+				//System.out.println("No intersection between "+halfVector.toString()+" and "+edge.toString());
 			}
 		}
 		//System.out.println("Intersections: "+String.valueOf(intersections));
