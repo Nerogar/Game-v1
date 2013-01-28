@@ -95,38 +95,6 @@ public class Game implements Runnable {
 			renderEngine.toggleFullscreen();
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-
-			Vector3d p1 = new Vector3d(-0.57, -0.95, -1);
-			Vector3d p2 = new Vector3d(1.55, -0.73, -1);
-			Vector3d p3 = new Vector3d(1.55, -0.73, 1);
-			Vector3d p4 = new Vector3d(-0.57, -0.95, 1);
-			Vector3d[] points = new Vector3d[] { p1, p2, p3, p4 };
-			Line ray = new Line(new Vector3d(-0.35, 0.67, 0), new Vector3d(2.08, -2.31, 0));
-
-			Vector3d intersection = CollisionComparer.getRayPolygonIntersection(ray, points);
-			if (intersection == null)
-				System.out.println("Kein Treffer.");
-			else
-				System.out.println("Treffer: " + intersection.toString());
-		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-
-			Vector3d p1 = new Vector3d(1, 1, 0);
-			Vector3d p2 = new Vector3d(-1, 1, 0);
-			Vector3d p3 = new Vector3d(-1, -1, 0);
-			Line ray = new Line(new Vector3d(0, 0, -1), new Vector3d(0, 0, 1));
-			Plane plane = new Plane(p1, p2, p3);
-
-			Vector3d intersection = PhysicHelper.getRayPlaneIntersection(ray, plane);
-			if (intersection == null)
-				System.out.println("SCHEISSE!");
-			else
-				System.out.println("GUT! " + intersection.toString());
-			System.out.println("NORMALVEKTOR: " + intersection.toString());
-		}
-
 		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
 
 			Vector3d sta1 = new Vector3d(13, -10, 0);
@@ -141,6 +109,69 @@ public class Game implements Runnable {
 				System.out.println("Kein Treffer!");
 			else
 				System.out.println("Treffer: " + intersection.toString());
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
+
+			Vector3d p1 = new Vector3d(-0.57, -0.95, -1);
+			Vector3d p2 = new Vector3d(1.55, -0.73, -1);
+			Vector3d p3 = new Vector3d(1.55, -1.73, 1);
+			Vector3d p4 = new Vector3d(-0.57, -1.95, 1);
+			Vector3d[] points = new Vector3d[] { p1, p2, p3, p4 };
+			Line ray = new Line(new Vector3d(-0.35, 0.67, 0.14), new Vector3d(1.08, -2.31, 0.35));
+
+			Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, points);
+			if (intersection == null)
+				System.out.println("Kein Treffer.");
+			else
+				System.out.println("Treffer: " + intersection.toString());
+		}
+
+		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
+
+			Vector3d p1 = new Vector3d(1, 1, 0);
+			Vector3d p2 = new Vector3d(-1, 1, 0);
+			Vector3d p3 = new Vector3d(-1, -1, 0);
+			Line ray = new Line(new Vector3d(0, 0, -1), new Vector3d(0, 0, 1));
+			Plane plane = new Plane(p1, p2, p3);
+
+			Vector3d intersection = PhysicHelper.getLinePlaneIntersection(ray, plane);
+			if (intersection == null)
+				System.out.println("SCHEISSE!");
+			else
+				System.out.println("GUT! " + intersection.toString());
+			System.out.println("NORMALVEKTOR: " + intersection.toString());
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) {
+
+			Vector3d p1 = new Vector3d(-0.57, -0.95, -1);
+			Vector3d p2 = new Vector3d(1.55, -0.73, -1);
+			Vector3d p3 = new Vector3d(1.55, -1.73, 1);
+			Vector3d p4 = new Vector3d(-0.57, -1.95, 1);
+			Vector3d[] points = new Vector3d[] { p1, p2, p3, p4 };
+			Line ray = new Line(new Vector3d(-0.35, 0.67, 0.14), new Vector3d(1.08, -2.31, 0.35));
+			
+			long time1 = System.nanoTime();
+			for (int i = 0; i < 10000000; i++) {
+				CollisionComparer.getLinePolygonIntersection(ray, points);
+			}
+			long time2 = System.nanoTime();
+			System.out.println("Elapsed time for given amount: "+String.valueOf((time2-time1)/1000000d));
+
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) {
+			
+			Ray ray = new Ray(new Vector3d(0,0,0), new Vector3d(0.1,0.2,0.3));
+			BoundingAABB aabb = new BoundingAABB(new Vector3d(-1,-1,-1), new Vector3d(1,1,1));
+			
+			Vector3d intersection = CollisionComparer.getRayAABBIntersection(ray, aabb);
+			if (intersection == null)
+				System.out.println("Kein Treffer!");
+			else
+				System.out.println("Treffer: " + intersection.toString());
+			
 		}
 
 		//update game logics

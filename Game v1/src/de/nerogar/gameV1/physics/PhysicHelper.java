@@ -123,9 +123,9 @@ public final class PhysicHelper {
 
 	}
 
-	public static Vector3d getRayPlaneIntersection(Line ray, Plane plane) {
-		Vector3d start = ray.getStart();
-		Vector3d direction = ray.getDirection();
+	public static Vector3d getLinePlaneIntersection(Line line, Plane plane) {
+		Vector3d start = line.getStart();
+		Vector3d direction = line.getDirection();
 		double a = plane.getA();
 		double b = plane.getB();
 		double c = plane.getC();
@@ -137,6 +137,10 @@ public final class PhysicHelper {
 			return null;
 		}
 		double t = (d - a * start.getX() - b * start.getY() - c * start.getZ()) / nenner;
+		if (line instanceof Ray) {
+			if (t < 0) return null;
+			if (line instanceof LineSegment && t >= 1) return null;
+		}
 		return Vector3d.add(start, Vector3d.multiply(direction, t));
 	}
 

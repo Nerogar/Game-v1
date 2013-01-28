@@ -218,7 +218,8 @@ public class Vector3d {
 	}
 	
 	public String toString() {
-		return "["+String.format("%.3g", this.getX())+";"+String.format("%.3g", this.getY())+";"+String.format("%.3g", this.getZ())+"]";
+		//return "["+String.format("%.3g", Double.toString(this.getX()))+";"+String.format("%.3g", Double.toString(this.getY()))+";"+String.format("%.3g", Double.toString(this.getZ()))+"]";
+		return "("+Double.toString(this.getX())+","+Double.toString(this.getY())+","+Double.toString(this.getZ())+")";
 	}
 
 }

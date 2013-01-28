@@ -6,7 +6,7 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.physics.Line;
+import de.nerogar.gameV1.physics.Ray;
 
 public class EntityList {
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
@@ -37,7 +37,7 @@ public class EntityList {
 		}
 	}
 
-	public ArrayList<Entity> getEntitiesInSight(Line ray) {
+	public ArrayList<Entity> getEntitiesInSight(Ray ray) {
 		return collisionComparer.getEntitiesInRay(ray);
 	}
 

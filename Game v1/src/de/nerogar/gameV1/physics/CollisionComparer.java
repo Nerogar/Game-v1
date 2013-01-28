@@ -189,7 +189,7 @@ public class CollisionComparer {
 		//System.out.println(String.valueOf(value));
 		return value;
 	}
-	
+
 	public static boolean is2dSeparated(Vector2d v1, Vector2d[] vx) {
 
 		int left = 0;
@@ -212,21 +212,23 @@ public class CollisionComparer {
 			return true;
 		return false;
 	}
-	
-	public static Vector3d getRayPolygonIntersection(Line ray, Vector3d[] points) {
-		
+
+	public static Vector3d getLinePolygonIntersection(Line line, Vector3d[] points) {
+
 		// Ein Polygon braucht mindestens 3 Punkt
-		if (points.length < 3) return null; 
+		if (points.length < 3)
+			return null;
+
+		//System.out.println("Points("+points.length+"):"+points[0].toString()+points[1].toString()+points[2].toString()+points[3].toString());
 		
 		Plane plane = new Plane(points[0], points[1], points[2]);
-		Vector3d candidate = PhysicHelper.getRayPlaneIntersection(ray, plane);
+		Vector3d candidate = PhysicHelper.getLinePlaneIntersection(line, plane);
 		if (candidate == null) {
 			//System.out.println("Kein Kandidat!");
 			return null;
 		}
-		
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//System.out.println("Kandidat: " + candidate.toString());
+
+		//System.out.println("Kandidat: " + candidate.toString()+", Punkte: "+points[0].toString()+points[1].toString()+points[2].toString());
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
 		Vector3d pointInPlane = plane.getRandomPoint();
 		//System.out.println("HALBVEKTOR: "+pointInPlane.toString());
@@ -235,8 +237,10 @@ public class CollisionComparer {
 		Line halfVector, edge;
 		for (int i = 0; i < points.length; i++) {
 			a = points[i];
-			if (i == points.length-1) b = points[0];
-			else b = points[i+1];
+			if (i == points.length - 1)
+				b = points[0];
+			else
+				b = points[i + 1];
 			halfVector = new Ray(candidate, Vector3d.subtract(pointInPlane, candidate));
 			edge = new LineSegment(a, Vector3d.subtract(b, a));
 			intersection = PhysicHelper.getLineLineIntersection(halfVector, edge);
@@ -248,34 +252,55 @@ public class CollisionComparer {
 			}
 		}
 		//System.out.println("Intersections: "+String.valueOf(intersections));
-		if (intersections%2 == 1) {
-			System.out.println("INTERSECTIONS UNGERADE!");
+		if (intersections % 2 == 1) {
+			//System.out.println("INTERSECTIONS UNGERADE!");
 			return candidate;
 		}
 		return null;
 	}
 
-	public static Vector3d getRayAABBIntersection(Line ray, BoundingAABB aabb) {
-		
+	public static Vector3d getRayAABBIntersection(Ray ray, BoundingAABB aabb) {
+
 		Vector3d intersection = null;
 		Vector3d newIntersection = null;
 		Vector3d[][] faces = aabb.getFaces();
 		double distance = Double.MAX_VALUE;
 		double newDistance = 0;
-		
-		newIntersection = getRayPolygonIntersection(ray, faces[0]);
-		if (newIntersection != null) {
-			System.out.println("INTERSECTION WITH FACE!");
-			newDistance = Vector3d.subtract(newIntersection, ray.getStart()).getValue();
-			if (newDistance < distance) {
-				distance = newDistance;
-				intersection = newIntersection;
+
+		/*System.out.println("Ray: "+ray.toString());
+		for (int i = 0; i < faces.length; i++) {
+			System.out.print("Face["+i+"]: ");
+			for (Vector3d face : faces[i]) {
+				System.out.print(face.toString());
+			}
+			System.out.println();
+		}*/
+
+		for (int i = 0; i < faces.length; i++) {
+			newIntersection = getLinePolygonIntersection(ray, faces[i]);
+			if (newIntersection != null) {
+				//System.out.print("Intersection between: " + ray.toString() + " and ");
+				for (Vector3d face : faces[i]) {
+					//System.out.print(face.toString());
+				}
+				//System.out.println();
+				newDistance = Vector3d.subtract(newIntersection, ray.getStart()).getValue();
+				if (newDistance < distance) {
+					distance = newDistance;
+					intersection = newIntersection;
+				}
+			} else {
+				//System.out.print("No intersection between: " + ray.toString() + " and ");
+				for (Vector3d face : faces[i]) {
+					//System.out.print(face.toString());
+				}
+				//System.out.println();
 			}
 		}
-		
+
 		return intersection;
 	}
-	
+
 	/*public static boolean isRayThroughObject(Ray ray, Vector3d[] points) {
 
 		Vector3d start = ray.getStart();
@@ -318,11 +343,11 @@ public class CollisionComparer {
 		return true;
 	}*/
 
-	public ArrayList<Entity> getEntitiesInRay(Line ray) {
+	public ArrayList<Entity> getEntitiesInRay(Ray ray) {
 
 		Vector3d start = ray.getStart();
 		Vector3d dir = ray.getDirection();
-		
+
 		// Schleifenanfang x-Richtung
 		double startX = start.getX();
 		startX += shift.x;
@@ -359,11 +384,15 @@ public class CollisionComparer {
 			int startZGrid = (za[i] < za[nexti]) ? MathHelper.roundDownToInt(za[i], 1) : MathHelper.roundUpToInt(za[i], 1);
 			int endZGrid = (za[i] < za[nexti]) ? MathHelper.roundUpToInt(za[nexti], 1) : MathHelper.roundDownToInt(za[nexti], 1);
 
-			if (startZGrid < 0) startZGrid = 0;
-			if (startZGrid > max.z) startZGrid = max.z;
-			if (endZGrid < 0) endZGrid = 0;
-			if (endZGrid > max.z) endZGrid = max.z;
-			
+			if (startZGrid < 0)
+				startZGrid = 0;
+			if (startZGrid > max.z)
+				startZGrid = max.z;
+			if (endZGrid < 0)
+				endZGrid = 0;
+			if (endZGrid > max.z)
+				endZGrid = max.z;
+
 			for (int j = startZGrid; (startZGrid < endZGrid) ? (j < endZGrid) : (j > endZGrid); j += (startZGrid < endZGrid) ? 1 : -1) {
 				int ri = i;
 				int rj = j;
@@ -384,11 +413,15 @@ public class CollisionComparer {
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < ids.size(); i++) {
 			Entity entity = game.world.entityList.entities.get(i);
+			BoundingAABB aabb = entity.getAABB();
+			//System.out.println("AABB: " + aabb.a.toString() + "-" + aabb.b.toString());
+			//System.out.println("Pos: " + entity.matrix.position);
 			if (getRayAABBIntersection(ray, entity.getAABB()) != null)
 				entities.add(entity);
 		}
 
-		if (entities.size() > 0) System.out.println(entities.size());
+		if (entities.size() > 0)
+			System.out.println(entities.size());
 		return entities;
 
 	}

@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.physics.Line;
+import de.nerogar.gameV1.physics.Ray;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
 import de.nerogar.gameV1.image.TextureBank;
 
@@ -120,7 +120,7 @@ public class World {
 
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
-		Line sightRay = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
 		if (GameOptions.instance.getBoolOption("debug")) entityList.getEntitiesInSight(sightRay);
 
 		glPopMatrix();
