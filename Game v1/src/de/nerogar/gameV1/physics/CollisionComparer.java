@@ -217,7 +217,8 @@ public class CollisionComparer {
 
 		//System.out.println("Kandidat: " + candidate.toString()+", Punkte: "+points[0].toString()+points[1].toString()+points[2].toString());
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
-		Vector3d pointInPlane = plane.getRandomPoint();
+		// Der Punkt soll weit weg liegen, damit die Rechnung genau bleibt
+		Vector3d pointInPlane = plane.getRandomPoint(candidate.getX() + 100000);
 		//System.out.println("HALBVEKTOR: "+pointInPlane.toString());
 		int intersections = 0;
 		Vector3d a, b, intersection;

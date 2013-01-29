@@ -22,7 +22,7 @@ public class LevelGenerator {
 	}
 
 	private void addDefaultPopulators() {
-		addPopulator(new TestPopulator());
+		//addPopulator(new TestPopulator());
 	}
 
 	public Chunk generateLevel(Chunk chunk) {

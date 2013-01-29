@@ -86,7 +86,8 @@ public final class PhysicHelper {
 		// Fall sollte nicht mehr auftreten, da Parallelität zu Beginn ausgeschlossen werden sollte
 		if (value == 0) return null;
 
-		double tolerance = 0.000001;
+		double tolerance = 0.0000000001;
+		System.out.println("sxy: " + sxy + " sxz: " + sxz + " syz: " + syz);
 		if (Math.abs(sxy - sxz) > tolerance || Math.abs(sxz - syz) > tolerance) return null;
 
 		Vector3d candidate = Vector3d.add(s2, Vector3d.multiply(d2, sxy));
