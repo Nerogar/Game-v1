@@ -8,20 +8,15 @@ public final class PhysicHelper {
 
 	public static boolean isColliding(Bounding b1, Bounding b2) {
 
-		if (b1 instanceof BoundingCircle && b2 instanceof BoundingCircle)
-			return isCircleCollidingCircle((BoundingCircle) b1, (BoundingCircle) b2);
+		if (b1 instanceof BoundingCircle && b2 instanceof BoundingCircle) return isCircleCollidingCircle((BoundingCircle) b1, (BoundingCircle) b2);
 
-		if (b1 instanceof BoundingAABB && b2 instanceof BoundingAABB)
-			return isAABBCollidingAABB((BoundingAABB) b1, (BoundingAABB) b2);
+		if (b1 instanceof BoundingAABB && b2 instanceof BoundingAABB) return isAABBCollidingAABB((BoundingAABB) b1, (BoundingAABB) b2);
 
-		if (b1 instanceof BoundingCircle && b2 instanceof BoundingAABB)
-			return isCircleCollidingAABB((BoundingCircle) b1, (BoundingAABB) b2);
+		if (b1 instanceof BoundingCircle && b2 instanceof BoundingAABB) return isCircleCollidingAABB((BoundingCircle) b1, (BoundingAABB) b2);
 
-		if (b1 instanceof BoundingAABB && b2 instanceof BoundingCircle)
-			return isCircleCollidingAABB((BoundingCircle) b2, (BoundingAABB) b1);
+		if (b1 instanceof BoundingAABB && b2 instanceof BoundingCircle) return isCircleCollidingAABB((BoundingCircle) b2, (BoundingAABB) b1);
 
-		if (b1 instanceof BoundingOBB && b2 instanceof BoundingOBB)
-			return isOBBCollidingOBB((BoundingOBB) b1, (BoundingOBB) b2);
+		if (b1 instanceof BoundingOBB && b2 instanceof BoundingOBB) return isOBBCollidingOBB((BoundingOBB) b1, (BoundingOBB) b2);
 
 		// isCircleCollidingOBB fehlt
 		// isAABBCollidingOBB fehlt
@@ -32,7 +27,7 @@ public final class PhysicHelper {
 	public static Vector3d getLineLineIntersection(Line line1, Line line2) {
 
 		if (line1.isParallelTo(line2)) return null;
-		
+
 		Vector3d s1 = line1.getStart();
 		Vector3d s2 = line2.getStart();
 		Vector3d d1 = line1.getDirection();
@@ -54,8 +49,7 @@ public final class PhysicHelper {
 
 		double nenner1 = xd2 * yd1 - xd1 * yd2;
 		//System.out.println("Nenner1: "+String.valueOf(nenner1));
-		if (nenner1 != 0)
-			sxy = -1 * (xd1 * ys1 - xd1 * ys2 - yd1 * xs1 + yd1 * xs2) / nenner1;
+		if (nenner1 != 0) sxy = -1 * (xd1 * ys1 - xd1 * ys2 - yd1 * xs1 + yd1 * xs2) / nenner1;
 		//System.out.println("sxy: "+String.valueOf(sxy));
 		if (line2 instanceof Ray) {
 			if (sxy < 0) return null;
@@ -64,8 +58,7 @@ public final class PhysicHelper {
 
 		double nenner2 = xd2 * zd1 - xd1 * zd2;
 		//System.out.println("Nenner2: "+String.valueOf(nenner2));
-		if (nenner2 != 0)
-			sxz = -1 * (xd1 * zs1 - xd1 * zs2 - zd1 * xs1 + zd1 * xs2) / nenner2;
+		if (nenner2 != 0) sxz = -1 * (xd1 * zs1 - xd1 * zs2 - zd1 * xs1 + zd1 * xs2) / nenner2;
 		//System.out.println("sxz: "+String.valueOf(sxz));
 		if (line2 instanceof Ray) {
 			if (sxz < 0) return null;
@@ -74,8 +67,7 @@ public final class PhysicHelper {
 
 		double nenner3 = yd2 * zd1 - yd1 * zd2;
 		//System.out.println("Nenner3: "+String.valueOf(nenner3));
-		if (nenner3 != 0)
-			syz = -1 * (yd1 * zs1 - yd1 * zs2 - zd1 * ys1 + zd1 * ys2) / nenner3;
+		if (nenner3 != 0) syz = -1 * (yd1 * zs1 - yd1 * zs2 - zd1 * ys1 + zd1 * ys2) / nenner3;
 		//System.out.println("syz: "+String.valueOf(syz));
 		if (line2 instanceof Ray) {
 			if (syz < 0) return null;
@@ -86,37 +78,29 @@ public final class PhysicHelper {
 		value = (nenner1 == 0) ? value : sxy;
 		value = (nenner2 == 0) ? value : sxz;
 		value = (nenner3 == 0) ? value : syz;
-		sxy   = (nenner1 == 0) ? value : sxy;
-		sxz   = (nenner2 == 0) ? value : sxz;
-		syz   = (nenner3 == 0) ? value : syz;
+		sxy = (nenner1 == 0) ? value : sxy;
+		sxz = (nenner2 == 0) ? value : sxz;
+		syz = (nenner3 == 0) ? value : syz;
 
 		//Falls die Geraden identisch sind, keinen Punkt zurückgeben (Justins Vorschlag)
 		// Fall sollte nicht mehr auftreten, da Parallelität zu Beginn ausgeschlossen werden sollte
-		if (value == 0)
-			return null;
+		if (value == 0) return null;
 
-		double tolerance = 0.0000000001;
-		if (Math.abs(sxy - sxz) > tolerance || Math.abs(sxz - syz) > tolerance)
-			return null;
+		double tolerance = 0.000001;
+		if (Math.abs(sxy - sxz) > tolerance || Math.abs(sxz - syz) > tolerance) return null;
 
 		Vector3d candidate = Vector3d.add(s2, Vector3d.multiply(d2, sxy));
 		if (line1 instanceof Ray) {
 			double r;
 			Vector3d dirToCandidate = Vector3d.subtract(candidate, s1);
-			if (d1.getX() != 0)
-				r = dirToCandidate.getX() / d1.getX();
-			else if (d1.getY() != 0)
-				r = dirToCandidate.getY() / d1.getY();
-			else if (d1.getZ() != 0)
-				r = dirToCandidate.getZ() / d1.getZ();
-			else
-				return null;
-			
+			if (d1.getX() != 0) r = dirToCandidate.getX() / d1.getX();
+			else if (d1.getY() != 0) r = dirToCandidate.getY() / d1.getY();
+			else if (d1.getZ() != 0) r = dirToCandidate.getZ() / d1.getZ();
+			else return null;
+
 			//System.out.println("r: " + String.valueOf(r));
-			if (r < 0)
-				return null;
-			if (r >= 1 && line1 instanceof LineSegment)
-				return null;
+			if (r < 0) return null;
+			if (r >= 1 && line1 instanceof LineSegment) return null;
 		}
 
 		return candidate;
@@ -149,18 +133,15 @@ public final class PhysicHelper {
 		Vector3d dist = new Vector3d(b1.M);
 		dist.subtract(b2.M);
 
-		if (MathHelper.abs(dist.getValue()) < b1.r + b2.r)
-			return true;
+		if (MathHelper.abs(dist.getValue()) < b1.r + b2.r) return true;
 		return false;
 
 	}
 
 	public static boolean isAABBCollidingAABB(BoundingAABB b1, BoundingAABB b2) {
-		if (b1.b.getX() < b2.a.getX() || b1.b.getY() < b2.a.getY() || b1.b.getZ() < b2.a.getZ() || b1.a.getX() > b2.b.getX() || b1.a.getY() > b2.b.getY() || b1.a.getZ() > b2.b.getZ())
-			return false;
+		if (b1.b.getX() < b2.a.getX() || b1.b.getY() < b2.a.getY() || b1.b.getZ() < b2.a.getZ() || b1.a.getX() > b2.b.getX() || b1.a.getY() > b2.b.getY() || b1.a.getZ() > b2.b.getZ()) return false;
 
-		else
-			return true;
+		else return true;
 
 	}
 
@@ -170,11 +151,8 @@ public final class PhysicHelper {
 
 		boolean col = true;
 
-		if (!isColliding(b1, AABBtoCircle(b2)))
-			col = false;
-		if (col)
-			if (!isColliding(CircletoAABB(b1), b2))
-				col = false;
+		if (!isColliding(b1, AABBtoCircle(b2))) col = false;
+		if (col) if (!isColliding(CircletoAABB(b1), b2)) col = false;
 
 		return col;
 
@@ -192,13 +170,12 @@ public final class PhysicHelper {
 				break;
 			}
 		}
-		if (!col)
-			for (int i = 0; i < 8; i++) {
-				if (PointInOBB(b2.p[i], b1)) {
-					col = true;
-					break;
-				}
+		if (!col) for (int i = 0; i < 8; i++) {
+			if (PointInOBB(b2.p[i], b1)) {
+				col = true;
+				break;
 			}
+		}
 
 		return col;
 
@@ -238,18 +215,12 @@ public final class PhysicHelper {
 		Vector3d max = new Vector3d(0, 0, 0);
 
 		for (int i = 0; i < 8; i++) {
-			if (b.p[i].getX() < min.getX())
-				min.setX(b.p[i].getX());
-			if (b.p[i].getY() < min.getY())
-				min.setY(b.p[i].getY());
-			if (b.p[i].getZ() < min.getZ())
-				min.setZ(b.p[i].getZ());
-			if (b.p[i].getX() > max.getX())
-				max.setX(b.p[i].getX());
-			if (b.p[i].getY() > max.getY())
-				max.setY(b.p[i].getY());
-			if (b.p[i].getZ() > max.getZ())
-				max.setZ(b.p[i].getZ());
+			if (b.p[i].getX() < min.getX()) min.setX(b.p[i].getX());
+			if (b.p[i].getY() < min.getY()) min.setY(b.p[i].getY());
+			if (b.p[i].getZ() < min.getZ()) min.setZ(b.p[i].getZ());
+			if (b.p[i].getX() > max.getX()) max.setX(b.p[i].getX());
+			if (b.p[i].getY() > max.getY()) max.setY(b.p[i].getY());
+			if (b.p[i].getZ() > max.getZ()) max.setZ(b.p[i].getZ());
 		}
 
 		return new BoundingAABB(min, max);
@@ -269,42 +240,36 @@ public final class PhysicHelper {
 
 		// Plane unten
 		double dot = PointInOBBHelp(p, b.p[2], b.p[1], b.p[3]);
-		if (dot >= 0)
-			col = false;
+		if (dot >= 0) col = false;
 
 		// Plane oben
 		if (col) {
 			dot = PointInOBBHelp(p, b.p[7], b.p[5], b.p[6]);
-			if (dot >= 0)
-				col = false;
+			if (dot >= 0) col = false;
 		}
 
 		// Plane vorne
 		if (col) {
 			dot = PointInOBBHelp(p, b.p[7], b.p[3], b.p[4]);
-			if (dot >= 0)
-				col = false;
+			if (dot >= 0) col = false;
 		}
 
 		// Plane hinten
 		if (col) {
 			dot = PointInOBBHelp(p, b.p[5], b.p[1], b.p[2]);
-			if (dot >= 0)
-				col = false;
+			if (dot >= 0) col = false;
 		}
 
 		// Plane rechts
 		if (col) {
 			dot = PointInOBBHelp(p, b.p[6], b.p[2], b.p[3]);
-			if (dot >= 0)
-				col = false;
+			if (dot >= 0) col = false;
 		}
 
 		// Plane hinten
 		if (col) {
 			dot = PointInOBBHelp(p, b.p[4], b.p[1], b.p[5]);
-			if (dot >= 0)
-				col = false;
+			if (dot >= 0) col = false;
 		}
 
 		return col;
@@ -313,12 +278,9 @@ public final class PhysicHelper {
 
 	public static BoundingAABB toAABB(Bounding b) {
 
-		if (b instanceof BoundingAABB)
-			return (BoundingAABB) b;
-		if (b instanceof BoundingCircle)
-			return (BoundingAABB) CircletoAABB((BoundingCircle) b);
-		if (b instanceof BoundingOBB)
-			return (BoundingAABB) OBBtoAABB((BoundingOBB) b);
+		if (b instanceof BoundingAABB) return (BoundingAABB) b;
+		if (b instanceof BoundingCircle) return (BoundingAABB) CircletoAABB((BoundingCircle) b);
+		if (b instanceof BoundingOBB) return (BoundingAABB) OBBtoAABB((BoundingOBB) b);
 
 		return new BoundingAABB(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
 	}

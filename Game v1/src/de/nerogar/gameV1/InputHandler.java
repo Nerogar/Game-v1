@@ -73,7 +73,7 @@ public final class InputHandler {
 		//Camera down Rotation:
 		dirLoc.setY(-camRotDownSin);
 		dirLoc.setZ(-camRotDownCos);
-		
+
 		//Mouse Position Y:
 		dirLoc.addY(mouseY * camRotDownCos * fovMultY);
 		dirLoc.addZ(-mouseY * camRotDownSin * fovMultY);
@@ -109,6 +109,19 @@ public final class InputHandler {
 		//glVertex3f(start.x + dir.x * 100, start.y + dir.y * 100, start.z + dir.z * 100);
 		glVertex3f(start.getXf(), start.getYf(), start.getZf());
 		glVertex3f(start.getXf() + dir.getXf() * 10000, start.getYf() + dir.getYf() * 10000, start.getZf() + dir.getZf() * 10000);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glVertex3f(-2f, 5f, 0f);
+		glVertex3f(2f, 5f, 0f);
+		glVertex3f(2f, 9f, 0f);
+		glVertex3f(-2f, 9f, 0f);
+
+		glVertex3f(-2f, 9f, 0f);
+		glVertex3f(2f, 9f, 0f);
+		glVertex3f(2f, 5f, 0f);
+		glVertex3f(-2f, 5f, 0f);
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 	}

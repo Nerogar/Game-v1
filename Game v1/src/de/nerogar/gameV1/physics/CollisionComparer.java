@@ -41,14 +41,10 @@ public class CollisionComparer {
 				mi = new Position(game.world.land.chunks.get(i).chunkPosition.x, game.world.land.chunks.get(i).chunkPosition.z);
 				ma = new Position(game.world.land.chunks.get(i).chunkPosition.x, game.world.land.chunks.get(i).chunkPosition.z);
 			}
-			if (game.world.land.chunks.get(i).chunkPosition.x < mi.x)
-				mi.x = game.world.land.chunks.get(i).chunkPosition.x;
-			if (game.world.land.chunks.get(i).chunkPosition.z < mi.z)
-				mi.z = game.world.land.chunks.get(i).chunkPosition.z;
-			if (game.world.land.chunks.get(i).chunkPosition.x > ma.x)
-				ma.x = game.world.land.chunks.get(i).chunkPosition.x;
-			if (game.world.land.chunks.get(i).chunkPosition.z > ma.z)
-				ma.z = game.world.land.chunks.get(i).chunkPosition.z;
+			if (game.world.land.chunks.get(i).chunkPosition.x < mi.x) mi.x = game.world.land.chunks.get(i).chunkPosition.x;
+			if (game.world.land.chunks.get(i).chunkPosition.z < mi.z) mi.z = game.world.land.chunks.get(i).chunkPosition.z;
+			if (game.world.land.chunks.get(i).chunkPosition.x > ma.x) ma.x = game.world.land.chunks.get(i).chunkPosition.x;
+			if (game.world.land.chunks.get(i).chunkPosition.z > ma.z) ma.z = game.world.land.chunks.get(i).chunkPosition.z;
 			//if (game.world.land.chunkPositions.get(i).z == 0) System.out.println("DRAMATISCHER FEHLER!");
 		}
 
@@ -73,8 +69,7 @@ public class CollisionComparer {
 	public void compare() {
 
 		for (int i = 0; i < game.world.entityList.entities.size(); i++) {
-			if (game.world.entityList.entities.get(i) instanceof EntityBlock)
-				((EntityBlock) game.world.entityList.entities.get(i)).colliding = false;
+			if (game.world.entityList.entities.get(i) instanceof EntityBlock) ((EntityBlock) game.world.entityList.entities.get(i)).colliding = false;
 
 		}
 
@@ -83,8 +78,7 @@ public class CollisionComparer {
 		for (int i = 0; i < max.x; i++) {
 			for (int j = 0; j < max.z; j++) {
 
-				if (grid[i][j].size() < 2)
-					continue;
+				if (grid[i][j].size() < 2) continue;
 
 				for (int i2 = 0; i2 < grid[i][j].size(); i2++) {
 					for (int j2 = i2 + 1; j2 < grid[i][j].size(); j2++) {
@@ -153,10 +147,8 @@ public class CollisionComparer {
 	}
 
 	private int maxMinGridPosX(int pos) {
-		if (pos < 0)
-			pos = 0;
-		else if (pos > max.x)
-			pos = max.x;
+		if (pos < 0) pos = 0;
+		else if (pos > max.x) pos = max.x;
 		return pos;
 	}
 
@@ -167,8 +159,7 @@ public class CollisionComparer {
 
 	public static double getIntersectionZ(Vector3d s, Vector3d d, int xa) {
 		double r = (xa - s.getX()) / d.getX();
-		if (r < 0)
-			return s.getZ();
+		if (r < 0) return s.getZ();
 		return s.getZ() + r * d.getZ();
 	}
 
@@ -199,28 +190,24 @@ public class CollisionComparer {
 
 		for (int i = 0; i < vx.length; i++) {
 			float vxAmount = getCircleAmount(vx[i]);
-			if (vxAmount - v1Amount < 2 && vxAmount - v1Amount > 0)
-				left++;
-			else
-				right++;
+			if (vxAmount - v1Amount < 2 && vxAmount - v1Amount > 0) left++;
+			else right++;
 			//System.out.println(vxAmount+" vs. "+v1Amount);
 		}
 
 		//System.out.println("LR:"+left+"-"+right);
 		// Wenn alle Punkte links oder rechts vom Strahl liegen, schneiden sie sich nicht
-		if (left == 0 || right == 0)
-			return true;
+		if (left == 0 || right == 0) return true;
 		return false;
 	}
 
 	public static Vector3d getLinePolygonIntersection(Line line, Vector3d[] points) {
 
 		// Ein Polygon braucht mindestens 3 Punkt
-		if (points.length < 3)
-			return null;
+		if (points.length < 3) return null;
 
 		//System.out.println("Points("+points.length+"):"+points[0].toString()+points[1].toString()+points[2].toString()+points[3].toString());
-		
+
 		Plane plane = new Plane(points[0], points[1], points[2]);
 		Vector3d candidate = PhysicHelper.getLinePlaneIntersection(line, plane);
 		if (candidate == null) {
@@ -237,10 +224,8 @@ public class CollisionComparer {
 		Line halfVector, edge;
 		for (int i = 0; i < points.length; i++) {
 			a = points[i];
-			if (i == points.length - 1)
-				b = points[0];
-			else
-				b = points[i + 1];
+			if (i == points.length - 1) b = points[0];
+			else b = points[i + 1];
 			halfVector = new Ray(candidate, Vector3d.subtract(pointInPlane, candidate));
 			edge = new LineSegment(a, Vector3d.subtract(b, a));
 			intersection = PhysicHelper.getLineLineIntersection(halfVector, edge);
@@ -384,44 +369,38 @@ public class CollisionComparer {
 			int startZGrid = (za[i] < za[nexti]) ? MathHelper.roundDownToInt(za[i], 1) : MathHelper.roundUpToInt(za[i], 1);
 			int endZGrid = (za[i] < za[nexti]) ? MathHelper.roundUpToInt(za[nexti], 1) : MathHelper.roundDownToInt(za[nexti], 1);
 
-			if (startZGrid < 0)
-				startZGrid = 0;
-			if (startZGrid > max.z)
-				startZGrid = max.z;
-			if (endZGrid < 0)
-				endZGrid = 0;
-			if (endZGrid > max.z)
-				endZGrid = max.z;
+			if (startZGrid < 0) startZGrid = 0;
+			if (startZGrid > max.z) startZGrid = max.z;
+			if (endZGrid < 0) endZGrid = 0;
+			if (endZGrid > max.z) endZGrid = max.z;
 
 			for (int j = startZGrid; (startZGrid < endZGrid) ? (j < endZGrid) : (j > endZGrid); j += (startZGrid < endZGrid) ? 1 : -1) {
 				int ri = i;
 				int rj = j;
-				if (dir.getX() < 0)
-					ri -= 1;
-				if (dir.getZ() < 0)
-					rj -= 1;
+				if (dir.getX() < 0) ri -= 1;
+				if (dir.getZ() < 0) rj -= 1;
 				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xff00ff);
-				if (ri > 0 && rj > 0 && ri < grid.length && rj < grid[0].length) {
+				//if (ri >= 0 && rj >= 0 && ri < grid.length && rj < grid[0].length) {
+					//System.out.println("ri: " + ri + "  rj: " + rj);
 					for (int k = 0; k < grid[ri][rj].size(); k++) {
 						ids.add(grid[ri][rj].get(k));
+						System.out.println("id: "+grid[ri][rj].get(k));
+						BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xffff00);
 					}
-				}
+				//}
 			}
-
 		}
 
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < ids.size(); i++) {
-			Entity entity = game.world.entityList.entities.get(i);
+			Entity entity = game.world.entityList.entities.get(ids.get(i));
 			BoundingAABB aabb = entity.getAABB();
 			//System.out.println("AABB: " + aabb.a.toString() + "-" + aabb.b.toString());
 			//System.out.println("Pos: " + entity.matrix.position);
-			if (getRayAABBIntersection(ray, entity.getAABB()) != null)
-				entities.add(entity);
+			if (getRayAABBIntersection(ray, entity.getAABB()) != null) entities.add(entity);
 		}
 
-		if (entities.size() > 0)
-			System.out.println(entities.size());
+		if (entities.size() > 0) System.out.println(entities.size());
 		return entities;
 
 	}
@@ -479,7 +458,6 @@ public class CollisionComparer {
 							game.world.entityList.entities.set(grid[i][j].get(k), null);
 						}
 					}
-
 				}
 			}
 		}

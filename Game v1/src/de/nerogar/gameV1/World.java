@@ -121,7 +121,12 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		if (GameOptions.instance.getBoolOption("debug")) entityList.getEntitiesInSight(sightRay);
+		try {
+			if (GameOptions.instance.getBoolOption("debug")) entityList.getEntitiesInSight(sightRay);
+		} catch (Throwable e) {
+			Logger.printThrowable(e, "ray", false);
+		}
+		
 
 		glPopMatrix();
 	}
