@@ -4,7 +4,7 @@ import de.nerogar.gameV1.Vector3d;
 
 public class Plane {
 
-	// Normalenform: ax + by + cz = d
+	// Koordinatenform: ax + by + cz = d
 	private double a;
 	private double b;
 	private double c;
