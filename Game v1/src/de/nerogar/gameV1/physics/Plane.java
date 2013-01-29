@@ -58,13 +58,14 @@ public class Plane {
 	}
 	
 	public Vector3d getRandomPoint() {
-		return getRandomPoint(1);
+		return getRandomPoint(100);
 	}
 	
 	public Vector3d getRandomPoint(double start) {
 		double x = start;
 		double y = start;
 		double z = start;
+		
 		if (a != 0) {
 			x = (d - b*y - c*z) / a;
 		} else if (b != 0) {
