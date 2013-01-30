@@ -33,7 +33,7 @@ public class GuiDebugSettings extends Gui {
 
 		//AABBs
 		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));
-		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("vSync")), FontRenderer.LEFT, "Buttons/button.png", false, "");
+		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showAABBs")), FontRenderer.LEFT, "Buttons/button.png", false, "");
 
 		//ok button
 		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");

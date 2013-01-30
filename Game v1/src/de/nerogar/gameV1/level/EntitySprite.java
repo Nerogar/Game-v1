@@ -16,10 +16,6 @@ public abstract class EntitySprite extends Entity {
 		setObject(objectName, null);
 	}
 
-	public EntitySprite() {
-
-	}
-
 	public void setObject(String objectName, String textureName) {
 		object = Object3DBank.instance.getObject(objectName);
 	}

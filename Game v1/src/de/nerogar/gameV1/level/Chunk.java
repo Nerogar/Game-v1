@@ -195,7 +195,7 @@ public class Chunk {
 			}
 
 			for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
-				Entity entity = Entity.getEntity(chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
+				Entity entity = Entity.getEntity(world.game,chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
 				entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
 				//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
 				spawnEntity(entity);

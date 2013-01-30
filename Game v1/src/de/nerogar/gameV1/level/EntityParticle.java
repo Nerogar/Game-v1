@@ -16,10 +16,6 @@ public abstract class EntityParticle extends EntityPhysic {
 		standardAcceleration = new Vector3d(0, -GameOptions.instance.GRAVITY, 0);
 	}
 
-	public EntityParticle() {
-		setObject("houses/cone", "houses/cone.png");
-	}
-
 	public void updatePhysics(float time) {
 		updatePosition(time);
 	}

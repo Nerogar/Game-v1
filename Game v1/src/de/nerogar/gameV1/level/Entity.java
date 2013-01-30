@@ -1,5 +1,7 @@
 package de.nerogar.gameV1.level;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
@@ -39,8 +41,8 @@ public abstract class Entity {
 		object = Object3DBank.instance.getObject(objectName);
 		texture = textureName;
 	}
-	
-	public World getWorld(){
+
+	public World getWorld() {
 		return world;
 	}
 
@@ -115,10 +117,12 @@ public abstract class Entity {
 		entityList.put(entity.getNameTag(), (Class<? extends Entity>) entity.getClass());
 	}
 
-	public static Entity getEntity(String tagName) {
+	public static Entity getEntity(Game game, String tagName) {
 		try {
-			return entityList.get(tagName).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			Constructor<? extends Entity> contructor = entityList.get(tagName).getConstructor(new Class[] { Game.class, ObjectMatrix.class });
+			Entity entity = contructor.newInstance(game, new ObjectMatrix());
+			return entity;
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return null;

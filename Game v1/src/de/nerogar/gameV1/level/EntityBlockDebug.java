@@ -23,10 +23,6 @@ public abstract class EntityBlockDebug extends EntityBlock {
 		InputHandler.registerGamepadButton("y", "3", 0.25f);
 	}
 
-	public EntityBlockDebug() {
-		super();
-	}
-
 	public void updatePhysics(float time) {
 
 		//matrix.position = p;

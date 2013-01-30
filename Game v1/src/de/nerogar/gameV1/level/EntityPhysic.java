@@ -15,10 +15,6 @@ public abstract class EntityPhysic extends Entity {
 		setMass(mass);
 	}
 
-	public EntityPhysic() {
-
-	}
-
 	public void setMass(float mass) {
 		if (mass != 0) inverseMass = 1 / mass;
 	}

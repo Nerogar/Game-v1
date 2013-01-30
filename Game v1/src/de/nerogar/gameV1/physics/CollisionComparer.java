@@ -382,12 +382,12 @@ public class CollisionComparer {
 				if (dir.getZ() < 0) rj -= 1;
 				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xff00ff);
 				//if (ri >= 0 && rj >= 0 && ri < grid.length && rj < grid[0].length) {
-					//System.out.println("ri: " + ri + "  rj: " + rj);
-					for (int k = 0; k < grid[ri][rj].size(); k++) {
-						ids.add(grid[ri][rj].get(k));
-						System.out.println("id: "+grid[ri][rj].get(k));
-						BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xffff00);
-					}
+				//System.out.println("ri: " + ri + "  rj: " + rj);
+				for (int k = 0; k < grid[ri][rj].size(); k++) {
+					ids.add(grid[ri][rj].get(k));
+					//System.out.println("id: "+grid[ri][rj].get(k));
+					BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xffff00);
+				}
 				//}
 			}
 		}
@@ -395,13 +395,13 @@ public class CollisionComparer {
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < ids.size(); i++) {
 			Entity entity = game.world.entityList.entities.get(ids.get(i));
-			BoundingAABB aabb = entity.getAABB();
-			//System.out.println("AABB: " + aabb.a.toString() + "-" + aabb.b.toString());
-			//System.out.println("Pos: " + entity.matrix.position);
-			if (getRayAABBIntersection(ray, entity.getAABB()) != null) entities.add(entity);
+			if (!entities.contains(entity)) {
+				BoundingAABB aabb = entity.getAABB();
+				if (getRayAABBIntersection(ray, entity.getAABB()) != null) entities.add(entity);
+			}
 		}
 
-		if (entities.size() > 0) System.out.println(entities.size());
+		//if (entities.size() > 0) System.out.println(entities.size());
 		return entities;
 
 	}

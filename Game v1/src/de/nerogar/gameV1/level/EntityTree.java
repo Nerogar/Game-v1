@@ -8,16 +8,11 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 public class EntityTree extends Entity {
 
 	//private int size = 3;
-	
+
 	public EntityTree(Game game, ObjectMatrix matrix) {
 		super(game, matrix, "tree");
 		texture = "tree.png";/*Textur name*/
-		boundingBox = new BoundingAABB(new Vector3d(-4, 0, -4), new Vector3d(4, 8, 4));
-	}
-
-	public EntityTree() {
-		setObject("tree", "tree.png");
-		boundingBox = new BoundingAABB(new Vector3d(-4, 0, -4), new Vector3d(4, 8, 4));
+		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 4, 1));
 	}
 
 	@Override
@@ -39,7 +34,11 @@ public class EntityTree extends Entity {
 
 	@Override
 	public void click(int key) {
-		// TODO Auto-generated method stub
+		if (key == 0) {
+			matrix.addPosition(new Vector3d(0, 1, 0));
+		} else if (key == 1) {
+			matrix.addPosition(new Vector3d(0, -1, 0));
+		}
 
 	}
 

@@ -17,7 +17,7 @@ public class BoundingRender {
 	// renderOBB fehlt
 
 	public static void renderAABB(BoundingAABB bound, int color) {
-		if(!GameOptions.instance.getBoolOption("showAABBs"))return;
+		if(!GameOptions.instance.getBoolOption("showAABBs")||!GameOptions.instance.getBoolOption("debug"))return;
 		Vector3d a = bound.a;
 		Vector3d b = bound.b;
 		Vector3d[] v = new Vector3d[8];

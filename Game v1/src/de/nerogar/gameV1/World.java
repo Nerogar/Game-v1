@@ -2,6 +2,8 @@ package de.nerogar.gameV1;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
@@ -95,6 +97,21 @@ public class World {
 		/*Vector3d vTest = null;
 		System.out.println(vTest.getValue());*/
 
+		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		long time1 = System.nanoTime();
+		ArrayList<Entity> clickedEntities = entityList.getEntitiesInSight(sightRay);
+		long time2 = System.nanoTime();
+		//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
+
+		if (InputHandler.isMouseButtonPressed(0)) {
+			for (Entity entity : clickedEntities) {
+				entity.click(0);
+			}
+		}else if (InputHandler.isMouseButtonPressed(1)) {
+			for (Entity entity : clickedEntities) {
+				entity.click(1);
+			}
+		}
 	}
 
 	public void render() {
@@ -120,15 +137,6 @@ public class World {
 
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
-		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		
-		
-		try {
-			if (GameOptions.instance.getBoolOption("debug")) entityList.getEntitiesInSight(sightRay);
-		} catch (Throwable e) {
-			Logger.printThrowable(e, "World.render", false);
-		}
-		
 
 		glPopMatrix();
 	}

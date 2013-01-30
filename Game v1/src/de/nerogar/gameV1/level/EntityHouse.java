@@ -14,10 +14,6 @@ public class EntityHouse extends EntityBlockDebug {
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 2, 1));
 	}
 
-	public EntityHouse() {
-		super();
-	}
-
 	//public void update(float time) {
 	//	matrix.getPosition().y = game.world.land.getHeight(matrix.getPosition().x, matrix.getPosition().z);
 	//}

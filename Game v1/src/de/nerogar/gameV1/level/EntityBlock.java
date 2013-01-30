@@ -19,10 +19,6 @@ public abstract class EntityBlock extends EntityParticle {
 
 	}
 
-	public EntityBlock() {
-		super();
-	}
-
 	public void updatePhysics(float time) {
 
 		updatePosition(time);

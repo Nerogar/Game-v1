@@ -65,6 +65,19 @@ public class GuiList {
 		for (int i = 0; i < guis.size(); i++) {
 			if (guis.get(i).pauseGame()) { return true; }
 		}
+
+		for (int i = 0; i < alerts.size(); i++) {
+			if (alerts.get(i).pauseGame()) { return true; }
+		}
+
+		for (int i = 0; i < newGuis.size(); i++) {
+			if (newGuis.get(i).pauseGame()) { return true; }
+		}
+
+		for (int i = 0; i < newAlerts.size(); i++) {
+			if (newAlerts.get(i).pauseGame()) { return true; }
+		}
+
 		return false;
 	}
 
@@ -85,7 +98,7 @@ public class GuiList {
 	}
 
 	public void render() {
-		
+
 		for (int i = 0; i < newGuis.size(); i++) {
 			guis.add(newGuis.get(i));
 		}
@@ -95,8 +108,7 @@ public class GuiList {
 			alerts.add(newAlerts.get(i));
 		}
 		newAlerts = new ArrayList<Alert>();
-		
-		
+
 		RenderEngine.instance.setOrtho();
 		beginRender();
 		if (noGuiLoaded() && !activeAlert()) { return; }
