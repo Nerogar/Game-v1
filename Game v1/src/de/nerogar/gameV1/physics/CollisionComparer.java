@@ -3,7 +3,6 @@ package de.nerogar.gameV1.physics;
 import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Entity;
@@ -101,8 +100,6 @@ public class CollisionComparer {
 			}
 		}
 
-		//System.out.println("Entities: "+game.world.entityList.entities.size()+", Vergleiche: "+comparations);
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -147,7 +144,8 @@ public class CollisionComparer {
 	}
 
 	private int maxMinGridPosX(int pos) {
-		if (pos < 0) pos = 0;
+		if (pos < 0)
+			pos = 0;
 		else if (pos > max.x) pos = max.x;
 		return pos;
 	}
@@ -163,50 +161,10 @@ public class CollisionComparer {
 		return s.getZ() + r * d.getZ();
 	}
 
-	// erfundener Wert, ähnlich dem Bogenmaß, aber schneller zu berechnen und mathematische Scheiße.
-	// dient nur zum überprüfen, ob ein Winkel größer oder kleiner ist
-	// Zwischen 0 und 4.
-	// Differenzen: 1 = 90° | 2 = 180°
-	public static float getCircleAmount(Vector2d v) {
-		Vector2d v2 = Vector2d.normalize(v);
-		float value = (float) v2.y;
-		if (v.x < 0 && v.y >= 0) {
-			value = 2 - value;
-		} else if (v.x < 0 && v.y < 0) {
-			value = 2 + value * -1;
-		} else if (v.x >= 0 && v.y < 0) {
-			value = 4 - value * -1;
-		}
-		//System.out.println(String.valueOf(value));
-		return value;
-	}
-
-	public static boolean is2dSeparated(Vector2d v1, Vector2d[] vx) {
-
-		int left = 0;
-		int right = 0;
-
-		float v1Amount = getCircleAmount(v1);
-
-		for (int i = 0; i < vx.length; i++) {
-			float vxAmount = getCircleAmount(vx[i]);
-			if (vxAmount - v1Amount < 2 && vxAmount - v1Amount > 0) left++;
-			else right++;
-			//System.out.println(vxAmount+" vs. "+v1Amount);
-		}
-
-		//System.out.println("LR:"+left+"-"+right);
-		// Wenn alle Punkte links oder rechts vom Strahl liegen, schneiden sie sich nicht
-		if (left == 0 || right == 0) return true;
-		return false;
-	}
-
 	public static Vector3d getLinePolygonIntersection(Line line, Vector3d[] points) {
 
-		// Ein Polygon braucht mindestens 3 Punkt
+		// Ein Polygon braucht mindestens 3 Punkte
 		if (points.length < 3) return null;
-
-		//System.out.println("Points("+points.length+"):"+points[0].toString()+points[1].toString()+points[2].toString()+points[3].toString());
 
 		Plane plane = new Plane(points[0], points[1], points[2]);
 		Vector3d candidate = PhysicHelper.getLinePlaneIntersection(line, plane);
@@ -215,33 +173,27 @@ public class CollisionComparer {
 			return null;
 		}
 
-		//System.out.println("Kandidat: " + candidate.toString()+", Punkte: "+points[0].toString()+points[1].toString()+points[2].toString());
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
 		// Der Punkt soll weit weg liegen, damit die Rechnung genau bleibt
 		Vector3d pointInPlane = plane.getRandomPoint(candidate.getX() + 100000);
-		//System.out.println("HALBVEKTOR: "+pointInPlane.toString());
+
 		int intersections = 0;
 		Vector3d a, b, intersection;
 		Line halfVector, edge;
 		for (int i = 0; i < points.length; i++) {
 			a = points[i];
-			if (i == points.length - 1) b = points[0];
-			else b = points[i + 1];
+			if (i == points.length - 1)
+				b = points[0];
+			else
+				b = points[i + 1];
 			halfVector = new Ray(candidate, Vector3d.subtract(pointInPlane, candidate));
 			edge = new LineSegment(a, Vector3d.subtract(b, a));
 			intersection = PhysicHelper.getLineLineIntersection(halfVector, edge);
 			if (intersection != null) {
 				intersections++;
-				//System.out.println("Intersection between "+halfVector.toString()+" and "+edge.toString());
-			} else {
-				//System.out.println("No intersection between "+halfVector.toString()+" and "+edge.toString());
 			}
 		}
-		//System.out.println("Intersections: "+String.valueOf(intersections));
-		if (intersections % 2 == 1) {
-			//System.out.println("INTERSECTIONS UNGERADE!");
-			return candidate;
-		}
+		if (intersections % 2 == 1) return candidate;
 		return null;
 	}
 
@@ -253,85 +205,123 @@ public class CollisionComparer {
 		double distance = Double.MAX_VALUE;
 		double newDistance = 0;
 
-		/*System.out.println("Ray: "+ray.toString());
-		for (int i = 0; i < faces.length; i++) {
-			System.out.print("Face["+i+"]: ");
-			for (Vector3d face : faces[i]) {
-				System.out.print(face.toString());
-			}
-			System.out.println();
-		}*/
-
 		for (int i = 0; i < faces.length; i++) {
 			newIntersection = getLinePolygonIntersection(ray, faces[i]);
 			if (newIntersection != null) {
-				//System.out.print("Intersection between: " + ray.toString() + " and ");
-				for (Vector3d face : faces[i]) {
-					//System.out.print(face.toString());
-				}
-				//System.out.println();
 				newDistance = Vector3d.subtract(newIntersection, ray.getStart()).getValue();
 				if (newDistance < distance) {
 					distance = newDistance;
 					intersection = newIntersection;
 				}
-			} else {
-				//System.out.print("No intersection between: " + ray.toString() + " and ");
-				for (Vector3d face : faces[i]) {
-					//System.out.print(face.toString());
-				}
-				//System.out.println();
 			}
 		}
 
 		return intersection;
 	}
 
-	/*public static boolean isRayThroughObject(Ray ray, Vector3d[] points) {
+	public Vector3d getFloorIntersectionInRay(Ray ray) {
 
+		Vector3d intersection = null;
+
+		return intersection;
+
+	}
+
+	public ArrayList<Position> getGridPositionsInRay(Ray ray) {
 		Vector3d start = ray.getStart();
 		Vector3d dir = ray.getDirection();
-		
-		// Alle Punkte in die Matrix des Strahlstartes verschieben
-		// dadurch kann der Richtungsvektor mit den Punkten verglichen werden
-		Vector3d[] normPoints = new Vector3d[points.length];
-		for (int i = 0; i < points.length; i++) {
-			normPoints[i] = Vector3d.subtract(points[i], start);
+
+		// Schleifenanfang x-Richtung
+		double startX = start.getX();
+		startX += shift.x;
+
+		// Schleifenende x-Richtung
+		int endXGrid = dir.getX() > 0 ? max.x : 0;
+
+		int startXGrid = ((startX / GRIDSIZE) < endXGrid) ? MathHelper.roundDownToInt(startX / GRIDSIZE, 1) : MathHelper.roundUpToInt(startX / GRIDSIZE, 1);
+		startXGrid = maxMinGridPosX(startXGrid); // zwischen 0 und max
+
+		// Array der Schnittpunkt-Z-Werte
+		double[] za = new double[(startXGrid <= endXGrid) ? endXGrid + 2 : startXGrid + 2];
+
+		za[startXGrid] = (getIntersectionZ(start, dir, (startXGrid * GRIDSIZE) - shift.x) + shift.z) / GRIDSIZE;
+
+		ArrayList<Position> positions = new ArrayList<Position>();
+
+		// Schleife x-Richtung
+		for (int i = startXGrid; (startXGrid < endXGrid) ? (i < endXGrid) : (i > endXGrid); i += (startXGrid < endXGrid) ? 1 : -1) {
+
+			// Der Strahl in Parameterform angegeben: g: a-> = s-> + r*d->
+			// 
+			// Nur die X-Werte: xa = xs + r*xd
+			// einzige Unbekannte: r
+			// nach r aufgelöst: r = (xa - xs) / xd
+			//
+			// Nur die Z-Werte: za = zs + r*zd
+			// r eingesetzt: za = zs + ((xa - xs) / xd)*zd
+			// einzige Unbekannte: za (Der z-Wert des Schnittpunktes der Geraden mit dem Grid)
+
+			int nexti = (startXGrid < endXGrid) ? i + 1 : i - 1;
+			za[nexti] = (getIntersectionZ(start, dir, (nexti * GRIDSIZE) - shift.x) + shift.z) / GRIDSIZE;
+
+			int startZGrid = (za[i] < za[nexti]) ? MathHelper.roundDownToInt(za[i], 1) : MathHelper.roundUpToInt(za[i], 1);
+			int endZGrid = (za[i] < za[nexti]) ? MathHelper.roundUpToInt(za[nexti], 1) : MathHelper.roundDownToInt(za[nexti], 1);
+
+			if (startZGrid < 0) startZGrid = 0;
+			if (startZGrid > max.z) startZGrid = max.z;
+			if (endZGrid < 0) endZGrid = 0;
+			if (endZGrid > max.z) endZGrid = max.z;
+
+			for (int j = startZGrid; (startZGrid < endZGrid) ? (j < endZGrid) : (j > endZGrid); j += (startZGrid < endZGrid) ? 1 : -1) {
+				int ri = i;
+				int rj = j;
+				if (dir.getX() < 0) ri -= 1;
+				if (dir.getZ() < 0) rj -= 1;
+				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xff00ff);
+				positions.add(new Position(ri, rj));
+
+			}
 		}
 
-		// XY-Vergleiche
-		Vector2d dirXY = new Vector2d(dir.getX(), dir.getY());
-		Vector2d[] pointsXY = new Vector2d[normPoints.length];
-		for (int i = 0; i < normPoints.length; i++) {
-			pointsXY[i] = new Vector2d(normPoints[i].getX(), normPoints[i].getY());
-		}
-		boolean separatedXY = is2dSeparated(dirXY, pointsXY);
-
-		// XZ-Vergleiche
-		Vector2d dirXZ = new Vector2d(dir.getX(), dir.getZ());
-		Vector2d[] pointsXZ = new Vector2d[normPoints.length];
-		for (int i = 0; i < normPoints.length; i++) {
-			pointsXZ[i] = new Vector2d(normPoints[i].getX(), normPoints[i].getZ());
-		}
-		boolean separatedXZ = is2dSeparated(dirXZ, pointsXZ);
-
-		// YZ-Vergleiche
-		Vector2d dirYZ = new Vector2d(dir.getY(), dir.getZ());
-		Vector2d[] pointsYZ = new Vector2d[normPoints.length];
-		for (int i = 0; i < normPoints.length; i++) {
-			pointsYZ[i] = new Vector2d(normPoints[i].getY(), normPoints[i].getZ());
-		}
-		boolean separatedYZ = is2dSeparated(dirYZ, pointsYZ);
-
-		//if (!separatedXY || !separatedXZ || !separatedYZ) System.out.println("Separate-Test: "+separatedXY+"-"+separatedXZ+"-"+separatedYZ);
-		if (separatedXY || separatedXZ || separatedYZ)
-			return false;
-		return true;
-	}*/
+		return positions;
+	}
 
 	public ArrayList<Entity> getEntitiesInRay(Ray ray) {
 
-		Vector3d start = ray.getStart();
+		ArrayList<Position> positions = getGridPositionsInRay(ray);
+
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		for (int i = 0; i < positions.size(); i++) {
+			Position pos = positions.get(i);
+			for (int j = 0; j < grid[pos.x][pos.z].size(); j++) {
+				ids.add(grid[pos.x][pos.z].get(j));
+				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(pos.x * GRIDSIZE - shift.x, 0, pos.z * GRIDSIZE - shift.z), new Vector3d((pos.x + 1) * GRIDSIZE - shift.x, 10, (pos.z + 1) * GRIDSIZE - shift.z)), 0xffff00);
+			}
+		}
+
+		ArrayList<Entity> entities = new ArrayList<Entity>();
+		ArrayList<Double> distances = new ArrayList<Double>();
+		Vector3d intersection;
+		for (int i = 0; i < ids.size(); i++) {
+			Entity entity = game.world.entityList.entities.get(ids.get(i));
+			if (!entities.contains(entity)) {
+				intersection = getRayAABBIntersection(ray, entity.getAABB());
+				if (intersection != null) {
+					entities.add(entity);
+					double distance = Vector3d.subtract(ray.getStart(), intersection).getSquaredValue();
+					distances.add(distance);
+				}
+			}
+		}
+		
+		Entity[] entitiesA = (Entity[]) entities.toArray();
+		Vector3d[] intersectionsA = (Vector3d[]) distances.toArray();
+		
+		
+		
+		return entities;
+
+		/*Vector3d start = ray.getStart();
 		Vector3d dir = ray.getDirection();
 
 		// Schleifenanfang x-Richtung
@@ -389,20 +379,7 @@ public class CollisionComparer {
 					BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xffff00);
 				}
 				//}
-			}
-		}
-
-		ArrayList<Entity> entities = new ArrayList<Entity>();
-		for (int i = 0; i < ids.size(); i++) {
-			Entity entity = game.world.entityList.entities.get(ids.get(i));
-			if (!entities.contains(entity)) {
-				BoundingAABB aabb = entity.getAABB();
-				if (getRayAABBIntersection(ray, entity.getAABB()) != null) entities.add(entity);
-			}
-		}
-
-		//if (entities.size() > 0) System.out.println(entities.size());
-		return entities;
+			}*/
 
 	}
 

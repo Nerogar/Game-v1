@@ -90,6 +90,9 @@ public class GuiDebug extends Gui {
 	public void clickButton(int id, int mouseButton) {
 		if (id == resetCamButton.id && mouseButton == 0) {
 			game.world.camera = new Camera();
+			game.world.camera.scrollX = 1000000;
+			game.world.camera.scrollZ = -20000000;
+			game.world.camera.updatePostition();
 		}
 	}
 }

@@ -15,7 +15,6 @@ import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.physics.LineSegment;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.PhysicHelper;
 import de.nerogar.gameV1.physics.Plane;

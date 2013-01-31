@@ -7,6 +7,8 @@ public class Vector3d {
 	private double z = 0;
 	private double value = 0;
 	private boolean isValueDirty = true;
+	private double squaredValue;
+	private boolean isSquaredValueDirty;
 	
 	public Vector3d(double xn, double yn, double zn) {
 		set(xn, yn, zn);
@@ -140,9 +142,32 @@ public class Vector3d {
 		return this.value;
 	}
 	
+	public double getSquaredValue() {
+		if (isSquaredValueDirty()) recalculateSquaredValue();
+		return this.squaredValue;
+	}
+	
+	private boolean isSquaredValueDirty() {
+		return this.isSquaredValueDirty;
+	}
+
 	private void recalculateValue() {
-		setValue(Math.sqrt(x*x+y*y+z*z));
+		if (isSquaredValueDirty()) recalculateSquaredValue();
+		setValue(Math.sqrt(this.squaredValue));
 		this.setValueDirty(false);
+	}
+	
+	private void recalculateSquaredValue() {
+		setSquaredValue(x*x+y*y+z*z);
+		this.setSquaredValueDirty(false);
+	}
+
+	private void setSquaredValueDirty(boolean isSquaredValueDirty) {
+		this.isSquaredValueDirty = isSquaredValueDirty;
+	}
+
+	private void setSquaredValue(double squaredValue) {
+		this.squaredValue = squaredValue;
 	}
 
 	public Vector3d crossProduct(Vector3d v1) {
@@ -179,6 +204,7 @@ public class Vector3d {
 
 	public void setValueDirty(boolean isValueDirty) {
 		this.isValueDirty = isValueDirty;
+		if (isValueDirty == true) setSquaredValueDirty(true);
 	}
 	
 	public Vector3d normalize() {
@@ -192,7 +218,9 @@ public class Vector3d {
 	public Vector3d clone() {
 		Vector3d v2 = new Vector3d(this);
 		v2.setValueDirty(this.isValueDirty());
+		v2.setSquaredValueDirty(this.isSquaredValueDirty());
 		v2.setValue(this.getValue());
+		v2.setSquaredValue(this.getSquaredValue());
 		return v2;
 	}
 	
@@ -218,7 +246,6 @@ public class Vector3d {
 	}
 	
 	public String toString() {
-		//return "["+String.format("%.3g", Double.toString(this.getX()))+";"+String.format("%.3g", Double.toString(this.getY()))+";"+String.format("%.3g", Double.toString(this.getZ()))+"]";
 		return "("+Double.toString(this.getX())+","+Double.toString(this.getY())+","+Double.toString(this.getZ())+")";
 	}
 
