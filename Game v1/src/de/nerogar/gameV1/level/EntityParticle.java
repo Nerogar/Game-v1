@@ -9,8 +9,8 @@ public abstract class EntityParticle extends EntityPhysic {
 
 	private Vector3d standardAcceleration = new Vector3d(0, 0, 0);
 
-	public EntityParticle(Game game, ObjectMatrix matrix, float mass) {
-		super(game, matrix, "houses/cone", mass);
+	public EntityParticle(Game game, ObjectMatrix matrix, String objectName, float mass) {
+		super(game, matrix, objectName, mass);
 		texture = "houses/cone.png";/* Textur name */
 
 		standardAcceleration = new Vector3d(0, -GameOptions.instance.GRAVITY, 0);

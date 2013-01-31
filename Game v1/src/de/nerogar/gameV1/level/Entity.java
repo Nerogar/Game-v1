@@ -133,5 +133,6 @@ public abstract class Entity {
 		registerEntity(new EntityTree(game, objectMatrix));
 		registerEntity(new EntityHouse(game, objectMatrix));
 		registerEntity(new EntityShrine(game, objectMatrix));
+		registerEntity(new EntityTestparticle(game, objectMatrix));
 	}
 }

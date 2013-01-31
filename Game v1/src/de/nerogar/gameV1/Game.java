@@ -3,16 +3,20 @@ package de.nerogar.gameV1;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import java.util.ArrayList;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.level.Entity;
+import de.nerogar.gameV1.level.EntityPhysic;
+import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.LineSegment;
+import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.PhysicHelper;
 import de.nerogar.gameV1.physics.Plane;
 import de.nerogar.gameV1.physics.Line;
@@ -96,63 +100,19 @@ public class Game implements Runnable {
 		}
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
-
-			Vector3d sta1 = new Vector3d(13, -10, 0);
-			Vector3d dir1 = new Vector3d(1, 1, 3);
-			Vector3d sta2 = new Vector3d(12, -11, 0);
-			Vector3d dir2 = new Vector3d(2, 2, 2);
-			Ray l1 = new Ray(sta1, dir1);
-			LineSegment l2 = new LineSegment(sta2, dir2);
-
-			Vector3d intersection = PhysicHelper.getLineLineIntersection(l1, l2);
-			if (intersection == null) System.out.println("Kein Treffer!");
-			else System.out.println("Treffer: " + intersection.toString());
+			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
+			world.entityList.addEntity(entity);
 		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-
-			Vector3d p1 = new Vector3d(-0.57, -0.95, -1);
-			Vector3d p2 = new Vector3d(1.55, -0.73, -1);
-			Vector3d p3 = new Vector3d(1.55, -1.73, 1);
-			Vector3d p4 = new Vector3d(-0.57, -1.95, 1);
-			Vector3d[] points = new Vector3d[] { p1, p2, p3, p4 };
-			Line ray = new Line(new Vector3d(-0.35, 0.67, 0.14), new Vector3d(1.08, -2.31, 0.35));
-
-			Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, points);
-			if (intersection == null) System.out.println("Kein Treffer.");
-			else System.out.println("Treffer: " + intersection.toString());
-		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-
-			Vector3d p1 = new Vector3d(1, 1, 0);
-			Vector3d p2 = new Vector3d(-1, 1, 0);
-			Vector3d p3 = new Vector3d(-1, -1, 0);
-			Line ray = new Line(new Vector3d(0, 0, -1), new Vector3d(0, 0, 1));
-			Plane plane = new Plane(p1, p2, p3);
-
-			Vector3d intersection = PhysicHelper.getLinePlaneIntersection(ray, plane);
-			if (intersection == null) System.out.println("SCHEISSE!");
-			else System.out.println("GUT! " + intersection.toString());
-			System.out.println("NORMALVEKTOR: " + intersection.toString());
-		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) {
-
-			Vector3d p1 = new Vector3d(-0.57, -0.95, -1);
-			Vector3d p2 = new Vector3d(1.55, -0.73, -1);
-			Vector3d p3 = new Vector3d(1.55, -1.73, 1);
-			Vector3d p4 = new Vector3d(-0.57, -1.95, 1);
-			Vector3d[] points = new Vector3d[] { p1, p2, p3, p4 };
-			Line ray = new Line(new Vector3d(-0.35, 0.67, 0.14), new Vector3d(1.08, -2.31, 0.35));
-
-			long time1 = System.nanoTime();
-			for (int i = 0; i < 10000000; i++) {
-				CollisionComparer.getLinePolygonIntersection(ray, points);
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
+			ArrayList<Entity> entities = world.entityList.entities;
+			System.out.println(entities.size()+" entities gefunden.");
+			for (int i = 0; i < entities.size(); i++) {
+				if (entities.get(i) instanceof EntityPhysic) {
+					EntityPhysic entity = (EntityPhysic) entities.get(i);
+					entity.addForce(new Vector3d(0, 500, 0));
+				}
 			}
-			long time2 = System.nanoTime();
-			System.out.println("Elapsed time for given amount: " + String.valueOf((time2 - time1) / 1000000d));
-
 		}
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) {

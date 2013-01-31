@@ -10,7 +10,7 @@ public abstract class EntityBlock extends EntityParticle {
 	public boolean colliding = false;
 
 	public EntityBlock(Game game, ObjectMatrix matrix, float mass, float sca) {
-		super(game, matrix, mass);
+		super(game, matrix, "houses/cone", mass);
 
 		// Zu Debug-Zwecken eine vorläufige, festkodierte AABB
 		boundingBox = new BoundingAABB(new Vector3d(-4, 0, -4), new Vector3d(4, 8, 4));
