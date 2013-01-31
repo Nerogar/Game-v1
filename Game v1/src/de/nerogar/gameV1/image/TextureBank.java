@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -46,6 +47,10 @@ public class TextureBank {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void addTexture(String textureName, Texture texture){
+		
 	}
 
 	public Texture getTexture(String filename) {

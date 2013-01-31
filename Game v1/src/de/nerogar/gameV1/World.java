@@ -123,7 +123,7 @@ public class World {
 
 		RenderEngine.instance.setPerspective();
 
-		TextureBank.instance.getTexture("terrain/floor.png").bind();
+		TextureBank.instance.getTexture("terrain/water.png").bind();
 
 		glPushMatrix();
 

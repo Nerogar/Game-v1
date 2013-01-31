@@ -156,7 +156,7 @@ public class Land {
 
 	}
 
-	public void renderOverlay() {
+	public void renderOverlay() {//test cones
 		int xShift = (int) world.camera.scrollX;
 		int zShift = (int) world.camera.scrollZ;
 
