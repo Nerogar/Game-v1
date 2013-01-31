@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.physics.Ray;
 
 public class Land {
 	public ArrayList<Chunk> chunks;
@@ -123,7 +125,7 @@ public class Land {
 		chunks.get(chunkIndex).save();
 		chunks.get(chunkIndex).cleanup();
 		chunks.remove(chunkIndex);
-		game.world.collisionComparer.newGrid();
+		world.collisionComparer.newGrid();
 	}
 
 	private Position getChunkPosition(double x, double z) {
@@ -154,6 +156,10 @@ public class Land {
 			return 0;
 		}
 
+	}
+	
+	public Vector3d getFloorpointInSight(Ray ray) {
+		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray);
 	}
 
 	public void renderOverlay() {//test cones

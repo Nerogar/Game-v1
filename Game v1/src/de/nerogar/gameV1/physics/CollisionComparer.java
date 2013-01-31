@@ -172,6 +172,12 @@ public class CollisionComparer {
 			//System.out.println("Kein Kandidat!");
 			return null;
 		}
+		
+		//if(points.length == 3) {
+		//	Vector3d OV  = points[0];
+		//	Vector3d RV1 = Vector3d.subtract(points[2], OV);
+		//	Vector3d RV2 = Vector3d.subtract(points[1], OV);
+		//}
 
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
 		// Der Punkt soll weit weg liegen, damit die Rechnung genau bleibt
@@ -219,9 +225,62 @@ public class CollisionComparer {
 		return intersection;
 	}
 
-	public Vector3d getFloorIntersectionInRay(Ray ray) {
+	public Vector3d getNearestFloorIntersectionWithRay(Ray ray) {
 
 		Vector3d intersection = null;
+		ArrayList<Position> gridPositions = getGridPositionsInRay(ray);
+
+		Vector3d[][] polygons = new Vector3d[gridPositions.size() * GRIDSIZE * GRIDSIZE * 2][3];
+		int counter = 0;
+
+		for (Position pos : gridPositions) {
+
+			//System.out.println(shift.x + "," + shift.z);
+			int x = (pos.x * GRIDSIZE) + shift.x;
+			int z = (pos.z * GRIDSIZE) + shift.z;
+
+			double[][] heights = new double[GRIDSIZE + 1][GRIDSIZE + 1];
+			for (int i = 0; i <= GRIDSIZE; i++) {
+				for (int j = 0; j <= GRIDSIZE; j++) {
+					heights[i][j] = game.world.land.getHeight(x + i, z + j);
+					//System.out.println(x + "," + z);
+				}
+			}
+
+			for (int i = 0; i < GRIDSIZE; i++) {
+				for (int j = 0; j < GRIDSIZE; j++) {
+					polygons[counter][0] = new Vector3d(x + i, heights[i][j], z + j);
+					polygons[counter][1] = new Vector3d(x + i, heights[i][j + 1], z + j);
+					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
+					counter++;
+					polygons[counter][0] = new Vector3d(x + i, heights[i][j + 1], z + j);
+					polygons[counter][1] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
+					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j], z + j);
+					counter++;
+				}
+			}
+
+		}
+
+		Double distance = Double.MAX_VALUE;
+		Double newDistance;
+		Vector3d newIntersection = null;
+		Vector3d[] polygon;
+		int comparations = 0;
+		for (int i = 0; i < polygons.length; i++) {
+			polygon = polygons[i];
+			//System.out.println(polygon[0].toString());
+			newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
+			comparations++;
+			if (newIntersection != null) {
+				newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
+				if (newDistance < distance) {
+					intersection = newIntersection;
+					distance = newDistance;
+				}
+			}
+		}
+		System.out.println(comparations+" Vergleiche");
 
 		return intersection;
 
@@ -286,7 +345,7 @@ public class CollisionComparer {
 		return positions;
 	}
 
-	public ArrayList<Entity> getEntitiesInRay(Ray ray) {
+	public Entity[] getEntitiesInRay(Ray ray) {
 
 		ArrayList<Position> positions = getGridPositionsInRay(ray);
 
@@ -313,13 +372,29 @@ public class CollisionComparer {
 				}
 			}
 		}
-		
-		Entity[] entitiesA = (Entity[]) entities.toArray();
-		Vector3d[] intersectionsA = (Vector3d[]) distances.toArray();
-		
-		
-		
-		return entities;
+
+		Entity[] entitiesA = new Entity[entities.size()];
+		entities.toArray(entitiesA);
+		Double[] distancesA = new Double[distances.size()];
+		distances.toArray(distancesA);
+
+		// vorläufig bubble-sort!
+		for (int i = entitiesA.length - 1; i > 0; i--) {
+
+			for (int j = i; j > 0; j--) {
+				if (distancesA[j] < distancesA[j - 1]) {
+					Double helpD = distancesA[j];
+					distancesA[j] = distancesA[j - 1];
+					distancesA[j - 1] = helpD;
+					Entity helpE = entitiesA[j];
+					entitiesA[j] = entitiesA[j - 1];
+					entitiesA[j - 1] = helpE;
+				}
+			}
+
+		}
+
+		return entitiesA;
 
 		/*Vector3d start = ray.getStart();
 		Vector3d dir = ray.getDirection();

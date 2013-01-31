@@ -114,17 +114,6 @@ public class Game implements Runnable {
 			}
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) {
-
-			Ray ray = new Ray(new Vector3d(0, 0, 0), new Vector3d(0.1, 0.2, 0.3));
-			BoundingAABB aabb = new BoundingAABB(new Vector3d(-1, -1, -1), new Vector3d(1, 1, 1));
-
-			Vector3d intersection = CollisionComparer.getRayAABBIntersection(ray, aabb);
-			if (intersection == null) System.out.println("Kein Treffer!");
-			else System.out.println("Treffer: " + intersection.toString());
-
-		}
-
 		if (true) { //test bei sichtbarer plane
 
 			Vector3d p1 = new Vector3d(-2f, 5f, 0f);

@@ -99,7 +99,7 @@ public class World {
 
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
 		long time1 = System.nanoTime();
-		ArrayList<Entity> clickedEntities = entityList.getEntitiesInSight(sightRay);
+		Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
 		long time2 = System.nanoTime();
 		//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
 
@@ -107,11 +107,14 @@ public class World {
 			for (Entity entity : clickedEntities) {
 				entity.click(0);
 			}
-		}else if (InputHandler.isMouseButtonPressed(1)) {
+		} else if (InputHandler.isMouseButtonPressed(1)) {
 			for (Entity entity : clickedEntities) {
 				entity.click(1);
 			}
 		}
+
+		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+
 	}
 
 	public void render() {
@@ -123,7 +126,7 @@ public class World {
 
 		RenderEngine.instance.setPerspective();
 
-		TextureBank.instance.getTexture("terrain/water.png").bind();
+		TextureBank.instance.getTexture("terrain/floor.png").bind();
 
 		glPushMatrix();
 
@@ -137,6 +140,18 @@ public class World {
 
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
+
+		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		Vector3d floorIntersection = new Vector3d(10, 10, 10);
+		if (floorIntersection != null) {
+			glDisable(GL_TEXTURE_2D);
+			glBegin(GL_LINES);
+			glColor3f(1f, 0f, 0f);
+			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
+			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
+			glEnd();
+		}
 
 		glPopMatrix();
 	}

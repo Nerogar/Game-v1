@@ -37,7 +37,7 @@ public class EntityList {
 		}
 	}
 
-	public ArrayList<Entity> getEntitiesInSight(Ray ray) {
+	public Entity[] getEntitiesInSight(Ray ray) {
 		return collisionComparer.getEntitiesInRay(ray);
 	}
 
