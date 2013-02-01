@@ -43,7 +43,7 @@ public class World {
 		land.seed = worldData.seed;
 
 		camera.init();
-		land.laodAllAroundXZ(new Position((int) camera.scrollX, (int) camera.scrollZ));
+		land.loadAllAroundXZ(new Position((int) camera.scrollX, (int) camera.scrollZ));
 		isLoaded = true;
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
@@ -109,7 +109,7 @@ public class World {
 			}
 		}
 
-		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
 
 	}
 

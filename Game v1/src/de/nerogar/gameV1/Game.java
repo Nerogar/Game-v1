@@ -13,6 +13,7 @@ import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
+import de.nerogar.gameV1.level.Position;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class Game implements Runnable {
@@ -96,6 +97,11 @@ public class Game implements Runnable {
 		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
 			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
 			world.entityList.addEntity(entity);
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
+			Vector3d p = world.land.getHighestBetween(new Position(0,0), new Position(16,16));
+			System.out.println(p.toString());
 		}
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {

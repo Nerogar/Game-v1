@@ -7,6 +7,7 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBlock;
+import de.nerogar.gameV1.level.Land;
 import de.nerogar.gameV1.level.Position;
 
 public class CollisionComparer {
@@ -226,7 +227,7 @@ public class CollisionComparer {
 		return intersection;
 	}
 
-	public Vector3d getNearestFloorIntersectionWithRay(Ray ray) {
+	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, Land land) {
 
 		Vector3d intersection = null;
 		ArrayList<Position> gridPositions = getGridPositionsInRay(ray);
@@ -240,16 +241,37 @@ public class CollisionComparer {
 			int x = (pos.x * GRIDSIZE) + shift.x;
 			int z = (pos.z * GRIDSIZE) + shift.z;
 
+			// Wenn der höchste/niedrigste Punkt des Gridelements über dem niedrigsten/höchsten
+			// Punkt des Strahls liegt, wird dieses Grid übersprungen
+			Double minY = ray.getY(new Vector3d(x,0,z));
+			if (minY == null) minY = 0d;
+			Double maxY = ray.getY(new Vector3d(x+GRIDSIZE,0,z+GRIDSIZE));
+			if (maxY == null) maxY = Double.MAX_VALUE;
+			double minLandY = 0;
+			double maxLandY = land.getHighestBetween(new Position(x,z), new Position(x+GRIDSIZE , z+GRIDSIZE)).getY();
+			if (minY > maxLandY || maxY < minLandY) continue;
+			
 			double[][] heights = new double[GRIDSIZE + 1][GRIDSIZE + 1];
 			for (int i = 0; i <= GRIDSIZE; i++) {
 				for (int j = 0; j <= GRIDSIZE; j++) {
-					heights[i][j] = game.world.land.getHeight(x + i, z + j);
+					heights[i][j] = land.getHeight(x + i, z + j);
 					//System.out.println(x + "," + z);
 				}
 			}
 
-			for (int i = 0; i < GRIDSIZE; i++) {
-				for (int j = 0; j < GRIDSIZE; j++) {
+			double borderX1 = ray.getX(new Vector3d(0,0,z));
+			double borderX2 = ray.getX(new Vector3d(0,0,z+GRIDSIZE));
+			int minX = Math.max(0, (int) ((borderX1 < borderX2) ? Math.floor(borderX1) : Math.floor(borderX2)) - x);
+			int maxX = Math.min(GRIDSIZE-1, (int) ((borderX1 < borderX2) ? Math.ceil(borderX2) : Math.ceil(borderX1)) - x);
+			
+			for (int i = minX; i <= maxX+1; i++) {
+				
+				double borderZ1 = ray.getZ(new Vector3d(x,0,0));
+				double borderZ2 = ray.getZ(new Vector3d(x+GRIDSIZE,0,0));
+				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1) : Math.floor(borderZ2)) - z);
+				int maxZ = Math.min(GRIDSIZE-1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2) : Math.ceil(borderZ1)) - z);
+				
+				for (int j = minZ; j < maxZ; j++) {
 					polygons[counter][0] = new Vector3d(x + i, heights[i][j], z + j);
 					polygons[counter][1] = new Vector3d(x + i, heights[i][j + 1], z + j);
 					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
@@ -269,6 +291,8 @@ public class CollisionComparer {
 		Vector3d[] polygon;
 		int comparations = 0;
 		for (int i = 0; i < polygons.length; i++) {
+			// Das Array ist größer, als wirklich Daten drinne sind. Deshalb ab der ersten "null" aufhören
+			if (polygons[i][0] == null) break;
 			polygon = polygons[i];
 			//System.out.println(polygon[0].toString());
 			newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
