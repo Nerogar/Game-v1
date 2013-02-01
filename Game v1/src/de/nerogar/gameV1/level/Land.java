@@ -10,9 +10,12 @@ import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.image.SpriteSheet;
+import de.nerogar.gameV1.image.TextureBank;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Land {
+	private static SpriteSheet floorSprites;
 	public ArrayList<Chunk> chunks;
 	public long seed;
 	public String saveName;
@@ -157,7 +160,7 @@ public class Land {
 		}
 
 	}
-	
+
 	public Vector3d getFloorpointInSight(Ray ray) {
 		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray);
 	}
@@ -201,6 +204,7 @@ public class Land {
 	}
 
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
+		TextureBank.instance.bindTexture("floorTexture");
 
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk chunk = chunks.get(i);
@@ -214,5 +218,15 @@ public class Land {
 			}
 
 		}
+	}
+
+	static {
+		floorSprites = new SpriteSheet("floorTexture");
+		floorSprites.addTexture("terrain/floor.png");
+		floorSprites.addTexture("terrain/water.png");
+		floorSprites.addTexture("terrain/grass.png");
+		floorSprites.compile();
+		Chunk.floorSprites = floorSprites;
+
 	}
 }

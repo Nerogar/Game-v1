@@ -126,8 +126,6 @@ public class World {
 
 		RenderEngine.instance.setPerspective();
 
-		TextureBank.instance.getTexture("terrain/floor.png").bind();
-
 		glPushMatrix();
 
 		glRotatef(camera.rotationDown, 1.0f, 0.0f, 0.0f);//blick nach unten drehen

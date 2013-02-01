@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import org.lwjgl.BufferUtils;
 
 import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.image.SpriteSheet;
 
 public class Chunk {
+	public static SpriteSheet floorSprites;
 	public static final int CHUNKSIZE = 64;
 	public static final int GENERATESIZE = Chunk.CHUNKSIZE + 1;
 	public float[][] heightMap = new float[GENERATESIZE][GENERATESIZE];
@@ -62,6 +65,10 @@ public class Chunk {
 		float[] colors = new float[CHUNKSIZE * CHUNKSIZE * 4 * 3];
 		float[] texCoords = new float[CHUNKSIZE * CHUNKSIZE * 4 * 2];
 
+		Vector2d textPos1 = floorSprites.getTexturePosition1("terrain/floor.png");
+		Vector2d textPos2 = floorSprites.getTexturePosition2("terrain/floor.png");
+		System.out.println("position: " + textPos1.toString()+textPos2.toString());
+
 		for (int i = 0; i < CHUNKSIZE; i++) {
 			for (int j = 0; j < CHUNKSIZE; j++) {
 
@@ -71,8 +78,8 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = heightMap[i][j] / 5;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = 0f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = 0f;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = textPos1.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = textPos1.getYf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1;
@@ -80,8 +87,8 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = heightMap[i][j + 1] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = heightMap[i][j + 1] / 5;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = 1f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = 0f;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = textPos2.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = textPos1.getYf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1;
@@ -89,8 +96,8 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = heightMap[i + 1][j + 1] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = heightMap[i + 1][j + 1] / 5;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = 1f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = 1f;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = textPos2.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = textPos2.getYf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j;
@@ -98,8 +105,8 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = heightMap[i + 1][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 5;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = 0f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = 1f;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();
 
 				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
@@ -195,7 +202,7 @@ public class Chunk {
 			}
 
 			for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
-				Entity entity = Entity.getEntity(world.game,chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
+				Entity entity = Entity.getEntity(world.game, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
 				entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
 				//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
 				spawnEntity(entity);

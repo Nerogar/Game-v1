@@ -1,12 +1,9 @@
 package de.nerogar.gameV1.image;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +21,11 @@ public class SpriteSheet {
 	public String name;
 	public int id;
 	private ArrayList<String> textures = new ArrayList<String>();
-	private HashMap<String, Vector2d> TexturePositons = new HashMap<String, Vector2d>();
-	private HashMap<String, Vector2d> TextureSizes = new HashMap<String, Vector2d>();
+	private HashMap<String, Vector2d> TexturePositons1 = new HashMap<String, Vector2d>();
+	private HashMap<String, Vector2d> TexturePositons2 = new HashMap<String, Vector2d>();
 
-	public SpriteSheet() {
+	public SpriteSheet(String name) {
+		this.name = name;
 		/*int[] pixels = new int[64];
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = 0x00ff00;
@@ -56,7 +54,7 @@ public class SpriteSheet {
 
 	public void addTexture(String filename) {
 		for (String tempFilename : textures) {
-			if (tempFilename.equals(filename)) return;
+			if (tempFilename.equals("res/" + filename)) return;
 		}
 		textures.add(filename);
 	}
@@ -81,24 +79,56 @@ public class SpriteSheet {
 
 			for (int x = 0; x < images[i].getWidth(); x++) {
 				for (int y = 0; y < images[i].getHeight(); y++) {
-					pixels[((yOffset+y)*biggestImage)+x] = images[i].getRGB(x, y);
+					pixels[((yOffset + y) * biggestImage) + x] = images[i].getRGB(x, y);
 				}
 			}
-			yOffset+=images[i].getHeight();
+
+			TexturePositons1.put(textures.get(i), new Vector2d(0, (double) images[i].getHeight() / imageSizeSum + (double) yOffset / imageSizeSum));
+			TexturePositons2.put(textures.get(i), new Vector2d((double) images[i].getWidth() / biggestImage, (double) yOffset / imageSizeSum));
+			yOffset += images[i].getHeight();
 		}
-		
+
 		IntBuffer composedTextuer = BufferUtils.createIntBuffer(imageSizeSum * biggestImage);
 		composedTextuer.put(pixels);
 		composedTextuer.rewind();
-		
-		/*BufferedImage image = new BufferedImage(biggestImage, imageSizeSum, BufferedImage.TYPE_INT_RGB);
-		image.setRGB(0, 0, biggestImage, imageSizeSum, pixels, 0, biggestImage);
-		try {
-			FileOutputStream out = new FileOutputStream("res/terrain/TestDump.png");
-			ImageIO.write(image, "PNG", out);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
+
+		////////////////////////////////
+
+		glEnable(GL_TEXTURE_2D);
+
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		glGenTextures(buffer);
+		int id = buffer.get(0);
+
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, biggestImage, imageSizeSum, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, composedTextuer);
+
+		TextureBank.instance.addTexture(name, id);
+
+		//debug Dump
+		boolean dumpTexture = false;
+		if (dumpTexture) {
+			BufferedImage image = new BufferedImage(biggestImage, imageSizeSum, BufferedImage.TYPE_INT_RGB);
+
+			image.setRGB(0, 0, biggestImage, imageSizeSum, pixels, 0, biggestImage);
+			try {
+				FileOutputStream out = new FileOutputStream("res/terrain/TestDump.png");
+				ImageIO.write(image, "PNG", out);
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public Vector2d getTexturePosition1(String textureName) {
+		return TexturePositons1.get(textureName);
+	}
+
+	public Vector2d getTexturePosition2(String textureName) {
+		return TexturePositons2.get(textureName);
 	}
 }
