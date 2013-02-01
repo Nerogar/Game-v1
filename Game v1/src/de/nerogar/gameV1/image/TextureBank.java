@@ -1,13 +1,11 @@
 package de.nerogar.gameV1.image;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 

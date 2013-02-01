@@ -1,16 +1,12 @@
 package de.nerogar.gameV1;
 
 import static org.lwjgl.opengl.GL11.*;
-
-import java.util.ArrayList;
-
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
-import de.nerogar.gameV1.image.TextureBank;
 
 public class World {
 	public EntityList entityList;
@@ -98,9 +94,9 @@ public class World {
 		System.out.println(vTest.getValue());*/
 
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		long time1 = System.nanoTime();
+		//long time1 = System.nanoTime();
 		Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
-		long time2 = System.nanoTime();
+		//long time2 = System.nanoTime();
 		//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
 
 		if (InputHandler.isMouseButtonPressed(0)) {
@@ -139,7 +135,7 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 
-		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		//Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
 		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
 		Vector3d floorIntersection = new Vector3d(10, 10, 10);
 		if (floorIntersection != null) {

@@ -10,17 +10,10 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.gui.*;
-import de.nerogar.gameV1.image.SpriteSheet;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
-import de.nerogar.gameV1.physics.BoundingAABB;
-import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.ObjectMatrix;
-import de.nerogar.gameV1.physics.PhysicHelper;
-import de.nerogar.gameV1.physics.Plane;
-import de.nerogar.gameV1.physics.Line;
-import de.nerogar.gameV1.physics.Ray;
 
 public class Game implements Runnable {
 	public boolean running = true;
@@ -116,7 +109,7 @@ public class Game implements Runnable {
 			}
 		}
 
-		if (true) { //test bei sichtbarer plane
+		/*if (true) { //test bei sichtbarer plane
 
 			Vector3d p1 = new Vector3d(-2f, 5f, 0f);
 			Vector3d p2 = new Vector3d(2f, 5f, 0f);
@@ -128,16 +121,16 @@ public class Game implements Runnable {
 			Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
 			Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
 
-			/*if (intersection == null) {
+			if (intersection == null) {
 				System.out.println("kein Schnittpunkt!");
 			} else {
 				System.out.println("Schnittpunkt bei: " + intersection.toString());
 			}
 			if (intersectionC != null) {
 				System.out.println("---" + intersectionC.toString());
-			}*/
+			}
 
-		}
+		}*/
 
 		//update game logics
 		Timer.instance.update();
