@@ -125,7 +125,7 @@ public class World {
 		RenderHelper.renderDefaultWorldBackground();
 
 		RenderEngine.instance.setPerspective();
-		
+
 		glPushMatrix();
 
 		glRotatef(camera.rotationDown, 1.0f, 0.0f, 0.0f);//blick nach unten drehen
@@ -146,7 +146,7 @@ public class World {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			glColor3f(1f, 0f, 0f);
-			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 10, floorIntersection.getZf());
+			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
 			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
 			glEnd();
 		}

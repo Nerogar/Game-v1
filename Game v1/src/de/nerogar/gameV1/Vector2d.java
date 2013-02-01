@@ -10,6 +10,12 @@ public class Vector2d {
 		this.y = y;
 	}
 	
+	public double getX() { return this.x; }
+	public double getY() { return this.y; }
+
+	public float getXf() { return (float) this.getX(); }
+	public float getYf() { return (float) this.getY(); }
+	
 	public Vector2d normalize() {
 		double value = getValue();
 		this.x /= value;
@@ -36,4 +42,7 @@ public class Vector2d {
 		return v1.x*v2.x + v1.y*v2.y;
 	}
 	
+	public String toString() {
+		return "("+Double.toString(this.getX())+","+Double.toString(this.getY())+")";
+	}
 }

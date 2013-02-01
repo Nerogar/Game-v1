@@ -39,11 +39,6 @@ public class Game implements Runnable {
 		this.game = this;
 
 		try {
-			SpriteSheet sheet = new SpriteSheet();
-			sheet.addTexture("terrain/floor.png");
-			sheet.addTexture("terrain/water.png");
-			sheet.addTexture("terrain/grass.png");
-			sheet.compile();
 
 			init();
 			Timer.instance.registerEvent("gc", 10);
