@@ -259,19 +259,30 @@ public class CollisionComparer {
 				}
 			}
 
-			double borderX1 = ray.getX(new Vector3d(0,0,z));
-			double borderX2 = ray.getX(new Vector3d(0,0,z+GRIDSIZE));
-			int minX = Math.max(0, (int) ((borderX1 < borderX2) ? Math.floor(borderX1) : Math.floor(borderX2)) - x);
-			int maxX = Math.min(GRIDSIZE-1, (int) ((borderX1 < borderX2) ? Math.ceil(borderX2) : Math.ceil(borderX1)) - x);
+			Double borderX1 = ray.getX(new Vector3d(0,0,z));
+			if (borderX1 == null) borderX1 = 0d;
+			Double borderX2 = ray.getX(new Vector3d(0,0,z+GRIDSIZE));
+			if (borderX2 == null) borderX1 = (double)GRIDSIZE;
+			int minX = Math.max(0, (int) ((borderX1 < borderX2) ? Math.floor(borderX1-x) : Math.floor(borderX2-x)));
+			minX = Math.min(GRIDSIZE-1, minX);
+			int maxX = Math.min(GRIDSIZE-1, (int) ((borderX1 < borderX2) ? Math.ceil(borderX2-x) : Math.ceil(borderX1-x)));
+			maxX = Math.max(0, minX);
+
+			System.out.println("X: "+minX+" bis "+maxX);
 			
-			for (int i = minX; i <= maxX+1; i++) {
+			for (int i = minX; i <= maxX; i++) {
 				
-				double borderZ1 = ray.getZ(new Vector3d(x,0,0));
-				double borderZ2 = ray.getZ(new Vector3d(x+GRIDSIZE,0,0));
-				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1) : Math.floor(borderZ2)) - z);
-				int maxZ = Math.min(GRIDSIZE-1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2) : Math.ceil(borderZ1)) - z);
+				Double borderZ1 = ray.getZ(new Vector3d(x,0,0));
+				if (borderZ1 == null) borderZ1 = 0d;
+				Double borderZ2 = ray.getZ(new Vector3d(x+GRIDSIZE,0,0));
+				if (borderZ2 == null) borderZ2 = (double)GRIDSIZE;
 				
-				for (int j = minZ; j < maxZ; j++) {
+				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1-z) : Math.floor(borderZ2-z)));
+				minZ = Math.min(GRIDSIZE-1, minZ);
+				int maxZ = Math.min(GRIDSIZE-1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2-z) : Math.ceil(borderZ1-z)));
+				maxZ = Math.max(0, minZ);
+				
+				for (int j = minZ; j <= maxZ; j++) {
 					polygons[counter][0] = new Vector3d(x + i, heights[i][j], z + j);
 					polygons[counter][1] = new Vector3d(x + i, heights[i][j + 1], z + j);
 					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
