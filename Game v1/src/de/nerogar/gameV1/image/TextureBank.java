@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -13,11 +15,13 @@ public class TextureBank {
 	//private ArrayList<Texture> textures;
 	//private ArrayList<String> textureNames;
 	private HashMap<String, Texture> textures;
+	private HashMap<String, Integer> TextureIDs;
 
 	public static TextureBank instance = new TextureBank();
 
 	public TextureBank() {
 		textures = new HashMap<String, Texture>();
+		TextureIDs = new HashMap<String, Integer>();
 	}
 
 	public void loadTexture(String filename) {
@@ -39,20 +43,26 @@ public class TextureBank {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}*/
-			
+
 			try {
-				Texture newTexture = TextureLoader.getTexture("PNG", new FileInputStream(new File("res/" + filename)));
+				FileInputStream in = new FileInputStream("res/" + filename);
+				Texture newTexture = TextureLoader.getTexture("PNG", in);
 				textures.put(filename, newTexture);
+				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	public void addTexture(String textureName, Texture texture){
-		
+
+	public void addTexture(String textureName, int id) {
+		TextureIDs.put(textureName, id);
 	}
 
+	public void bindTexture(String textureName){
+		 glBindTexture(GL_TEXTURE_2D, TextureIDs.get(textureName));
+	}
+	
 	public Texture getTexture(String filename) {
 
 		Texture retTexture = textures.get(filename);

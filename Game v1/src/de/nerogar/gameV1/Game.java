@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.gui.*;
+import de.nerogar.gameV1.image.SpriteSheet;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
@@ -38,6 +39,12 @@ public class Game implements Runnable {
 		this.game = this;
 
 		try {
+			SpriteSheet sheet = new SpriteSheet();
+			sheet.addTexture("terrain/floor.png");
+			sheet.addTexture("terrain/water.png");
+			sheet.addTexture("terrain/grass.png");
+			sheet.compile();
+
 			init();
 			Timer.instance.registerEvent("gc", 10);
 
@@ -102,10 +109,10 @@ public class Game implements Runnable {
 			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
 			world.entityList.addEntity(entity);
 		}
-		
+
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = world.entityList.entities;
-			System.out.println(entities.size()+" entities gefunden.");
+			System.out.println(entities.size() + " entities gefunden.");
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof EntityPhysic) {
 					EntityPhysic entity = (EntityPhysic) entities.get(i);
