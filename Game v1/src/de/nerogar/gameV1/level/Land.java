@@ -133,10 +133,10 @@ public class Land {
 
 	private Position getChunkPosition(double x, double z) {
 
-		double chPosX = MathHelper.divDownToInt(x, Chunk.CHUNKSIZE);
-		double chPosZ = MathHelper.divDownToInt(z, Chunk.CHUNKSIZE);
+		int chPosX = MathHelper.divDownToInt(x, Chunk.CHUNKSIZE);
+		int chPosZ = MathHelper.divDownToInt(z, Chunk.CHUNKSIZE);
 
-		return new Position((int) chPosX, (int) chPosZ);
+		return new Position(chPosX, chPosZ);
 	}
 
 	private Position getChunkPosition(Position blockPosition) {
@@ -148,8 +148,11 @@ public class Land {
 		return chunkPosition;
 	}
 
-	public float getHeight(double x, double z) {
+	private boolean isInChunk(Position blockPosition, Chunk chunk) {
+		return (blockPosition.x / Chunk.CHUNKSIZE) == chunk.chunkPosition.x && (int) (blockPosition.z / Chunk.CHUNKSIZE) == chunk.chunkPosition.z;
+	}
 
+	public float getHeight(double x, double z) {
 		Position chunkPosition = getChunkPosition(x, z);
 		Chunk chunk = getChunk(chunkPosition);
 
@@ -158,7 +161,61 @@ public class Land {
 		} else {
 			return 0;
 		}
+	}
 
+	public Vector3d getHighestBetween(Position pos1, Position pos2) {
+		Position chunkPos1Temp = getChunkPosition(pos1);
+		Position chunkPos2Temp = getChunkPosition(pos2);
+		Position chunkPos1 = new Position(0, 0);
+		Position chunkPos2 = new Position(0, 0);
+		Vector3d highest = new Vector3d(0, 0, 0);
+		int heightestValue = 0;
+
+		if (chunkPos1Temp.x < chunkPos2Temp.x) {
+			chunkPos1.x = chunkPos1Temp.x;
+			chunkPos2.x = chunkPos2Temp.x;
+		} else {
+			chunkPos1.x = chunkPos2Temp.x;
+			chunkPos2.x = chunkPos1Temp.x;
+		}
+
+		if (chunkPos1Temp.z < chunkPos2Temp.z) {
+			chunkPos1.z = chunkPos1Temp.z;
+			chunkPos2.z = chunkPos2Temp.z;
+		} else {
+			chunkPos1.z = chunkPos2Temp.z;
+			chunkPos2.z = chunkPos1Temp.z;
+		}
+
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk chunk = chunks.get(i);
+			if (chunk.chunkPosition.x >= chunkPos1.x && chunk.chunkPosition.x <= chunkPos2.x) {
+				if (chunk.chunkPosition.z >= chunkPos1.z && chunk.chunkPosition.z <= chunkPos2.z) {
+					//MathHelper.modToInt(x, Chunk.CHUNKSIZE), MathHelper.modToInt(z, Chunk.CHUNKSIZE)
+					int x0 = (int) MathHelper.modToInt(chunkPos1.x, Chunk.CHUNKSIZE);
+					int x1 = (int) MathHelper.modToInt(chunkPos2.x, Chunk.CHUNKSIZE);
+					int z0 = (int) MathHelper.modToInt(chunkPos1.z, Chunk.CHUNKSIZE);
+					int z1 = (int) MathHelper.modToInt(chunkPos2.z, Chunk.CHUNKSIZE);
+					if (!isInChunk(pos1, chunk)) {
+						x0 = 0;
+						z0 = 0;
+					}
+					if (!isInChunk(pos2, chunk)) {
+						x1 = Chunk.CHUNKSIZE;
+						z1 = Chunk.CHUNKSIZE;
+					}
+					for (int x = x0; x < x1; x++) {
+						for (int z = z0; z < z1; z++) {
+							double posHeight = chunk.getLocalHeight(x, z);
+							if (posHeight > heightestValue) {
+								highest = new Vector3d(x, posHeight, z);
+							}
+						}
+					}
+				}
+			}
+		}
+		return highest;
 	}
 
 	public Vector3d getFloorpointInSight(Ray ray) {
@@ -216,7 +273,6 @@ public class Land {
 					glPopMatrix();
 				}
 			}
-
 		}
 	}
 
