@@ -249,8 +249,9 @@ public class CollisionComparer {
 			if (maxY == null) maxY = Double.MAX_VALUE;
 			double minLandY = 0;
 			double maxLandY = land.getHighestBetween(new Position(x,z), new Position(x+GRIDSIZE , z+GRIDSIZE)).getY();
-			if (minY > maxLandY || maxY < minLandY) continue;
+			System.out.println(new Position(x,z).toString()+"   ---   "+new Position(x+GRIDSIZE , z+GRIDSIZE).toString());
 			
+			if (minY > maxLandY || maxY < minLandY) continue;
 			double[][] heights = new double[GRIDSIZE + 1][GRIDSIZE + 1];
 			for (int i = 0; i <= GRIDSIZE; i++) {
 				for (int j = 0; j <= GRIDSIZE; j++) {
@@ -282,7 +283,6 @@ public class CollisionComparer {
 					counter++;
 				}
 			}
-
 		}
 
 		Double distance = Double.MAX_VALUE;
@@ -305,10 +305,9 @@ public class CollisionComparer {
 				}
 			}
 		}
-		System.out.println(comparations+" Vergleiche");
+		//System.out.println(comparations+" Vergleiche");
 
 		return intersection;
-
 	}
 
 	public ArrayList<Position> getGridPositionsInRay(Ray ray) {
