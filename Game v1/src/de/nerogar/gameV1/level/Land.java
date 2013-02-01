@@ -95,7 +95,7 @@ public class Land {
 		game.world.collisionComparer.newGrid();
 	}
 
-	public void laodAllAroundXZ(Position blockPosition) {
+	public void loadAllAroundXZ(Position blockPosition) {
 		while (loadChunksAroundXZ(blockPosition)) {
 
 		}
@@ -219,7 +219,7 @@ public class Land {
 	}
 
 	public Vector3d getFloorpointInSight(Ray ray) {
-		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray);
+		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray, this);
 	}
 
 	public void renderOverlay() {//test cones
