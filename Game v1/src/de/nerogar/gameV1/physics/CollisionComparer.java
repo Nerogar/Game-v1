@@ -173,6 +173,7 @@ public class CollisionComparer {
 			return null;
 		}
 		
+		
 		//if(points.length == 3) {
 		//	Vector3d OV  = points[0];
 		//	Vector3d RV1 = Vector3d.subtract(points[2], OV);
