@@ -67,7 +67,6 @@ public class Chunk {
 
 		Vector2d textPos1 = floorSprites.getTexturePosition1("terrain/floor.png");
 		Vector2d textPos2 = floorSprites.getTexturePosition2("terrain/floor.png");
-		System.out.println("position: " + textPos1.toString()+textPos2.toString());
 
 		for (int i = 0; i < CHUNKSIZE; i++) {
 			for (int j = 0; j < CHUNKSIZE; j++) {
