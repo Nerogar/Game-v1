@@ -240,13 +240,17 @@ public class CollisionComparer {
 
 	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
 
-		int minLoadX = world.loadPosition.x - world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE;
-		int maxLoadX = world.loadPosition.x + world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE + 1;
-		int minLoadZ = world.loadPosition.z - world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE;
-		int maxLoadZ = world.loadPosition.z + world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE + 1;
+		int minLoadX = world.loadPosition.x - (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE;
+		int maxLoadX = world.loadPosition.x + (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE + 1;
+		int minLoadZ = world.loadPosition.z - (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE;
+		int maxLoadZ = world.loadPosition.z + (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE + 1;
+		minLoadX -= minLoadX % Chunk.CHUNKSIZE;
+		maxLoadX -= maxLoadX % Chunk.CHUNKSIZE;
+		minLoadZ -= minLoadZ % Chunk.CHUNKSIZE;
+		maxLoadZ -= maxLoadZ % Chunk.CHUNKSIZE;
 
 		int minX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() : ray.getStart().getX() - MAX_DISTANCE);
-		int maxX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() + MAX_DISTANCE : ray.getStart().getX()) + 1;
+		int maxX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() + MAX_DISTANCE : ray.getStart().getX());
 		minX = Math.min(maxLoadX, minX);
 		minX = Math.max(minLoadX, minX);
 		maxX = Math.min(maxLoadX, maxX);
@@ -254,25 +258,31 @@ public class CollisionComparer {
 
 		Double lastZ = ray.getZ(new Vector3d(minX, 0, 0));
 		if (lastZ == null) lastZ = 0d;
+		lastZ = Math.max(ray.getStart().getZ()-MAX_DISTANCE, lastZ);
+		lastZ = Math.min(ray.getStart().getZ()+MAX_DISTANCE, lastZ);
+		
 		Double rayYmin, rayYmax, thisZ, spotYmin, spotYmax;
 		int minZ, maxZ;
 
 		ArrayList<Position> positions = new ArrayList<Position>();
 		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
 
-		System.out.println("x-Iteration: " + minX + " - " + maxX);
+		//System.out.println("x-Iteration: " + minX + " - " + maxX);
 
 		for (int i = minX; i <= maxX; i++) {
 			thisZ = ray.getZ(new Vector3d(i + 1, 0, 0));
 			if (thisZ == null) thisZ = lastZ;
+			thisZ = Math.max(ray.getStart().getZ()-MAX_DISTANCE, thisZ);
+			thisZ = Math.min(ray.getStart().getZ()+MAX_DISTANCE, thisZ);
+			
 			minZ = (lastZ < thisZ) ? lastZ.intValue() : thisZ.intValue();
-			maxZ = ((lastZ < thisZ) ? thisZ.intValue() : lastZ.intValue()) + 1;
+			maxZ = ((lastZ < thisZ) ? thisZ.intValue() : lastZ.intValue());
 			minZ = Math.min(maxLoadZ, minZ);
 			minZ = Math.max(minLoadZ, minZ);
 			maxZ = Math.min(maxLoadZ, maxZ);
 			maxZ = Math.max(minLoadZ, maxZ);
 
-			System.out.println("z-Iteration: " + minZ + " - " + maxZ);
+			//System.out.println("z-Iteration: " + minZ + " - " + maxZ);
 			for (int j = minZ; j <= maxZ; j++) {
 				Position pos = new Position(i, j);
 				Position posX = new Position(i + 1, j);
@@ -327,7 +337,7 @@ public class CollisionComparer {
 
 		}
 
-		System.out.println(comparations + " Bodenvergleiche");
+		//System.out.println(comparations + " Bodenvergleiche");
 
 		return intersection;
 

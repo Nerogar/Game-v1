@@ -137,12 +137,12 @@ public class World {
 
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
 		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
-		System.out.println(floorIntersection);
+		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
 		if (floorIntersection != null) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
-			glColor3f(1f, 0f, 0f);
+			glColor3f(1f, 1f, 1f);
 			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
 			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
 			glEnd();
