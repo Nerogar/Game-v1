@@ -14,7 +14,7 @@ public class World {
 	public boolean isLoaded = false;
 	public Land land;
 	public Camera camera = new Camera();
-	private Position loadPosition;
+	public Position loadPosition;
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
 	public Game game;
 	public CollisionComparer collisionComparer;
@@ -109,7 +109,7 @@ public class World {
 			}
 		}
 
-		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
 
 	}
 
@@ -135,9 +135,10 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 
-		//Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
-		Vector3d floorIntersection = new Vector3d(10, 10, 10);
+		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		System.out.println(floorIntersection);
+		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
 		if (floorIntersection != null) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);

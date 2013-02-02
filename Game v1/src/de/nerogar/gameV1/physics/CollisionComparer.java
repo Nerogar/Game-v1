@@ -1,9 +1,20 @@
 package de.nerogar.gameV1.physics;
 
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnd;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBlock;
@@ -20,6 +31,7 @@ public class CollisionComparer {
 	private Position max = new Position(0, 0);
 
 	private final int GRIDSIZE = 16;
+	private final int MAX_DISTANCE = 128;
 
 	public int comparations = 0;
 
@@ -173,8 +185,7 @@ public class CollisionComparer {
 			//System.out.println("Kein Kandidat!");
 			return null;
 		}
-		
-		
+
 		//if(points.length == 3) {
 		//	Vector3d OV  = points[0];
 		//	Vector3d RV1 = Vector3d.subtract(points[2], OV);
@@ -227,7 +238,112 @@ public class CollisionComparer {
 		return intersection;
 	}
 
-	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, Land land) {
+	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
+
+		int minLoadX = world.loadPosition.x - world.land.maxChunkLoadDistance;
+		int maxLoadX = world.loadPosition.x + world.land.maxChunkLoadDistance + 1;
+		int minLoadZ = world.loadPosition.z - world.land.maxChunkLoadDistance;
+		int maxLoadZ = world.loadPosition.z + world.land.maxChunkLoadDistance + 1;
+
+		int minX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() : ray.getStart().getX() - MAX_DISTANCE);
+		int maxX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() + MAX_DISTANCE : ray.getStart().getX()) + 1;
+		minX = Math.min(maxLoadX, minX);
+		minX = Math.max(minLoadX, minX);
+		maxX = Math.min(maxLoadX, maxX);
+		maxX = Math.max(minLoadX, maxX);
+
+		Double lastZ = ray.getZ(new Vector3d(minX, 0, 0));
+		if (lastZ == null) lastZ = 0d;
+		Double rayYmin, rayYmax, thisZ, spotYmin, spotYmax;
+		int minZ, maxZ;
+
+		ArrayList<Position> positions = new ArrayList<Position>();
+		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
+
+		System.out.println("x-Iteration: " + minX + " - " + maxX);
+
+		for (int i = minX; i <= maxX; i++) {
+			thisZ = ray.getZ(new Vector3d(i + 1, 0, 0));
+			if (thisZ == null) thisZ = lastZ;
+			minZ = (lastZ < thisZ) ? lastZ.intValue() : thisZ.intValue();
+			maxZ = ((lastZ < thisZ) ? thisZ.intValue() : lastZ.intValue()) + 1;
+			minZ = Math.min(maxLoadZ, minZ);
+			minZ = Math.max(minLoadZ, minZ);
+			maxZ = Math.min(maxLoadZ, maxZ);
+			maxZ = Math.max(minLoadZ, maxZ);
+
+			System.out.println("z-Iteration: " + minZ + " - " + maxZ);
+			for (int j = minZ; j <= maxZ; j++) {
+				Position pos = new Position(i, j);
+				Position posX = new Position(i + 1, j);
+				Position posZ = new Position(i, j + 1);
+				Position posXZ = new Position(i + 1, j + 1);
+				if (!heightMap.containsKey(pos)) heightMap.put(pos, (double) world.land.getHeight(pos));
+				if (!heightMap.containsKey(posX)) heightMap.put(posX, (double) world.land.getHeight(posX));
+				if (!heightMap.containsKey(posZ)) heightMap.put(posZ, (double) world.land.getHeight(posZ));
+				if (!heightMap.containsKey(posXZ)) heightMap.put(posXZ, (double) world.land.getHeight(posXZ));
+				rayYmin = (ray.getDirection().getY() > 0) ? ray.getY(new Vector3d(i, 0, j)) : ray.getY(new Vector3d(i + 1, 0, j + 1));
+				rayYmax = (ray.getDirection().getY() > 0) ? ray.getY(new Vector3d(i + 1, 0, j + 1)) : ray.getY(new Vector3d(i, 0, j));
+				spotYmin = MathHelper.getLowest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
+				spotYmax = MathHelper.getHightest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
+				if (rayYmin == null) rayYmin = 0d;
+				if (rayYmax == null) rayYmax = 0d;
+				if (spotYmin == null) spotYmin = 0d;
+				if (spotYmax == null) spotYmax = 0d;
+
+				if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
+				positions.add(pos);
+			}
+			lastZ = thisZ;
+		}
+
+		Double distance = Double.MAX_VALUE;
+		Double newDistance;
+		Vector3d newIntersection = null, intersection = null;
+		int comparations = 0;
+		for (Position pos : positions) {
+
+			Vector3d[][] polygons = new Vector3d[2][3];
+			polygons[0][0] = new Vector3d(pos.x, heightMap.get(pos), pos.z);
+			polygons[0][1] = new Vector3d(pos.x, heightMap.get(new Position(pos.x, pos.z + 1)), pos.z + 1);
+			polygons[0][2] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z + 1)), pos.z + 1);
+			polygons[1][0] = new Vector3d(pos.x, heightMap.get(pos), pos.z);
+			polygons[1][1] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z)), pos.z);
+			polygons[1][2] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z + 1)), pos.z + 1);
+
+			for (Vector3d[] polygon : polygons) {
+
+				newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
+				drawTriangle(polygon[0], polygon[1], polygon[2]);
+				comparations++;
+				if (newIntersection != null) {
+					newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
+					if (newDistance < distance) {
+						intersection = newIntersection;
+						distance = newDistance;
+					}
+				}
+			}
+
+		}
+
+		System.out.println(comparations + " Bodenvergleiche");
+
+		return intersection;
+
+	}
+
+	private void drawTriangle(Vector3d a, Vector3d b, Vector3d c) {
+		glDisable(GL_TEXTURE_2D);
+		glBegin(GL_TRIANGLES);
+		glColor3f(1f, 0f, 0f);
+		glVertex3f(a.getXf(), a.getYf() + .01f, a.getZf());
+		glVertex3f(b.getXf(), b.getYf() + .01f, b.getZf());
+		glVertex3f(c.getXf(), c.getYf() + .01f, c.getZf());
+		glEnd();
+	}
+
+	public Vector3d getNearestFloorIntersectionWithRay2(Ray ray, Land land) {
 
 		Vector3d intersection = null;
 		ArrayList<Position> gridPositions = getGridPositionsInRay(ray);
@@ -238,19 +354,20 @@ public class CollisionComparer {
 		for (Position pos : gridPositions) {
 
 			//System.out.println(shift.x + "," + shift.z);
-			int x = (pos.x * GRIDSIZE) + shift.x;
-			int z = (pos.z * GRIDSIZE) + shift.z;
+			int x = (pos.x * GRIDSIZE) - shift.x;
+			int z = (pos.z * GRIDSIZE) - shift.z;
 
+			//System.out.println("SHIFT: "+shift.x+" "+shift.z);
 			// Wenn der höchste/niedrigste Punkt des Gridelements über dem niedrigsten/höchsten
 			// Punkt des Strahls liegt, wird dieses Grid übersprungen
-			Double minY = ray.getY(new Vector3d(x,0,z));
+			Double minY = ray.getY(new Vector3d(x, 0, z));
 			if (minY == null) minY = 0d;
-			Double maxY = ray.getY(new Vector3d(x+GRIDSIZE,0,z+GRIDSIZE));
+			Double maxY = ray.getY(new Vector3d(x + GRIDSIZE, 0, z + GRIDSIZE));
 			if (maxY == null) maxY = Double.MAX_VALUE;
 			double minLandY = 0;
-			double maxLandY = land.getHighestBetween(new Position(x,z), new Position(x+GRIDSIZE , z+GRIDSIZE)).getY();
-			System.out.println(new Position(x,z).toString()+"   ---   "+new Position(x+GRIDSIZE , z+GRIDSIZE).toString());
-			
+			double maxLandY = land.getHighestBetween(new Position(x, z), new Position(x + GRIDSIZE, z + GRIDSIZE)).getY();
+			//System.out.println(new Position(x,z).toString()+"   ---   "+new Position(x+GRIDSIZE , z+GRIDSIZE).toString());
+
 			if (minY > maxLandY || maxY < minLandY) continue;
 			double[][] heights = new double[GRIDSIZE + 1][GRIDSIZE + 1];
 			for (int i = 0; i <= GRIDSIZE; i++) {
@@ -260,29 +377,34 @@ public class CollisionComparer {
 				}
 			}
 
-			Double borderX1 = ray.getX(new Vector3d(0,0,z));
+			Double borderX1 = ray.getX(new Vector3d(0, 0, z));
 			if (borderX1 == null) borderX1 = 0d;
-			Double borderX2 = ray.getX(new Vector3d(0,0,z+GRIDSIZE));
-			if (borderX2 == null) borderX1 = (double)GRIDSIZE;
-			int minX = Math.max(0, (int) ((borderX1 < borderX2) ? Math.floor(borderX1-x) : Math.floor(borderX2-x)));
-			minX = Math.min(GRIDSIZE-1, minX);
-			int maxX = Math.min(GRIDSIZE-1, (int) ((borderX1 < borderX2) ? Math.ceil(borderX2-x) : Math.ceil(borderX1-x)));
+			Double borderX2 = ray.getX(new Vector3d(0, 0, z + GRIDSIZE));
+			if (borderX2 == null) borderX2 = (double) GRIDSIZE;
+			int minX = (int) ((borderX1 < borderX2) ? Math.floor(borderX1) : Math.floor(borderX2)) - x;
+			int maxX = (int) ((borderX1 < borderX2) ? Math.ceil(borderX2) : Math.ceil(borderX1)) - x;
+			System.out.println("min/max: " + minX + ", " + maxX);
+			minX = Math.max(0, minX);
+			minX = Math.min(GRIDSIZE - 1, minX);
 			maxX = Math.max(0, minX);
+			maxX = Math.min(GRIDSIZE - 1, minX);
 
-			System.out.println("X: "+minX+" bis "+maxX);
-			
+			//System.out.println("X: "+minX+" bis "+maxX);
+
 			for (int i = minX; i <= maxX; i++) {
-				
-				Double borderZ1 = ray.getZ(new Vector3d(x,0,0));
+
+				Double borderZ1 = ray.getZ(new Vector3d(x, 0, 0));
 				if (borderZ1 == null) borderZ1 = 0d;
-				Double borderZ2 = ray.getZ(new Vector3d(x+GRIDSIZE,0,0));
-				if (borderZ2 == null) borderZ2 = (double)GRIDSIZE;
-				
-				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1-z) : Math.floor(borderZ2-z)));
-				minZ = Math.min(GRIDSIZE-1, minZ);
-				int maxZ = Math.min(GRIDSIZE-1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2-z) : Math.ceil(borderZ1-z)));
+				Double borderZ2 = ray.getZ(new Vector3d(x + GRIDSIZE, 0, 0));
+				if (borderZ2 == null) borderZ2 = (double) GRIDSIZE;
+
+				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1) : Math.floor(borderZ2)) - z);
+				minZ = Math.min(GRIDSIZE - 1, minZ);
+				int maxZ = Math.min(GRIDSIZE - 1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2) : Math.ceil(borderZ1)) - z);
 				maxZ = Math.max(0, minZ);
-				
+
+				//System.out.println("Z: "+minZ+" bis "+maxZ);
+
 				for (int j = minZ; j <= maxZ; j++) {
 					polygons[counter][0] = new Vector3d(x + i, heights[i][j], z + j);
 					polygons[counter][1] = new Vector3d(x + i, heights[i][j + 1], z + j);

@@ -19,7 +19,7 @@ public class Land {
 	public ArrayList<Chunk> chunks;
 	public long seed;
 	public String saveName;
-	private int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
+	public int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
 	public int chunkUpdatesPerFrame = 4;
 	private Game game;
 	private World world;
@@ -74,7 +74,9 @@ public class Land {
 
 	private int isChunkLoaded(Position chunkPosition) {
 		for (int i = 0; i < chunks.size(); i++) {
-			if (chunks.get(i).equals(chunkPosition)) { return i; }
+			if (chunks.get(i).equals(chunkPosition)) {
+				return i;
+			}
 		}
 
 		return -1;
@@ -163,6 +165,17 @@ public class Land {
 		}
 	}
 
+	public float getHeight(int x, int z) {
+		Position chunkPosition = getChunkPosition(x, z);
+		Chunk chunk = getChunk(chunkPosition);
+
+		if (chunk != null) {
+			return chunk.getLocalHeight((int) MathHelper.modToInt(x, Chunk.CHUNKSIZE), (int) MathHelper.modToInt(z, Chunk.CHUNKSIZE));
+		} else {
+			return 0;
+		}
+	}
+
 	public Vector3d getHighestBetween(Position pos1, Position pos2) {
 		Position chunkPos1Temp = getChunkPosition(pos1);
 		Position chunkPos2Temp = getChunkPosition(pos2);
@@ -219,7 +232,7 @@ public class Land {
 	}
 
 	public Vector3d getFloorpointInSight(Ray ray) {
-		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray, this);
+		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray, world);
 	}
 
 	public void renderOverlay() {//test cones
@@ -284,5 +297,9 @@ public class Land {
 		floorSprites.compile();
 		Chunk.floorSprites = floorSprites;
 
+	}
+
+	public double getHeight(Position pos) {
+		return getHeight(pos.x, pos.z);
 	}
 }

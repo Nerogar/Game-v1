@@ -23,4 +23,9 @@ public class Position {
 	public String toString() {
 		return "Position X: " + x + " | Z: " + z;
 	}
+	
+	@Override
+	public int hashCode() {
+		return (this.x &0xffff)|((this.z & 0xffff)<<16);
+	}
 }
