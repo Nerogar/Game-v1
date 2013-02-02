@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
@@ -31,7 +32,7 @@ public class CollisionComparer {
 	private Position max = new Position(0, 0);
 
 	private final int GRIDSIZE = 16;
-	private final int MAX_DISTANCE = 128;
+	private final int MAX_DISTANCE = 256;
 
 	public int comparations = 0;
 
@@ -240,49 +241,57 @@ public class CollisionComparer {
 
 	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
 
-		int minLoadX = world.loadPosition.x - (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE;
-		int maxLoadX = world.loadPosition.x + (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE + 1;
-		int minLoadZ = world.loadPosition.z - (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE;
-		int maxLoadZ = world.loadPosition.z + (world.land.maxChunkLoadDistance+1)*Chunk.CHUNKSIZE + 1;
+		double minLoadX = world.loadPosition.x - (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE;
+		double maxLoadX = world.loadPosition.x + (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE + 1;
+		double minLoadZ = world.loadPosition.z - (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE;
+		double maxLoadZ = world.loadPosition.z + (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE + 1;
 		minLoadX -= minLoadX % Chunk.CHUNKSIZE;
 		maxLoadX -= maxLoadX % Chunk.CHUNKSIZE;
 		minLoadZ -= minLoadZ % Chunk.CHUNKSIZE;
 		maxLoadZ -= maxLoadZ % Chunk.CHUNKSIZE;
+		if (ray.getStart().getX() - MAX_DISTANCE > minLoadX) minLoadX = ray.getStart().getX() - MAX_DISTANCE;
+		if (ray.getStart().getX() + MAX_DISTANCE < maxLoadX) maxLoadX = ray.getStart().getX() + MAX_DISTANCE;
+		if (ray.getStart().getZ() - MAX_DISTANCE > minLoadZ) minLoadZ = ray.getStart().getZ() - MAX_DISTANCE;
+		if (ray.getStart().getZ() + MAX_DISTANCE < maxLoadZ) maxLoadZ = ray.getStart().getZ() + MAX_DISTANCE;
 
-		int minX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() : ray.getStart().getX() - MAX_DISTANCE);
-		int maxX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() + MAX_DISTANCE : ray.getStart().getX());
-		minX = Math.min(maxLoadX, minX);
-		minX = Math.max(minLoadX, minX);
-		maxX = Math.min(maxLoadX, maxX);
-		maxX = Math.max(minLoadX, maxX);
+		int minX = (int) Math.floor(((ray.getDirection().getX() >= 0) ? ray.getStart().getX() : minLoadX));
+		int maxX = (int) Math.floor(((ray.getDirection().getX() > 0) ? maxLoadX : ray.getStart().getX()));
+		minX = (int) Math.floor(Math.min(maxLoadX, minX));
+		minX = (int) Math.floor(Math.max(minLoadX, minX));
+		maxX = (int) Math.floor(Math.min(maxLoadX, maxX));
+		maxX = (int) Math.floor(Math.max(minLoadX, maxX));
 
 		Double lastZ = ray.getZ(new Vector3d(minX, 0, 0));
-		if (lastZ == null) lastZ = 0d;
-		lastZ = Math.max(ray.getStart().getZ()-MAX_DISTANCE, lastZ);
-		lastZ = Math.min(ray.getStart().getZ()+MAX_DISTANCE, lastZ);
-		
+		if (lastZ == null) lastZ = ray.getStart().getZ();
+
 		Double rayYmin, rayYmax, thisZ, spotYmin, spotYmax;
 		int minZ, maxZ;
 
 		ArrayList<Position> positions = new ArrayList<Position>();
 		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
 
-		//System.out.println("x-Iteration: " + minX + " - " + maxX);
-
 		for (int i = minX; i <= maxX; i++) {
 			thisZ = ray.getZ(new Vector3d(i + 1, 0, 0));
 			if (thisZ == null) thisZ = lastZ;
-			thisZ = Math.max(ray.getStart().getZ()-MAX_DISTANCE, thisZ);
-			thisZ = Math.min(ray.getStart().getZ()+MAX_DISTANCE, thisZ);
-			
-			minZ = (lastZ < thisZ) ? lastZ.intValue() : thisZ.intValue();
-			maxZ = ((lastZ < thisZ) ? thisZ.intValue() : lastZ.intValue());
-			minZ = Math.min(maxLoadZ, minZ);
-			minZ = Math.max(minLoadZ, minZ);
-			maxZ = Math.min(maxLoadZ, maxZ);
-			maxZ = Math.max(minLoadZ, maxZ);
+			Double lastZnow = lastZ;
+			if (i == minX) {
+				lastZnow = Math.max(minLoadZ, lastZnow);
+				lastZnow = Math.min(maxLoadZ, lastZnow);
+			}
+			Double thisZnow = thisZ;
+			if (thisZ < minLoadZ && lastZ < minLoadZ) continue;
+			if (thisZ > maxLoadZ && lastZ > maxLoadZ) continue;
 
-			//System.out.println("z-Iteration: " + minZ + " - " + maxZ);
+			thisZnow = Math.max(minLoadZ, thisZ);
+			thisZnow = Math.min(maxLoadZ, thisZ);
+
+			minZ = (lastZnow < thisZnow) ? ((int) Math.floor(lastZnow)) : ((int) Math.floor(thisZnow));
+			maxZ = ((lastZnow < thisZnow) ? ((int) Math.floor(thisZnow)) : ((int) Math.floor(lastZnow)));
+			minZ = (int) Math.floor(Math.min(maxLoadZ, minZ));
+			minZ = (int) Math.floor(Math.max(minLoadZ, minZ));
+			maxZ = (int) Math.floor(Math.min(maxLoadZ, maxZ));
+			maxZ = (int) Math.floor(Math.max(minLoadZ, maxZ));
+
 			for (int j = minZ; j <= maxZ; j++) {
 				Position pos = new Position(i, j);
 				Position posX = new Position(i + 1, j);
@@ -292,16 +301,16 @@ public class CollisionComparer {
 				if (!heightMap.containsKey(posX)) heightMap.put(posX, (double) world.land.getHeight(posX));
 				if (!heightMap.containsKey(posZ)) heightMap.put(posZ, (double) world.land.getHeight(posZ));
 				if (!heightMap.containsKey(posXZ)) heightMap.put(posXZ, (double) world.land.getHeight(posXZ));
-				rayYmin = (ray.getDirection().getY() > 0) ? ray.getY(new Vector3d(i, 0, j)) : ray.getY(new Vector3d(i + 1, 0, j + 1));
-				rayYmax = (ray.getDirection().getY() > 0) ? ray.getY(new Vector3d(i + 1, 0, j + 1)) : ray.getY(new Vector3d(i, 0, j));
+				rayYmin = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? ray.getY(new Vector3d(i, 0, j)) : ray.getY(new Vector3d(i + 1, 0, j + 1));
+				rayYmax = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? ray.getY(new Vector3d(i + 1, 0, j + 1)) : ray.getY(new Vector3d(i, 0, j));
 				spotYmin = MathHelper.getLowest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
 				spotYmax = MathHelper.getHightest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
 				if (rayYmin == null) rayYmin = 0d;
 				if (rayYmax == null) rayYmax = 0d;
 				if (spotYmin == null) spotYmin = 0d;
 				if (spotYmax == null) spotYmax = 0d;
+				if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
 
-				//if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
 				positions.add(pos);
 			}
 			lastZ = thisZ;
@@ -344,13 +353,15 @@ public class CollisionComparer {
 	}
 
 	private void drawTriangle(Vector3d a, Vector3d b, Vector3d c) {
-		glDisable(GL_TEXTURE_2D);
-		glBegin(GL_TRIANGLES);
-		glColor3f(1f, 0f, 0f);
-		glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
-		glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
-		glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
-		glEnd();
+		if (GameOptions.instance.getBoolOption("debug")) {
+			glDisable(GL_TEXTURE_2D);
+			glBegin(GL_TRIANGLES);
+			glColor3f(1f, 0f, 0f);
+			glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
+			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
+			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
+			glEnd();
+		}
 	}
 
 	public Vector3d getNearestFloorIntersectionWithRay2(Ray ray, Land land) {

@@ -105,10 +105,10 @@ public final class InputHandler {
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_LINES);
 		glColor3f(1.0f, 1.0f, 0.0f);
-		//glVertex3f(start.x, start.y, start.z);
-		//glVertex3f(start.x + dir.x * 100, start.y + dir.y * 100, start.z + dir.z * 100);
-		glVertex3f(start.getXf(), 5, start.getZf());
-		glVertex3f(start.getXf() + dir.getXf() * 10000, 5, start.getZf() + dir.getZf() * 10000);
+		//glVertex3f(start.getXf(), 5, start.getZf());
+		//glVertex3f(start.getXf() + dir.getXf() * 10000, 5, start.getZf() + dir.getZf() * 10000);
+		glVertex3f(start.getXf(), start.getYf(), start.getZf());
+		glVertex3f(start.getXf() + dir.getXf() * 10000, start.getYf() + dir.getYf() * 10000, start.getZf() + dir.getZf() * 10000);
 		glEnd();
 
 		glEnable(GL_TEXTURE_2D);

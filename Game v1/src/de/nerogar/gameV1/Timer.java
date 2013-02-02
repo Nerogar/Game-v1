@@ -11,6 +11,7 @@ public class Timer {
 	private long lastFps;
 	public int mfFps;
 	private ArrayList<Event> events = new ArrayList<Event>();
+	private int framecount;
 	//private ArrayList<String> eventNames = new ArrayList<String>();
 	public static Timer instance = new Timer();
 
@@ -25,7 +26,7 @@ public class Timer {
 
 	private void printFPS() {
 		if (getTime() - lastFps > 1000) {
-			//if (GameOptions.instance.getBoolOption("debug")) 
+			if (GameOptions.instance.getBoolOption("debug")) 
 				System.out.println("FPS: " + fps);
 			mfFps = fps;
 			fps = 0;
@@ -35,6 +36,7 @@ public class Timer {
 
 	public void update() {
 		fps++;
+		framecount++;
 		long time = getTime();
 		delta = time - lastFrame;
 		lastFrame = time;
@@ -61,6 +63,10 @@ public class Timer {
 	public boolean shellExecute(String name) {
 		int index = indexOfEvent(name);
 		return events.get(index).shellExecute();
+	}
+
+	public int getFramecount() {
+		return framecount;
 	}
 
 	private class Event {

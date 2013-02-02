@@ -136,10 +136,13 @@ public class World {
 		InputHandler.renderMouseRay();
 
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		double time1 = System.nanoTime();
 		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		double time2 = System.nanoTime();
+		if (Timer.instance.getFramecount() % 60 == 0) System.out.println("Floorcollision time: "+((time2-time1)/1000000)+"ms");
 		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
-		if (floorIntersection != null) {
+		if (floorIntersection != null && GameOptions.instance.getBoolOption("debug")) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			glColor3f(1f, 1f, 1f);
