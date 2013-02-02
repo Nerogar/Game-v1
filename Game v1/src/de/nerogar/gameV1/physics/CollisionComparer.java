@@ -240,10 +240,10 @@ public class CollisionComparer {
 
 	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
 
-		int minLoadX = world.loadPosition.x - world.land.maxChunkLoadDistance;
-		int maxLoadX = world.loadPosition.x + world.land.maxChunkLoadDistance + 1;
-		int minLoadZ = world.loadPosition.z - world.land.maxChunkLoadDistance;
-		int maxLoadZ = world.loadPosition.z + world.land.maxChunkLoadDistance + 1;
+		int minLoadX = world.loadPosition.x - world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE;
+		int maxLoadX = world.loadPosition.x + world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE + 1;
+		int minLoadZ = world.loadPosition.z - world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE;
+		int maxLoadZ = world.loadPosition.z + world.land.maxChunkLoadDistance*Chunk.CHUNKSIZE + 1;
 
 		int minX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() : ray.getStart().getX() - MAX_DISTANCE);
 		int maxX = (int) ((ray.getDirection().getX() > 0) ? ray.getStart().getX() + MAX_DISTANCE : ray.getStart().getX()) + 1;
@@ -291,7 +291,7 @@ public class CollisionComparer {
 				if (spotYmin == null) spotYmin = 0d;
 				if (spotYmax == null) spotYmax = 0d;
 
-				if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
+				//if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
 				positions.add(pos);
 			}
 			lastZ = thisZ;
@@ -308,8 +308,8 @@ public class CollisionComparer {
 			polygons[0][1] = new Vector3d(pos.x, heightMap.get(new Position(pos.x, pos.z + 1)), pos.z + 1);
 			polygons[0][2] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z + 1)), pos.z + 1);
 			polygons[1][0] = new Vector3d(pos.x, heightMap.get(pos), pos.z);
-			polygons[1][1] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z)), pos.z);
-			polygons[1][2] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z + 1)), pos.z + 1);
+			polygons[1][1] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z + 1)), pos.z + 1);
+			polygons[1][2] = new Vector3d(pos.x + 1, heightMap.get(new Position(pos.x + 1, pos.z)), pos.z);
 
 			for (Vector3d[] polygon : polygons) {
 
@@ -337,9 +337,9 @@ public class CollisionComparer {
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_TRIANGLES);
 		glColor3f(1f, 0f, 0f);
-		glVertex3f(a.getXf(), a.getYf() + .01f, a.getZf());
-		glVertex3f(b.getXf(), b.getYf() + .01f, b.getZf());
-		glVertex3f(c.getXf(), c.getYf() + .01f, c.getZf());
+		glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
+		glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
+		glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
 		glEnd();
 	}
 
