@@ -1,12 +1,7 @@
 package de.nerogar.gameV1.physics;
 
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +9,12 @@ import java.util.HashMap;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBlock;
-import de.nerogar.gameV1.level.Land;
 import de.nerogar.gameV1.level.Position;
 
 public class CollisionComparer {
@@ -346,7 +341,7 @@ public class CollisionComparer {
 
 		}
 
-		//System.out.println(comparations + " Bodenvergleiche");
+		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println(comparations + " Bodenvergleiche letzten Frame.");
 
 		return intersection;
 
@@ -362,106 +357,6 @@ public class CollisionComparer {
 			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
 			glEnd();
 		}
-	}
-
-	public Vector3d getNearestFloorIntersectionWithRay2(Ray ray, Land land) {
-
-		Vector3d intersection = null;
-		ArrayList<Position> gridPositions = getGridPositionsInRay(ray);
-
-		Vector3d[][] polygons = new Vector3d[gridPositions.size() * GRIDSIZE * GRIDSIZE * 2][3];
-		int counter = 0;
-
-		for (Position pos : gridPositions) {
-
-			//System.out.println(shift.x + "," + shift.z);
-			int x = (pos.x * GRIDSIZE) - shift.x;
-			int z = (pos.z * GRIDSIZE) - shift.z;
-
-			//System.out.println("SHIFT: "+shift.x+" "+shift.z);
-			// Wenn der höchste/niedrigste Punkt des Gridelements über dem niedrigsten/höchsten
-			// Punkt des Strahls liegt, wird dieses Grid übersprungen
-			Double minY = ray.getY(new Vector3d(x, 0, z));
-			if (minY == null) minY = 0d;
-			Double maxY = ray.getY(new Vector3d(x + GRIDSIZE, 0, z + GRIDSIZE));
-			if (maxY == null) maxY = Double.MAX_VALUE;
-			double minLandY = 0;
-			double maxLandY = land.getHighestBetween(new Position(x, z), new Position(x + GRIDSIZE, z + GRIDSIZE)).getY();
-			//System.out.println(new Position(x,z).toString()+"   ---   "+new Position(x+GRIDSIZE , z+GRIDSIZE).toString());
-
-			if (minY > maxLandY || maxY < minLandY) continue;
-			double[][] heights = new double[GRIDSIZE + 1][GRIDSIZE + 1];
-			for (int i = 0; i <= GRIDSIZE; i++) {
-				for (int j = 0; j <= GRIDSIZE; j++) {
-					heights[i][j] = land.getHeight(x + i, z + j);
-					//System.out.println(x + "," + z);
-				}
-			}
-
-			Double borderX1 = ray.getX(new Vector3d(0, 0, z));
-			if (borderX1 == null) borderX1 = 0d;
-			Double borderX2 = ray.getX(new Vector3d(0, 0, z + GRIDSIZE));
-			if (borderX2 == null) borderX2 = (double) GRIDSIZE;
-			int minX = (int) ((borderX1 < borderX2) ? Math.floor(borderX1) : Math.floor(borderX2)) - x;
-			int maxX = (int) ((borderX1 < borderX2) ? Math.ceil(borderX2) : Math.ceil(borderX1)) - x;
-			System.out.println("min/max: " + minX + ", " + maxX);
-			minX = Math.max(0, minX);
-			minX = Math.min(GRIDSIZE - 1, minX);
-			maxX = Math.max(0, minX);
-			maxX = Math.min(GRIDSIZE - 1, minX);
-
-			//System.out.println("X: "+minX+" bis "+maxX);
-
-			for (int i = minX; i <= maxX; i++) {
-
-				Double borderZ1 = ray.getZ(new Vector3d(x, 0, 0));
-				if (borderZ1 == null) borderZ1 = 0d;
-				Double borderZ2 = ray.getZ(new Vector3d(x + GRIDSIZE, 0, 0));
-				if (borderZ2 == null) borderZ2 = (double) GRIDSIZE;
-
-				int minZ = Math.max(0, (int) ((borderZ1 < borderZ2) ? Math.floor(borderZ1) : Math.floor(borderZ2)) - z);
-				minZ = Math.min(GRIDSIZE - 1, minZ);
-				int maxZ = Math.min(GRIDSIZE - 1, (int) ((borderZ1 < borderZ2) ? Math.ceil(borderZ2) : Math.ceil(borderZ1)) - z);
-				maxZ = Math.max(0, minZ);
-
-				//System.out.println("Z: "+minZ+" bis "+maxZ);
-
-				for (int j = minZ; j <= maxZ; j++) {
-					polygons[counter][0] = new Vector3d(x + i, heights[i][j], z + j);
-					polygons[counter][1] = new Vector3d(x + i, heights[i][j + 1], z + j);
-					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
-					counter++;
-					polygons[counter][0] = new Vector3d(x + i, heights[i][j + 1], z + j);
-					polygons[counter][1] = new Vector3d(x + i, heights[i + 1][j + 1], z + j);
-					polygons[counter][2] = new Vector3d(x + i, heights[i + 1][j], z + j);
-					counter++;
-				}
-			}
-		}
-
-		Double distance = Double.MAX_VALUE;
-		Double newDistance;
-		Vector3d newIntersection = null;
-		Vector3d[] polygon;
-		int comparations = 0;
-		for (int i = 0; i < polygons.length; i++) {
-			// Das Array ist größer, als wirklich Daten drinne sind. Deshalb ab der ersten "null" aufhören
-			if (polygons[i][0] == null) break;
-			polygon = polygons[i];
-			//System.out.println(polygon[0].toString());
-			newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
-			comparations++;
-			if (newIntersection != null) {
-				newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
-				if (newDistance < distance) {
-					intersection = newIntersection;
-					distance = newDistance;
-				}
-			}
-		}
-		//System.out.println(comparations+" Vergleiche");
-
-		return intersection;
 	}
 
 	public ArrayList<Position> getGridPositionsInRay(Ray ray) {
@@ -573,66 +468,6 @@ public class CollisionComparer {
 		}
 
 		return entitiesA;
-
-		/*Vector3d start = ray.getStart();
-		Vector3d dir = ray.getDirection();
-
-		// Schleifenanfang x-Richtung
-		double startX = start.getX();
-		startX += shift.x;
-
-		// Schleifenende x-Richtung
-		int endXGrid = dir.getX() > 0 ? max.x : 0;
-
-		int startXGrid = ((startX / GRIDSIZE) < endXGrid) ? MathHelper.roundDownToInt(startX / GRIDSIZE, 1) : MathHelper.roundUpToInt(startX / GRIDSIZE, 1);
-		startXGrid = maxMinGridPosX(startXGrid); // zwischen 0 und max
-
-		// Array der Schnittpunkt-Z-Werte
-		double[] za = new double[(startXGrid <= endXGrid) ? endXGrid + 2 : startXGrid + 2];
-
-		za[startXGrid] = (getIntersectionZ(start, dir, (startXGrid * GRIDSIZE) - shift.x) + shift.z) / GRIDSIZE;
-
-		ArrayList<Integer> ids = new ArrayList<Integer>();
-
-		// Schleife x-Richtung
-		for (int i = startXGrid; (startXGrid < endXGrid) ? (i < endXGrid) : (i > endXGrid); i += (startXGrid < endXGrid) ? 1 : -1) {
-
-			// Der Strahl in Parameterform angegeben: g: a-> = s-> + r*d->
-			// 
-			// Nur die X-Werte: xa = xs + r*xd
-			// einzige Unbekannte: r
-			// nach r aufgelöst: r = (xa - xs) / xd
-			//
-			// Nur die Z-Werte: za = zs + r*zd
-			// r eingesetzt: za = zs + ((xa - xs) / xd)*zd
-			// einzige Unbekannte: za (Der z-Wert des Schnittpunktes der Geraden mit dem Grid)
-
-			int nexti = (startXGrid < endXGrid) ? i + 1 : i - 1;
-			za[nexti] = (getIntersectionZ(start, dir, (nexti * GRIDSIZE) - shift.x) + shift.z) / GRIDSIZE;
-
-			int startZGrid = (za[i] < za[nexti]) ? MathHelper.roundDownToInt(za[i], 1) : MathHelper.roundUpToInt(za[i], 1);
-			int endZGrid = (za[i] < za[nexti]) ? MathHelper.roundUpToInt(za[nexti], 1) : MathHelper.roundDownToInt(za[nexti], 1);
-
-			if (startZGrid < 0) startZGrid = 0;
-			if (startZGrid > max.z) startZGrid = max.z;
-			if (endZGrid < 0) endZGrid = 0;
-			if (endZGrid > max.z) endZGrid = max.z;
-
-			for (int j = startZGrid; (startZGrid < endZGrid) ? (j < endZGrid) : (j > endZGrid); j += (startZGrid < endZGrid) ? 1 : -1) {
-				int ri = i;
-				int rj = j;
-				if (dir.getX() < 0) ri -= 1;
-				if (dir.getZ() < 0) rj -= 1;
-				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xff00ff);
-				//if (ri >= 0 && rj >= 0 && ri < grid.length && rj < grid[0].length) {
-				//System.out.println("ri: " + ri + "  rj: " + rj);
-				for (int k = 0; k < grid[ri][rj].size(); k++) {
-					ids.add(grid[ri][rj].get(k));
-					//System.out.println("id: "+grid[ri][rj].get(k));
-					BoundingRender.renderAABB(new BoundingAABB(new Vector3d(ri * GRIDSIZE - shift.x, 0, rj * GRIDSIZE - shift.z), new Vector3d((ri + 1) * GRIDSIZE - shift.x, 10, (rj + 1) * GRIDSIZE - shift.z)), 0xffff00);
-				}
-				//}
-			}*/
 
 	}
 

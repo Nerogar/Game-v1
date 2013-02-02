@@ -10,16 +10,10 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.gui.*;
-import de.nerogar.gameV1.image.SpriteSheet;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
-import de.nerogar.gameV1.physics.BoundingAABB;
-import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.ObjectMatrix;
-import de.nerogar.gameV1.physics.PhysicHelper;
-import de.nerogar.gameV1.physics.Plane;
-import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Game implements Runnable {
@@ -123,15 +117,15 @@ public class Game implements Runnable {
 
 		if (true) { //test bei sichtbarer plane
 
-			Vector3d p1 = new Vector3d(-2f, 5f, 0f);
-			Vector3d p2 = new Vector3d(2f, 5f, 0f);
-			Vector3d p3 = new Vector3d(2f, 9f, 0f);
-			Vector3d p4 = new Vector3d(-2f, 9f, 0f);
-			Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-			Plane plane = new Plane(p1, p2, p3);
+			//Vector3d p1 = new Vector3d(-2f, 5f, 0f);
+			//Vector3d p2 = new Vector3d(2f, 5f, 0f);
+			//Vector3d p3 = new Vector3d(2f, 9f, 0f);
+			//Vector3d p4 = new Vector3d(-2f, 9f, 0f);
+			//Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+			//Plane plane = new Plane(p1, p2, p3);
 
-			Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
-			Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
+			//Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
+			//Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
 
 			/*if (intersection == null) {
 				System.out.println("kein Schnittpunkt!");

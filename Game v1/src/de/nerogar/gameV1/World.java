@@ -100,13 +100,15 @@ public class World {
 		//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
 
 		if (InputHandler.isMouseButtonPressed(0)) {
-			for (Entity entity : clickedEntities) {
-				entity.click(0);
-			}
+			if (clickedEntities.length > 0) clickedEntities[0].click(0);
+			//for (Entity entity : clickedEntities) {
+			//	entity.click(0);
+			//}
 		} else if (InputHandler.isMouseButtonPressed(1)) {
-			for (Entity entity : clickedEntities) {
-				entity.click(1);
-			}
+			if (clickedEntities.length > 0) clickedEntities[0].click(1);
+			//for (Entity entity : clickedEntities) {
+			//	entity.click(1);
+			//}
 		}
 
 		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
@@ -139,7 +141,7 @@ public class World {
 		double time1 = System.nanoTime();
 		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
 		double time2 = System.nanoTime();
-		if (Timer.instance.getFramecount() % 60 == 0) System.out.println("Floorcollision time: "+((time2-time1)/1000000)+"ms");
+		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: "+((time2-time1)/1000000)+"ms");
 		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
 		if (floorIntersection != null && GameOptions.instance.getBoolOption("debug")) {
