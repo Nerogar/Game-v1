@@ -22,6 +22,10 @@ public class EntityList {
 	public Entity getEntity(int id) {
 		return entities.get(entityID.indexOf(id));
 	}
+	
+	public boolean containsEntity(Entity entity) {
+		return entities.contains(entity);
+	}
 
 	public void addEntity(Entity entity) {
 		entities.add(entity);

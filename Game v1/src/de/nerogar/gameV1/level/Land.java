@@ -298,7 +298,7 @@ public class Land {
 			markerCone.setForce(new Vector3d(0,0,0));
 			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0,10,0)));
 			markerCone.addForce(new Vector3d(0,-10000,0));
-			
+			if (!world.containsEntity(markerCone)) world.spawnEntity(markerCone);
 		}
 	}
 }

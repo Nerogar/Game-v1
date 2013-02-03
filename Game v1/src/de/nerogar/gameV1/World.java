@@ -144,14 +144,14 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 
-		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		//System.out.println(floorIntersection);
-		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
-
 		glPopMatrix();
 	}
 
 	public void spawnEntity(Entity entity) {
-		entityList.addEntity(entity);
+		if (isLoaded) entityList.addEntity(entity);
+	}
+	
+	public boolean containsEntity(Entity entity) {
+		return entityList.containsEntity(entity);
 	}
 }
