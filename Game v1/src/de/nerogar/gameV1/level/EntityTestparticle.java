@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityTestparticle extends EntityParticle {
@@ -37,7 +38,5 @@ public class EntityTestparticle extends EntityParticle {
 	public String getNameTag() {
 		return "Testpartikel";
 	}
-
-	
 	
 }

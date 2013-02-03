@@ -22,8 +22,8 @@ public class World {
 
 	public World(Game game) {
 		this.game = game;
-		this.land = new Land(game, this);
 		entityList = new EntityList(game);
+		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
 		entityList.setCollisionComparer(collisionComparer);
 	}
@@ -40,6 +40,7 @@ public class World {
 			worldData.load();
 		}
 
+		land = new Land(game, this);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
 

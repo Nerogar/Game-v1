@@ -239,6 +239,12 @@ public class CollisionComparer {
 
 	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
 
+		double time0 = System.nanoTime();
+		
+		if (ray.getDirection().getX() == 0) {
+			ray.getDirection().add(new Vector3d(.000000001, 0, 0));
+		}
+
 		double minLoadX = world.loadPosition.x - (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE;
 		double maxLoadX = world.loadPosition.x + (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE + 1;
 		double minLoadZ = world.loadPosition.z - (world.land.maxChunkLoadDistance + 1) * Chunk.CHUNKSIZE;
@@ -259,19 +265,24 @@ public class CollisionComparer {
 		maxX = (int) Math.floor(Math.min(maxLoadX, maxX));
 		maxX = (int) Math.floor(Math.max(minLoadX, maxX));
 
-		Double lastZ = ray.getZ(new Vector3d(minX, 0, 0));
+		Double lastZ = ray.getZatX(minX);
 		if (lastZ == null) lastZ = ray.getStart().getZ();
 
-		Double rayYmin, rayYmax, thisZ, spotYmin, spotYmax;
+		Double thisZ, ymin, ymax;
 		int minZ, maxZ;
 
 		ArrayList<Position> positions = new ArrayList<Position>();
 		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
 
+		double time1 = System.nanoTime();
+		System.out.println("Dauer Initialisierung: "+(time1-time0)/1000000+"ms");
+		
+		double getHeightTime = 0;
+		
 		//System.out.println("x-Iteration: "+minX+" bis "+maxX);
 		for (int i = minX; i <= maxX; i++) {
-			
-			thisZ = ray.getLine().getZ(new Vector3d(i + 1, 0, 0));
+
+			thisZ = ray.getLine().getZatX(i + 1);
 			if (thisZ == null) thisZ = lastZ;
 			Double lastZnow = lastZ;
 			if (i == minX) {
@@ -282,12 +293,16 @@ public class CollisionComparer {
 			if (thisZ < minLoadZ && lastZ < minLoadZ) continue;
 			if (thisZ > maxLoadZ && lastZ > maxLoadZ) continue;
 			lastZ = thisZ;
-			
-			Double ymin = (ray.getDirection().getX() > 0) ? ray.getY(new Vector3d(i, 0, 0)) : ray.getY(new Vector3d(i+1, 0, 0));
-			Double ymax = (ray.getDirection().getX() > 0) ? ray.getY(new Vector3d(i+1, 0, 0)) : ray.getY(new Vector3d(i, 0, 0));
-			if (ymin != null) if (ymin < MIN_HEIGHT) continue;
-			if (ymax != null) if (ymax > MAX_HEIGHT) continue;
-			
+
+			ymin = (ray.getDirection().getX() > 0) ? ray.getYatX(i) : ray.getYatX(i + 1);
+			ymax = (ray.getDirection().getX() > 0) ? ray.getYatX(i + 1) : ray.getYatX(i);
+			if (ymin == null && ymax == null) continue;
+			if (ymin != null && ymax != null) {
+				if (ray.getDirection().getX() > 0 && ray.getDirection().getY() < 0 && ymin < MIN_HEIGHT) break;
+				if (ray.getDirection().getX() < 0 && ray.getDirection().getY() < 0 && ymax > MAX_HEIGHT) break;
+				if (ymin < MIN_HEIGHT || ymax > MAX_HEIGHT) continue;
+			}
+
 			thisZnow = Math.max(minLoadZ, thisZ);
 			thisZnow = Math.min(maxLoadZ, thisZ);
 
@@ -297,46 +312,39 @@ public class CollisionComparer {
 			minZ = (int) Math.floor(Math.max(minLoadZ, minZ));
 			maxZ = (int) Math.floor(Math.min(maxLoadZ, maxZ));
 			maxZ = (int) Math.floor(Math.max(minLoadZ, maxZ));
-
+			
 			for (int j = minZ; j <= maxZ; j++) {
 
+				ymin = (ray.getDirection().getZ() > 0) ? ray.getYatZ(j) : ray.getYatZ(j + 1);
+				ymax = (ray.getDirection().getZ() > 0) ? ray.getYatZ(j + 1) : ray.getYatZ(j);
+				if (ymin == null && ymax == null) continue;
+				if (ymin != null && ymax != null) {
+					if (ray.getDirection().getZ() > 0 && ray.getDirection().getY() < 0 && ymin < MIN_HEIGHT) break;
+					if (ray.getDirection().getZ() < 0 && ray.getDirection().getY() < 0 && ymax > MAX_HEIGHT) break;
+					if (ymin < MIN_HEIGHT || ymax > MAX_HEIGHT) continue;
+				}
+				
 				Position pos = new Position(i, j);
 				Position posX = new Position(i + 1, j);
 				Position posZ = new Position(i, j + 1);
 				Position posXZ = new Position(i + 1, j + 1);
+				double time1_1 = System.nanoTime();
 				if (!heightMap.containsKey(pos)) heightMap.put(pos, (double) world.land.getHeight(pos));
 				if (!heightMap.containsKey(posX)) heightMap.put(posX, (double) world.land.getHeight(posX));
 				if (!heightMap.containsKey(posZ)) heightMap.put(posZ, (double) world.land.getHeight(posZ));
 				if (!heightMap.containsKey(posXZ)) heightMap.put(posXZ, (double) world.land.getHeight(posXZ));
-
-				/*
-				Double interX1 = ray.getX(new Vector3d(0, 0, j));
-				Double interX2 = ray.getX(new Vector3d(0, 0, j + 1));
-				if (interX1 == null) interX1 = 0d;
-				if (interX2 == null) interX2 = 0d;
-				//boolean leftToRight = ((interX1 > i + 1 || interX1 < i) && (interX2 > i + 1 || interX2 < i));
-				Double rayY1 = (Math.min(interX1, interX2) < i) ? ray.getY(new Vector3d(i, 0, 0)) : ray.getY(new Vector3d(0, 0, j));
-				if (rayY1 == null) rayY1 = 0d;
-				Double rayY2 = (Math.max(interX1, interX2) > i + 1) ? ray.getY(new Vector3d(i + 1, 0, 0)) : ray.getY(new Vector3d(0, 0, j + 1));
-				if (rayY2 == null) rayY2 = 0d;
-
-				//System.out.println("Y1: " + rayY1 + "  Y2:" + rayY2);
-				rayYmin = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? rayY1 : rayY2;
-				rayYmax = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? rayY2 : rayY1;
-				spotYmin = MathHelper.getLowest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
-				spotYmax = MathHelper.getHightest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
-				//if (rayYmin == null) rayYmin = 0d;
-				//if (rayYmax == null) rayYmax = 0d;
-				if (spotYmin == null) spotYmin = 0d;
-				if (spotYmax == null) spotYmax = 0d;
-				//if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
-				*/
+				double time1_2 = System.nanoTime();
+				getHeightTime += (time1_2-time1_1);
 
 				positions.add(pos);
 			}
 			//System.out.println("highest: " + world.land.getHighestBetween(new Position(0, 0), new Position(-64, -64)));
 			//System.out.println("Höhenmaplänge: " + heightMap.size());
 		}
+		
+		System.out.println("Dauer getHeight: "+(getHeightTime)/1000000+"ms");
+		double time2 = System.nanoTime();
+		System.out.println("Dauer Schleife: "+(time2-time1)/1000000+"ms");
 
 		Double distance = Double.MAX_VALUE;
 		Double newDistance;
@@ -355,7 +363,7 @@ public class CollisionComparer {
 			for (Vector3d[] polygon : polygons) {
 
 				newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
-				drawTriangle(polygon[0], polygon[1], polygon[2]);
+				//drawTriangle(polygon[0], polygon[1], polygon[2]);
 				comparations++;
 				if (newIntersection != null) {
 					newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
@@ -367,6 +375,11 @@ public class CollisionComparer {
 			}
 
 		}
+		
+		double time3 = System.nanoTime();
+		System.out.println("Dauer Bodenvergleiche: "+(time3-time2)/1000000+"ms");
+		System.out.println("Dauer gesamt: "+(time3-time0)/1000000+"ms");
+		System.out.println("--------------------");
 
 		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println(comparations + " Bodenvergleiche letzten Frame.");
 

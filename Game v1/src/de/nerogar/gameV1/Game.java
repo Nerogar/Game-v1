@@ -13,6 +13,7 @@ import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
+import de.nerogar.gameV1.level.Tile;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.Ray;
 
@@ -110,11 +111,6 @@ public class Game implements Runnable {
 			}
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-			Ray ray = new Ray(new Vector3d(1, 1, 1), new Vector3d(1, 0, 3));
-			System.out.println(ray.getZ(new Vector3d(20,0,0)));
-		}
-
 		/*if (true) { //test bei sichtbarer plane
 
 			Vector3d p1 = new Vector3d(-2f, 5f, 0f);
@@ -159,6 +155,7 @@ public class Game implements Runnable {
 		}
 		guiList.addGui(new GuiMain(game));
 		Entity.initEntityList(game);
+		Tile.initTileList();
 		Timer.instance.init();
 	}
 

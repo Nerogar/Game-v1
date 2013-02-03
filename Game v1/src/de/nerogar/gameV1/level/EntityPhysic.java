@@ -35,4 +35,9 @@ public abstract class EntityPhysic extends Entity {
 	public void addForce(Vector3d f) {
 		force.add(f);
 	}
+	
+	public void setForce(Vector3d f) {
+		force.set(f);
+	}
+	
 }

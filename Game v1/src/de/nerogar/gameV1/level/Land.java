@@ -24,11 +24,14 @@ public class Land {
 	public int chunkUpdatesPerFrame = 4;
 	private Game game;
 	private World world;
+	public EntityTestparticle markerCone;
 
 	public Land(Game game, World world) {
 		chunks = new ArrayList<Chunk>();
 		this.game = game;
 		this.world = world;
+		markerCone = new EntityTestparticle(game, new ObjectMatrix());
+		world.spawnEntity(markerCone);
 	}
 
 	public Chunk generateLand(Chunk chunk, Position chunkPosition) {
@@ -306,9 +309,10 @@ public class Land {
 
 	public void click(int button, Vector3d pos) {
 		if (button == 0) {
-			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix(pos.add(new Vector3d(0, 10, 0))));
-			world.spawnEntity(entity);
-			entity.addForce(new Vector3d(0,-10000,0));
+			markerCone.setForce(new Vector3d(0,0,0));
+			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0,10,0)));
+			markerCone.addForce(new Vector3d(0,-10000,0));
+			
 		}
 	}
 }

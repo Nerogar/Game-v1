@@ -37,7 +37,7 @@ public class Vector3d {
 		return false;
 	}
 	
-	public boolean isNull() {
+	public boolean isZero() {
 		if (x==0 && y==0 && z==0) return true;
 		return false;
 	}
@@ -240,8 +240,8 @@ public class Vector3d {
 	}
 	
 	public boolean isParallelTo(Vector3d v) {
-		if (this.isNull() || v.isNull()) return false;
-		if (Vector3d.crossProduct(this, v).isNull()) return true;
+		if (this.isZero() || v.isZero()) return false;
+		if (Vector3d.crossProduct(this, v).isZero()) return true;
 		return false;
 	}
 	

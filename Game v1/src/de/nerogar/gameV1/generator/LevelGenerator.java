@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.nerogar.gameV1.image.Noise;
 import de.nerogar.gameV1.level.Chunk;
+import de.nerogar.gameV1.level.Tile;
 
 public class LevelGenerator {
 	private Noise[] noise;
@@ -40,6 +41,9 @@ public class LevelGenerator {
 				//float n = values[0][i][j] * values[1][i][j];
 				float n = values[1][i][j];
 				chunk.heightMap[i][j] = n;
+				if(n<0.6){
+					chunk.TileMap[i][j]=Tile.TILE_WATER;
+				}
 			}
 		}
 		populate(chunk);
