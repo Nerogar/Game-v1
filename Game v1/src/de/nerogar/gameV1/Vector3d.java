@@ -10,6 +10,10 @@ public class Vector3d {
 	private double squaredValue;
 	private boolean isSquaredValueDirty;
 	
+	public Vector3d() {
+		this(0,0,0);
+	}
+	
 	public Vector3d(double xn, double yn, double zn) {
 		set(xn, yn, zn);
 	}

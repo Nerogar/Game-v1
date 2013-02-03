@@ -12,6 +12,10 @@ public class ObjectMatrix {
 		rotation = new Vector3d(0, 0, 0);
 		scaling = new Vector3d(1, 1, 1);
 	}
+	
+	public ObjectMatrix(Vector3d pos) {
+		this(pos, new Vector3d(), new Vector3d(1,1,1));
+	}
 
 	public ObjectMatrix(Vector3d pos, Vector3d rot, Vector3d scal) {
 		position = pos;

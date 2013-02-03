@@ -6,8 +6,8 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 public class EntityTestparticle extends EntityParticle {
 	
 	public EntityTestparticle(Game game, ObjectMatrix matrix) {
-		super(game, matrix, "houses/1", 1);
-		texture = "houses/1-lightmap.png";/* Textur name */
+		super(game, matrix, "houses/cone", 1);
+		texture = "houses/cone.png";/* Textur name */
 		// TODO Auto-generated constructor stub
 	}
 

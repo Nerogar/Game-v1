@@ -12,6 +12,7 @@ import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.image.SpriteSheet;
 import de.nerogar.gameV1.image.TextureBank;
+import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Land {
@@ -301,5 +302,13 @@ public class Land {
 
 	public double getHeight(Position pos) {
 		return getHeight(pos.x, pos.z);
+	}
+
+	public void click(int button, Vector3d pos) {
+		if (button == 0) {
+			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix(pos.add(new Vector3d(0, 10, 0))));
+			world.spawnEntity(entity);
+			entity.addForce(new Vector3d(0,-10000,0));
+		}
 	}
 }

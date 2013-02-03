@@ -19,6 +19,9 @@ import de.nerogar.gameV1.level.Position;
 
 public class CollisionComparer {
 
+	private static final Double MIN_HEIGHT = 0d;
+	private static final Double MAX_HEIGHT = 5d;
+
 	private ArrayList<Integer>[][] grid;
 
 	private Game game;
@@ -27,7 +30,7 @@ public class CollisionComparer {
 	private Position max = new Position(0, 0);
 
 	private final int GRIDSIZE = 16;
-	private final int MAX_DISTANCE = 256;
+	private final int MAX_DISTANCE = 128;
 
 	public int comparations = 0;
 
@@ -182,11 +185,11 @@ public class CollisionComparer {
 			return null;
 		}
 
-		//if(points.length == 3) {
-		//	Vector3d OV  = points[0];
-		//	Vector3d RV1 = Vector3d.subtract(points[2], OV);
-		//	Vector3d RV2 = Vector3d.subtract(points[1], OV);
-		//}
+		if (points.length == 3) {
+			Vector3d OV = points[0];
+			Vector3d RV1 = Vector3d.subtract(points[2], OV);
+			Vector3d RV2 = Vector3d.subtract(points[1], OV);
+		}
 
 		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
 		// Der Punkt soll weit weg liegen, damit die Rechnung genau bleibt
@@ -265,8 +268,10 @@ public class CollisionComparer {
 		ArrayList<Position> positions = new ArrayList<Position>();
 		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
 
+		//System.out.println("x-Iteration: "+minX+" bis "+maxX);
 		for (int i = minX; i <= maxX; i++) {
-			thisZ = ray.getZ(new Vector3d(i + 1, 0, 0));
+			
+			thisZ = ray.getLine().getZ(new Vector3d(i + 1, 0, 0));
 			if (thisZ == null) thisZ = lastZ;
 			Double lastZnow = lastZ;
 			if (i == minX) {
@@ -276,7 +281,13 @@ public class CollisionComparer {
 			Double thisZnow = thisZ;
 			if (thisZ < minLoadZ && lastZ < minLoadZ) continue;
 			if (thisZ > maxLoadZ && lastZ > maxLoadZ) continue;
-
+			lastZ = thisZ;
+			
+			Double ymin = (ray.getDirection().getX() > 0) ? ray.getY(new Vector3d(i, 0, 0)) : ray.getY(new Vector3d(i+1, 0, 0));
+			Double ymax = (ray.getDirection().getX() > 0) ? ray.getY(new Vector3d(i+1, 0, 0)) : ray.getY(new Vector3d(i, 0, 0));
+			if (ymin != null) if (ymin < MIN_HEIGHT) continue;
+			if (ymax != null) if (ymax > MAX_HEIGHT) continue;
+			
 			thisZnow = Math.max(minLoadZ, thisZ);
 			thisZnow = Math.min(maxLoadZ, thisZ);
 
@@ -288,6 +299,7 @@ public class CollisionComparer {
 			maxZ = (int) Math.floor(Math.max(minLoadZ, maxZ));
 
 			for (int j = minZ; j <= maxZ; j++) {
+
 				Position pos = new Position(i, j);
 				Position posX = new Position(i + 1, j);
 				Position posZ = new Position(i, j + 1);
@@ -296,19 +308,34 @@ public class CollisionComparer {
 				if (!heightMap.containsKey(posX)) heightMap.put(posX, (double) world.land.getHeight(posX));
 				if (!heightMap.containsKey(posZ)) heightMap.put(posZ, (double) world.land.getHeight(posZ));
 				if (!heightMap.containsKey(posXZ)) heightMap.put(posXZ, (double) world.land.getHeight(posXZ));
-				rayYmin = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? ray.getY(new Vector3d(i, 0, j)) : ray.getY(new Vector3d(i + 1, 0, j + 1));
-				rayYmax = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? ray.getY(new Vector3d(i + 1, 0, j + 1)) : ray.getY(new Vector3d(i, 0, j));
+
+				/*
+				Double interX1 = ray.getX(new Vector3d(0, 0, j));
+				Double interX2 = ray.getX(new Vector3d(0, 0, j + 1));
+				if (interX1 == null) interX1 = 0d;
+				if (interX2 == null) interX2 = 0d;
+				//boolean leftToRight = ((interX1 > i + 1 || interX1 < i) && (interX2 > i + 1 || interX2 < i));
+				Double rayY1 = (Math.min(interX1, interX2) < i) ? ray.getY(new Vector3d(i, 0, 0)) : ray.getY(new Vector3d(0, 0, j));
+				if (rayY1 == null) rayY1 = 0d;
+				Double rayY2 = (Math.max(interX1, interX2) > i + 1) ? ray.getY(new Vector3d(i + 1, 0, 0)) : ray.getY(new Vector3d(0, 0, j + 1));
+				if (rayY2 == null) rayY2 = 0d;
+
+				//System.out.println("Y1: " + rayY1 + "  Y2:" + rayY2);
+				rayYmin = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? rayY1 : rayY2;
+				rayYmax = (ray.getDirection().getY() > 0 && ray.getDirection().getX() > 0 || ray.getDirection().getY() <= 0 && ray.getDirection().getX() <= 0) ? rayY2 : rayY1;
 				spotYmin = MathHelper.getLowest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
 				spotYmax = MathHelper.getHightest(heightMap.get(pos), heightMap.get(posX), heightMap.get(posZ), heightMap.get(posXZ));
-				if (rayYmin == null) rayYmin = 0d;
-				if (rayYmax == null) rayYmax = 0d;
+				//if (rayYmin == null) rayYmin = 0d;
+				//if (rayYmax == null) rayYmax = 0d;
 				if (spotYmin == null) spotYmin = 0d;
 				if (spotYmax == null) spotYmax = 0d;
-				if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
+				//if (rayYmin > spotYmax || rayYmax < spotYmin) continue;
+				*/
 
 				positions.add(pos);
 			}
-			lastZ = thisZ;
+			//System.out.println("highest: " + world.land.getHighestBetween(new Position(0, 0), new Position(-64, -64)));
+			//System.out.println("Höhenmaplänge: " + heightMap.size());
 		}
 
 		Double distance = Double.MAX_VALUE;
@@ -356,6 +383,7 @@ public class CollisionComparer {
 			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
 			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
 			glEnd();
+			glEnable(GL_TEXTURE_2D);
 		}
 	}
 

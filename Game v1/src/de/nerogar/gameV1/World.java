@@ -1,6 +1,7 @@
 package de.nerogar.gameV1;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
@@ -144,15 +145,28 @@ public class World {
 		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
-		if (floorIntersection != null && GameOptions.instance.getBoolOption("debug")) {
-			glDisable(GL_TEXTURE_2D);
-			glBegin(GL_LINES);
-			glColor3f(1f, 1f, 1f);
-			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
-			glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
-			glEnd();
+		if (floorIntersection != null) {
+			if (InputHandler.isMouseButtonPressed(0)) {
+				land.click(0, floorIntersection);
+			}
+			if (InputHandler.isMouseButtonPressed(1)) {
+				land.click(1, floorIntersection);
+			}
+			if (GameOptions.instance.getBoolOption("debug")) {
+				glDisable(GL_TEXTURE_2D);
+				glBegin(GL_LINES);
+				glColor3f(1f, 1f, 1f);
+				glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
+				glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
+				glEnd();
+				glEnable(GL_TEXTURE_2D);
+			}
 		}
 
 		glPopMatrix();
+	}
+	
+	public void spawnEntity(Entity entity) {
+		entityList.addEntity(entity);
 	}
 }
