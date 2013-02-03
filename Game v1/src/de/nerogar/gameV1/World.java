@@ -82,7 +82,7 @@ public class World {
 		camera.updatePostition();
 		InputHandler.updateMousePositions(game);
 
-		loadPosition = new Position((int) camera.scrollX, (int) camera.scrollZ);
+		loadPosition = camera.getCamCenter().toPosition();
 		land.loadChunksAroundXZ(loadPosition);
 
 		entityList.update(game);
@@ -141,7 +141,7 @@ public class World {
 		double time1 = System.nanoTime();
 		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
 		double time2 = System.nanoTime();
-		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: "+((time2-time1)/1000000)+"ms");
+		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
 		if (floorIntersection != null && GameOptions.instance.getBoolOption("debug")) {

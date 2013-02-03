@@ -82,7 +82,7 @@ public class GElementTextField {
 	}
 
 	public void render(boolean active) {
-		textureBank.getTexture(bgImage).bind();
+		textureBank.bindTexture(bgImage);
 
 		int state;
 

@@ -62,7 +62,7 @@ public class Game implements Runnable {
 			renderEngine.cleanup();
 			GameOptions.instance.save();
 		} catch (Throwable e) {
-			Logger.printThrowable(e, "gotta catch 'em all", true);
+			Logger.printThrowable(e, "gotta catch 'em all", false);
 		}
 	}
 
@@ -115,28 +115,28 @@ public class Game implements Runnable {
 			System.out.println(ray.getZ(new Vector3d(20,0,0)));
 		}
 
-		if (true) { //test bei sichtbarer plane
+		/*if (true) { //test bei sichtbarer plane
 
-			//Vector3d p1 = new Vector3d(-2f, 5f, 0f);
-			//Vector3d p2 = new Vector3d(2f, 5f, 0f);
-			//Vector3d p3 = new Vector3d(2f, 9f, 0f);
-			//Vector3d p4 = new Vector3d(-2f, 9f, 0f);
-			//Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-			//Plane plane = new Plane(p1, p2, p3);
+			Vector3d p1 = new Vector3d(-2f, 5f, 0f);
+			Vector3d p2 = new Vector3d(2f, 5f, 0f);
+			Vector3d p3 = new Vector3d(2f, 9f, 0f);
+			Vector3d p4 = new Vector3d(-2f, 9f, 0f);
+			Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+			Plane plane = new Plane(p1, p2, p3);
 
-			//Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
-			//Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
+			Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
+			Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
 
-			/*if (intersection == null) {
+			if (intersection == null) {
 				System.out.println("kein Schnittpunkt!");
 			} else {
 				System.out.println("Schnittpunkt bei: " + intersection.toString());
 			}
 			if (intersectionC != null) {
 				System.out.println("---" + intersectionC.toString());
-			}*/
+			}
 
-		}
+		}*/
 
 		//update game logics
 		Timer.instance.update();

@@ -1,18 +1,14 @@
 package de.nerogar.gameV1.image;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javax.imageio.ImageIO;
-
 import org.lwjgl.BufferUtils;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL11.*;
 
 import de.nerogar.gameV1.Vector2d;
 
@@ -65,7 +61,7 @@ public class SpriteSheet {
 		int imageSizeSum = 0;
 		for (int i = 0; i < textures.size(); i++) {
 			try {
-				images[i] = ImageIO.read(new FileInputStream("res/" + textures.get(i)));
+				images[i] = ImageIO.read(new File("res/" + textures.get(i)));
 				if (images[i].getWidth() > biggestImage) biggestImage = images[i].getWidth();
 				imageSizeSum += images[i].getHeight();
 			} catch (IOException e) {
@@ -92,8 +88,10 @@ public class SpriteSheet {
 		composedTextuer.put(pixels);
 		composedTextuer.rewind();
 
+		TextureBank.instance.addTexture(name, composedTextuer, biggestImage, imageSizeSum);
+		
 		////////////////////////////////
-
+/*
 		glEnable(GL_TEXTURE_2D);
 
 		IntBuffer buffer = BufferUtils.createIntBuffer(1);
@@ -106,8 +104,9 @@ public class SpriteSheet {
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, biggestImage, imageSizeSum, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, composedTextuer);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
 		TextureBank.instance.addTexture(name, id);
-
+*/
 		//debug Dump
 		boolean dumpTexture = false;
 		if (dumpTexture) {

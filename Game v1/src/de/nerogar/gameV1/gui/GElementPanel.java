@@ -23,7 +23,7 @@ public class GElementPanel {
 
 	public void render() {
 		//textureBank.getTexture("Panel preset.png").bind();
-		textureBank.getTexture(bgImage).bind();
+		textureBank.bindTexture(bgImage);
 		GL11.glBegin(GL11.GL_QUADS);
 
 		GL11.glTexCoord2f(0, 0);

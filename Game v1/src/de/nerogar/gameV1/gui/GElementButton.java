@@ -54,7 +54,7 @@ public class GElementButton {
 
 	public void render() {
 		if (!visible) return;
-		textureBank.getTexture(bgImage).bind();
+		textureBank.bindTexture(bgImage);
 
 		boolean hovered = isHovered();
 		int state;

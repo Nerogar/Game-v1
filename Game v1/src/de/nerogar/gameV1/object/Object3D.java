@@ -88,7 +88,7 @@ public class Object3D {
 	public void render(ObjectMatrix om, String texture) {
 		//float x, float y, float z) {
 
-		TextureBank.instance.getTexture(texture).bind();
+		TextureBank.instance.bindTexture(texture);
 
 		glPushMatrix();
 		glColor3f(1f, 1f, 1f);

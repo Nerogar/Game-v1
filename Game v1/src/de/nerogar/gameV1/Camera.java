@@ -138,6 +138,9 @@ public class Camera {
 
 		scrollX = (float) (scrollXLoc - Math.sin((rotation / 360) * 3.1415927 * 2) * scrollBack);
 		scrollZ = (float) (scrollZLoc + Math.cos((rotation / 360) * 3.1415927 * 2) * scrollBack);
-
+	}
+	
+	public Vector2d getCamCenter(){
+		return new Vector2d(scrollXLoc, scrollZLoc);
 	}
 }

@@ -126,7 +126,7 @@ public class GElementListBox {
 
 				float yOffset = 1f / 4f * state;
 
-				textureBank.getTexture(bgImage).bind();
+				textureBank.bindTexture(bgImage);
 				GL11.glBegin(GL11.GL_QUADS);
 
 				GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -159,7 +159,7 @@ public class GElementListBox {
 
 		float yOffset = 1f / 4f * state;
 
-		textureBank.getTexture(sliderImage).bind();
+		textureBank.bindTexture(sliderImage);
 
 		if (max <= 0) max = 1;
 		double scale = (height - sliderHeight) / max;

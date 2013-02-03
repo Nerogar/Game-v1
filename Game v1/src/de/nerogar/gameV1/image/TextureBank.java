@@ -1,13 +1,18 @@
 package de.nerogar.gameV1.image;
 
-import java.io.FileInputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 
-import static org.lwjgl.opengl.GL11.*;
+import javax.imageio.ImageIO;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+
+import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
 public class TextureBank {
 	//private ArrayList<Texture> textures;
@@ -43,26 +48,53 @@ public class TextureBank {
 			}*/
 
 			try {
+				BufferedImage image = ImageIO.read(new File("res/" + filename));
+				IntBuffer buffer = BufferUtils.createIntBuffer(image.getWidth() * image.getHeight());
+				int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+				buffer.put(pixels);
+				buffer.rewind();
+				addTexture(filename, buffer, image.getWidth(), image.getHeight());
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			/*try {
 				FileInputStream in = new FileInputStream("res/" + filename);
 				Texture newTexture = TextureLoader.getTexture("PNG", in);
 				textures.put(filename, newTexture);
 				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 	}
 
-	public void addTexture(String textureName, int id) {
-		TextureIDs.put(textureName, id);
+	public void addTexture(String name, IntBuffer intBuffer, int width, int height) {
+
+		glEnable(GL_TEXTURE_2D);
+
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		glGenTextures(buffer);
+		int id = buffer.get(0);
+
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, intBuffer);
+
+		TextureIDs.put(name, id);
 	}
 
-	public void bindTexture(String textureName){
-		 glBindTexture(GL_TEXTURE_2D, TextureIDs.get(textureName));
+	public void bindTexture(String textureName) {
+		if (!TextureIDs.containsKey(textureName)) {
+			loadTexture(textureName);
+		}
+		glBindTexture(GL_TEXTURE_2D, TextureIDs.get(textureName));
 	}
-	
-	public Texture getTexture(String filename) {
 
+	/*public Texture getTexture(String filename) {
 		Texture retTexture = textures.get(filename);
 		if (retTexture != null) { return retTexture; }
 
@@ -71,5 +103,5 @@ public class TextureBank {
 		retTexture = textures.get(filename);
 
 		return retTexture;
-	}
+	}*/
 }

@@ -74,7 +74,7 @@ public class GElementSlider {
 
 	public void render() {
 		if (!visible) return;
-		textureBank.getTexture(bgImage).bind();
+		textureBank.bindTexture(bgImage);
 
 		boolean hovered = isHovered();
 		int state;
@@ -102,7 +102,7 @@ public class GElementSlider {
 
 		GL11.glEnd();
 
-		textureBank.getTexture(sliderImage).bind();
+		textureBank.bindTexture(sliderImage);
 
 		double scale = (width - sliderWidth) / (max - min);
 		float sliderXPos = (float) (xPos + position * scale - min * scale);

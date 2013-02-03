@@ -2,8 +2,6 @@ package de.nerogar.gameV1.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.newdawn.slick.opengl.Texture;
-
 import de.nerogar.gameV1.image.TextureBank;
 
 public class FontRenderer {
@@ -20,8 +18,8 @@ public class FontRenderer {
 	public static void renderFont(String textString, float x, float y, float width, float height, int alignment) {
 		
 		if (textString == null) return;
-		Texture fontSheet = textureBank.getTexture("font.png");
-		fontSheet.bind();
+		textureBank.bindTexture("font.png");
+		
 		float texSize = 1 / 16f;
 		char[] text = textString.toCharArray();
 
