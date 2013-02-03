@@ -100,9 +100,7 @@ public class Land {
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
-		while (loadChunksAroundXZ(blockPosition)) {
-
-		}
+		while (loadChunksAroundXZ(blockPosition));
 	}
 
 	public void regenChunk(Position chunkPosition) {

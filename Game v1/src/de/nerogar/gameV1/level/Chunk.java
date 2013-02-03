@@ -234,8 +234,12 @@ public class Chunk {
 		ArrayList<Entity> entities = world.collisionComparer.getEntitiesInChunk(this);
 		world.collisionComparer.removeEntitiesInChunk(this);
 
+		int entityIndex = 0;
 		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).save(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
+			if (entities.get(i).saveEntity) {
+				entities.get(i).save(chunkFile, Entity.NODEFOLDERSAVENAME + "." + entityIndex);
+				entityIndex++;
+			}
 		}
 
 		chunkFile.save();

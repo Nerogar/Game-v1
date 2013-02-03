@@ -15,7 +15,7 @@ public class World {
 	public boolean isLoaded = false;
 	public Land land;
 	public Camera camera = new Camera();
-	public Position loadPosition;
+	public Position loadPosition = camera.getCamCenter().toPosition();
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
 	public Game game;
 	public CollisionComparer collisionComparer;
@@ -45,7 +45,7 @@ public class World {
 		land.seed = worldData.seed;
 
 		camera.init();
-		land.loadAllAroundXZ(new Position((int) camera.scrollX, (int) camera.scrollZ));
+		land.loadAllAroundXZ(loadPosition);
 		isLoaded = true;
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
@@ -100,21 +100,26 @@ public class World {
 		Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
 		//long time2 = System.nanoTime();
 		//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
+		//double time1 = System.nanoTime();
+		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
+		//double time2 = System.nanoTime();
+		//if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 
-		if (InputHandler.isMouseButtonPressed(0)) {
-			if (clickedEntities.length > 0) clickedEntities[0].click(0);
-			//for (Entity entity : clickedEntities) {
-			//	entity.click(0);
-			//}
-		} else if (InputHandler.isMouseButtonPressed(1)) {
-			if (clickedEntities.length > 0) clickedEntities[0].click(1);
-			//for (Entity entity : clickedEntities) {
-			//	entity.click(1);
-			//}
+		if (clickedEntities.length > 0) {
+			if (InputHandler.isMouseButtonPressed(0)) {
+				clickedEntities[0].click(0);
+			} else if (InputHandler.isMouseButtonPressed(1)) {
+				clickedEntities[0].click(1);
+			}
 		}
 
-		//Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
-
+		if (floorIntersection != null) {
+			if (InputHandler.isMouseButtonPressed(0)) {
+				land.click(0, floorIntersection);
+			} else if (InputHandler.isMouseButtonPressed(1)) {
+				land.click(1, floorIntersection);
+			}
+		}
 	}
 
 	public void render() {
@@ -140,33 +145,12 @@ public class World {
 		InputHandler.renderMouseRay();
 
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		double time1 = System.nanoTime();
-		Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
-		double time2 = System.nanoTime();
-		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 		//System.out.println(floorIntersection);
 		//Vector3d floorIntersection = new Vector3d(10, 10, 10);
-		if (floorIntersection != null) {
-			if (InputHandler.isMouseButtonPressed(0)) {
-				land.click(0, floorIntersection);
-			}
-			if (InputHandler.isMouseButtonPressed(1)) {
-				land.click(1, floorIntersection);
-			}
-			if (GameOptions.instance.getBoolOption("debug")) {
-				glDisable(GL_TEXTURE_2D);
-				glBegin(GL_LINES);
-				glColor3f(1f, 1f, 1f);
-				glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() - 5, floorIntersection.getZf());
-				glVertex3f(floorIntersection.getXf(), floorIntersection.getYf() + 50, floorIntersection.getZf());
-				glEnd();
-				glEnable(GL_TEXTURE_2D);
-			}
-		}
 
 		glPopMatrix();
 	}
-	
+
 	public void spawnEntity(Entity entity) {
 		entityList.addEntity(entity);
 	}

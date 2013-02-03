@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class DNFile {
 
-	String filename;
+	public String filename;
 	DNNodePath nodePath;
 
 	public DNFile(String filename) {
