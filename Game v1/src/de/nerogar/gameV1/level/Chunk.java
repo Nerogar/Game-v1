@@ -22,6 +22,8 @@ public class Chunk {
 	public static final int GENERATESIZE = Chunk.CHUNKSIZE + 1;
 	public float[][] heightMap = new float[GENERATESIZE][GENERATESIZE];
 	public boolean[][] walkableMap = new boolean[CHUNKSIZE][CHUNKSIZE];
+	public Tile[][] TileMap = new Tile[CHUNKSIZE][CHUNKSIZE];
+
 	private final String fileExtension = ".chu";
 	private String filename;
 	private String dirname = "saves/";
