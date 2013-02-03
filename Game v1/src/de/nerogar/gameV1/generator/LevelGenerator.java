@@ -48,8 +48,10 @@ public class LevelGenerator {
 			for (int j = 0; j < Chunk.CHUNKSIZE; j++) {
 				if (chunk.heightMap[i][j] < 0.6) {
 					chunk.tileMap[i][j] = Tile.TILE_WATER.id;
-				} else {
+				} else if (chunk.heightMap[i][j] < 1.5) {
 					chunk.tileMap[i][j] = Tile.TILE_GRASS.id;
+				} else {
+					chunk.tileMap[i][j] = Tile.TILE_DIRT.id;
 				}
 			}
 		}

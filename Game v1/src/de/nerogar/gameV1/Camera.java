@@ -17,7 +17,7 @@ public class Camera {
 	public float rotationDown;
 
 	private final float MAXSCROLLBACK = 20;
-	private final float MINSCROLLUP = 10;
+	private final float MINSCROLLUP = 10f;
 	private final float MINROTDOWN = 35;
 
 	private int mouseX = Mouse.getX();
@@ -118,7 +118,7 @@ public class Camera {
 
 		sY = InputHandler.isKeyDown(Keyboard.KEY_DOWN) ? 1.0f : 0;
 		sY -= InputHandler.isKeyDown(Keyboard.KEY_UP) ? 1.0f : 0;
-		sY -= Mouse.getDWheel() / 30f;
+		sY -= Mouse.getDWheel() / 100f;
 		sY += InputHandler.getGamepadButtonData("up");
 
 		scrollYLoc += timer.delta / 20f * sY;
@@ -128,7 +128,7 @@ public class Camera {
 
 		float temp;
 
-		temp = (float) Math.sqrt(scrollYLoc) * 10;
+		temp = (float) Math.sqrt(scrollYLoc) * 8;
 		rotationDown = (temp <= 90 - MINROTDOWN ? temp + MINROTDOWN : 90);
 
 		temp = 90 - rotationDown;

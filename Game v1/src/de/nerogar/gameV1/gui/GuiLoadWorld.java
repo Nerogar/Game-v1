@@ -76,9 +76,9 @@ public class GuiLoadWorld extends Gui {
 		}
 
 		if (deleteWorldAlert.getClicked()) {
-			//System.out.println(true + "");
-			System.out.println(saveProvider.deleteWorld(saveList.clickedIndex));
+			saveProvider.deleteWorld(saveList.clickedIndex);
 			saveList.text = saveProvider.getSavesAsStrings();
+			saveList.clickedIndex = -1;
 		}
 
 	}
