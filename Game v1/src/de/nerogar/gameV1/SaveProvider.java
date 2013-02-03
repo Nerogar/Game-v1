@@ -64,4 +64,28 @@ public class SaveProvider {
 		tempWorldFile.addNode("levelName", newName);
 		tempWorldFile.save();
 	}
+	
+	public boolean deleteWorld(int index) {
+		File f = new File(dirname+saves[index]);
+		if (!f.exists()) return false;
+		boolean success = deleteFolder(f);
+		updateSaves();
+		return success;
+	}
+	
+	public static boolean deleteFolder(File folder) {
+		boolean success = true;
+	    File[] files = folder.listFiles();
+	    if(files!=null) { //some JVMs return null for empty dirs
+	        for(File f: files) {
+	            if(f.isDirectory()) {
+	                deleteFolder(f);
+	            } else {
+	                success = (success && f.delete());
+	            }
+	        }
+	    }
+	    success = (success && folder.delete());
+	    return success;
+	}
 }
