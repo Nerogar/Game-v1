@@ -15,7 +15,6 @@ import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.level.Tile;
 import de.nerogar.gameV1.physics.ObjectMatrix;
-import de.nerogar.gameV1.physics.Ray;
 
 public class Game implements Runnable {
 	public boolean running = true;

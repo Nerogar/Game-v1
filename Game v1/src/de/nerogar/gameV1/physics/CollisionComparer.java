@@ -30,7 +30,7 @@ public class CollisionComparer {
 	private Position max = new Position(0, 0);
 
 	private final int GRIDSIZE = 16;
-	private final int MAX_DISTANCE = 128;
+	private final int MAX_DISTANCE = 256;
 
 	public int comparations = 0;
 
@@ -173,48 +173,6 @@ public class CollisionComparer {
 		return s.getZ() + r * d.getZ();
 	}
 
-	public static Vector3d getLinePolygonIntersection(Line line, Vector3d[] points) {
-
-		// Ein Polygon braucht mindestens 3 Punkte
-		if (points.length < 3) return null;
-
-		Plane plane = new Plane(points[0], points[1], points[2]);
-		Vector3d candidate = PhysicHelper.getLinePlaneIntersection(line, plane);
-		if (candidate == null) {
-			//System.out.println("Kein Kandidat!");
-			return null;
-		}
-
-		if (points.length == 3) {
-			Vector3d OV = points[0];
-			Vector3d RV1 = Vector3d.subtract(points[2], OV);
-			Vector3d RV2 = Vector3d.subtract(points[1], OV);
-		}
-
-		// Per Halbvektoren-Test wird überprüft, ob der Punkt innerhalb der Fläche liegt.
-		// Der Punkt soll weit weg liegen, damit die Rechnung genau bleibt
-		Vector3d pointInPlane = plane.getRandomPoint(candidate.getX() + 100000);
-
-		int intersections = 0;
-		Vector3d a, b, intersection;
-		Line halfVector, edge;
-		for (int i = 0; i < points.length; i++) {
-			a = points[i];
-			if (i == points.length - 1)
-				b = points[0];
-			else
-				b = points[i + 1];
-			halfVector = new Ray(candidate, Vector3d.subtract(pointInPlane, candidate));
-			edge = new LineSegment(a, Vector3d.subtract(b, a));
-			intersection = PhysicHelper.getLineLineIntersection(halfVector, edge);
-			if (intersection != null) {
-				intersections++;
-			}
-		}
-		if (intersections % 2 == 1) return candidate;
-		return null;
-	}
-
 	public static Vector3d getRayAABBIntersection(Ray ray, BoundingAABB aabb) {
 
 		Vector3d intersection = null;
@@ -224,7 +182,7 @@ public class CollisionComparer {
 		double newDistance = 0;
 
 		for (int i = 0; i < faces.length; i++) {
-			newIntersection = getLinePolygonIntersection(ray, faces[i]);
+			newIntersection = GeometryHelper.getLinePolygonIntersection(ray, faces[i]);
 			if (newIntersection != null) {
 				newDistance = Vector3d.subtract(newIntersection, ray.getStart()).getValue();
 				if (newDistance < distance) {
@@ -239,8 +197,6 @@ public class CollisionComparer {
 
 	public Vector3d getNearestFloorIntersectionWithRay(Ray ray, World world) {
 
-		double time0 = System.nanoTime();
-		
 		if (ray.getDirection().getX() == 0) {
 			ray.getDirection().add(new Vector3d(.000000001, 0, 0));
 		}
@@ -274,11 +230,6 @@ public class CollisionComparer {
 		ArrayList<Position> positions = new ArrayList<Position>();
 		HashMap<Position, Double> heightMap = new HashMap<Position, Double>();
 
-		double time1 = System.nanoTime();
-		System.out.println("Dauer Initialisierung: "+(time1-time0)/1000000+"ms");
-		
-		double getHeightTime = 0;
-		
 		//System.out.println("x-Iteration: "+minX+" bis "+maxX);
 		for (int i = minX; i <= maxX; i++) {
 
@@ -328,24 +279,15 @@ public class CollisionComparer {
 				Position posX = new Position(i + 1, j);
 				Position posZ = new Position(i, j + 1);
 				Position posXZ = new Position(i + 1, j + 1);
-				double time1_1 = System.nanoTime();
 				if (!heightMap.containsKey(pos)) heightMap.put(pos, (double) world.land.getHeight(pos));
 				if (!heightMap.containsKey(posX)) heightMap.put(posX, (double) world.land.getHeight(posX));
 				if (!heightMap.containsKey(posZ)) heightMap.put(posZ, (double) world.land.getHeight(posZ));
 				if (!heightMap.containsKey(posXZ)) heightMap.put(posXZ, (double) world.land.getHeight(posXZ));
-				double time1_2 = System.nanoTime();
-				getHeightTime += (time1_2-time1_1);
-
 				positions.add(pos);
 			}
 			//System.out.println("highest: " + world.land.getHighestBetween(new Position(0, 0), new Position(-64, -64)));
 			//System.out.println("Höhenmaplänge: " + heightMap.size());
 		}
-		
-		System.out.println("Dauer getHeight: "+(getHeightTime)/1000000+"ms");
-		double time2 = System.nanoTime();
-		System.out.println("Dauer Schleife: "+(time2-time1)/1000000+"ms");
-
 		Double distance = Double.MAX_VALUE;
 		Double newDistance;
 		Vector3d newIntersection = null, intersection = null;
@@ -362,8 +304,8 @@ public class CollisionComparer {
 
 			for (Vector3d[] polygon : polygons) {
 
-				newIntersection = CollisionComparer.getLinePolygonIntersection(ray, polygon);
-				//drawTriangle(polygon[0], polygon[1], polygon[2]);
+				newIntersection = GeometryHelper.getLinePolygonIntersection(ray, polygon);
+				drawTriangle(polygon[0], polygon[1], polygon[2]);
 				comparations++;
 				if (newIntersection != null) {
 					newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
@@ -375,11 +317,6 @@ public class CollisionComparer {
 			}
 
 		}
-		
-		double time3 = System.nanoTime();
-		System.out.println("Dauer Bodenvergleiche: "+(time3-time2)/1000000+"ms");
-		System.out.println("Dauer gesamt: "+(time3-time0)/1000000+"ms");
-		System.out.println("--------------------");
 
 		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println(comparations + " Bodenvergleiche letzten Frame.");
 
