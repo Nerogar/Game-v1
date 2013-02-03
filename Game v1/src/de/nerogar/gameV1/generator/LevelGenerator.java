@@ -41,8 +41,15 @@ public class LevelGenerator {
 				//float n = values[0][i][j] * values[1][i][j];
 				float n = values[1][i][j];
 				chunk.heightMap[i][j] = n;
-				if(n<0.6){
-					chunk.TileMap[i][j]=Tile.TILE_WATER;
+			}
+		}
+
+		for (int i = 0; i < Chunk.CHUNKSIZE; i++) {
+			for (int j = 0; j < Chunk.CHUNKSIZE; j++) {
+				if (chunk.heightMap[i][j] < 0.6) {
+					chunk.tileMap[i][j] = Tile.TILE_WATER.id;
+				} else {
+					chunk.tileMap[i][j] = Tile.TILE_GRASS.id;
 				}
 			}
 		}

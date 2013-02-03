@@ -14,15 +14,13 @@ import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.image.SpriteSheet;
 
 public class Chunk {
-	public static SpriteSheet floorSprites;
 	public static final int CHUNKSIZE = 64;
 	public static final int GENERATESIZE = Chunk.CHUNKSIZE + 1;
 	public float[][] heightMap = new float[GENERATESIZE][GENERATESIZE];
 	public boolean[][] walkableMap = new boolean[CHUNKSIZE][CHUNKSIZE];
-	public Tile[][] TileMap = new Tile[CHUNKSIZE][CHUNKSIZE];
+	public int[][] tileMap = new int[CHUNKSIZE][CHUNKSIZE];
 
 	private final String fileExtension = ".chu";
 	private String filename;
@@ -67,11 +65,11 @@ public class Chunk {
 		float[] colors = new float[CHUNKSIZE * CHUNKSIZE * 4 * 3];
 		float[] texCoords = new float[CHUNKSIZE * CHUNKSIZE * 4 * 2];
 
-		Vector2d textPos1 = floorSprites.getTexturePosition1("terrain/floor.png");
-		Vector2d textPos2 = floorSprites.getTexturePosition2("terrain/floor.png");
-
 		for (int i = 0; i < CHUNKSIZE; i++) {
 			for (int j = 0; j < CHUNKSIZE; j++) {
+
+				Vector2d textPos1 = Tile.getTileByID(tileMap[i][j]).texturePos1;
+				Vector2d textPos2 = Tile.getTileByID(tileMap[i][j]).texturePos2;
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
@@ -202,6 +200,10 @@ public class Chunk {
 				heightMap[i] = chunkFile.getFloatArray("heightmap." + i);
 			}
 
+			for (int i = 0; i < CHUNKSIZE; i++) {
+				tileMap[i] = chunkFile.getIntArray("tilemap." + i);
+			}
+
 			for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
 				Entity entity = Entity.getEntity(world.game, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
 				entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
@@ -224,6 +226,10 @@ public class Chunk {
 			chunkFile.addNode("heightmap." + i, heightMap[i]);
 		}
 
+		for (int i = 0; i < CHUNKSIZE; i++) {
+			chunkFile.addNode("tilemap." + i, tileMap[i]);
+		}
+
 		chunkFile.addFolder(Entity.NODEFOLDERSAVENAME);
 		ArrayList<Entity> entities = world.collisionComparer.getEntitiesInChunk(this);
 		world.collisionComparer.removeEntitiesInChunk(this);
@@ -241,13 +247,6 @@ public class Chunk {
 		glDeleteBuffers(vboTextureHandle);
 		heightMap = null;
 	}
-
-	/* ###########################################################################################
-	 * Hier muss die getHight() Funktion sein.
-	 * Sie kann nicht in World sein, da sie auch bei nicht hinzugefügten Chunks funktionieren muss.
-	 * Von Land kann dann hierauf zugegriffen werden.
-	 * ###########################################################################################
-	 */
 
 	public float getLocalHeight(int x, int z) {
 		return heightMap[x][z];
