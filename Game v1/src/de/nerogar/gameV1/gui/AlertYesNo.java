@@ -27,11 +27,20 @@ public class AlertYesNo extends Alert {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == yesButton.id) {
-			returnBoolean = false;
-			close();
-		} else if (id == noButton.id) {
 			returnBoolean = true;
 			close();
+		} else if (id == noButton.id) {
+			returnBoolean = false;
+			close();
+		}
+	}
+
+	public boolean getClicked() {
+		if (hasNewBoolean) {
+			hasNewBoolean = false;
+			return returnBoolean;
+		} else {
+			return false;
 		}
 	}
 

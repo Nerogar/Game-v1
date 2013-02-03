@@ -39,10 +39,10 @@ public class GuiLoadWorld extends Gui {
 
 		loadButton = new GElementButton(genNewID(), 0.05f, 0.35f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		loadButton.enabled = false;
-		
+
 		renameButton = new GElementButton(genNewID(), 0.05f, 0.5f, 0.3f, 0.1f, "rename world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		renameButton.enabled = false;
-		
+
 		deleteButton = new GElementButton(genNewID(), 0.05f, 0.65f, 0.3f, 0.1f, "delete world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		deleteButton.enabled = false;
 
@@ -74,9 +74,11 @@ public class GuiLoadWorld extends Gui {
 				saveList.text = saveProvider.getSavesAsStrings();
 			}
 		}
-		if (deleteWorldAlert.hasNewBoolean && deleteWorldAlert.returnBoolean) {
-			System.out.println(true+"");
-			//System.out.println(saveProvider.deleteWorld(saveList.clickedIndex));
+
+		if (deleteWorldAlert.getClicked()) {
+			//System.out.println(true + "");
+			System.out.println(saveProvider.deleteWorld(saveList.clickedIndex));
+			saveList.text = saveProvider.getSavesAsStrings();
 		}
 
 	}
