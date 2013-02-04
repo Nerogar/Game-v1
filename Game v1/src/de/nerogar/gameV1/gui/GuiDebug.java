@@ -44,7 +44,7 @@ public class GuiDebug extends Gui {
 		for (int i = 0; i < labels.length; i++)
 			textLabels.add(labels[i]);
 		textLabels.add(fpsLabel);
-
+		
 		buttons.add(resetCamButton);
 
 		//textLabels.add(label1);

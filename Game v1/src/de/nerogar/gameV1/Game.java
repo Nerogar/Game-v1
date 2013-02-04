@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
@@ -30,6 +31,7 @@ public class Game implements Runnable {
 	public long stressTimeRender = 0;
 	public long stressTimeUpdate = 0;
 	public long stressTimeTotal = 0;
+	public Sound bgMusic;
 
 	public void run() {
 		this.game = this;
@@ -44,8 +46,7 @@ public class Game implements Runnable {
 			InputHandler.registerGamepadButton("back", "6", 0.25f);
 
 			// OpenAL Test
-			Sound jazz = new Sound(new File("res/sound/music.wav"));
-			jazz.play();
+			bgMusic = new Sound(new File("res/sound/music.wav"), "wav");
 
 			while (running) {
 				stressTimes[0] = System.nanoTime();
@@ -64,7 +65,8 @@ public class Game implements Runnable {
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
-			jazz.kill();
+			
+			bgMusic.destroy();
 			
 			if (world.isLoaded) world.closeWorld();
 			renderEngine.cleanup();
@@ -149,6 +151,7 @@ public class Game implements Runnable {
 		if (!guiList.pauseGame()) {
 			world.update();
 		}
+		Sound.setListener(new Vector3d(world.camera.scrollX,world.camera.scrollY,world.camera.scrollZ), new Vector3d(), new Vector3d());
 	}
 
 	private void render() {
@@ -166,6 +169,7 @@ public class Game implements Runnable {
 		Entity.initEntityList(game);
 		Tile.initTileList();
 		Timer.instance.init();
+		AL.create();
 	}
 
 	public static void main(String[] args) {

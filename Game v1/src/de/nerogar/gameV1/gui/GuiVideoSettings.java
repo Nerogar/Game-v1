@@ -43,7 +43,7 @@ public class GuiVideoSettings extends Gui {
 
 		//fps limit
 		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.5f, 0.2f, 0.1f, "fps limit:", FontRenderer.LEFT));
-		fpsSlider = new GElementSlider(genNewID(), 0.25f, 0.5f, 0.2f, 0.1f, 0.025f, 20, 120, "", "Buttons/button.png", "Buttons/slider.png");
+		fpsSlider = new GElementSlider(genNewID(), 0.25f, 0.5f, 0.2f, 0.1f, 0.025f, 20, 144, "", "Buttons/button.png", "Buttons/slider.png");
 		fpsSlider.position = GameOptions.instance.getDoubleOption("fps");
 		fpsSlider.allowFloat = false;
 
