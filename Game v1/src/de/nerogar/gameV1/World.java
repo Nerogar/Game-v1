@@ -7,18 +7,21 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
+import de.nerogar.gameV1.ai.Pathfinder;
+import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
 
 public class World {
 	public EntityList entityList;
+	public Land land;
 	public WorldData worldData;
 	public boolean isLoaded = false;
-	public Land land;
 	public Camera camera = new Camera();
 	public Position loadPosition = camera.getCamCenter().toPosition();
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
 	public Game game;
 	public CollisionComparer collisionComparer;
+	public Pathfinder pathfinder = new Pathfinder();
 
 	public World(Game game) {
 		this.game = game;
@@ -43,6 +46,7 @@ public class World {
 		land = new Land(game, this);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
+		land.levelGenerator = new LevelGenerator(land);
 
 		camera.init();
 		land.loadAllAroundXZ(loadPosition);
@@ -150,7 +154,7 @@ public class World {
 	public void spawnEntity(Entity entity) {
 		if (isLoaded) entityList.addEntity(entity);
 	}
-	
+
 	public boolean containsEntity(Entity entity) {
 		return entityList.containsEntity(entity);
 	}

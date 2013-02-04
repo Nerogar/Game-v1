@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 import de.nerogar.gameV1.image.Noise;
 import de.nerogar.gameV1.level.Chunk;
+import de.nerogar.gameV1.level.Land;
 import de.nerogar.gameV1.level.Tile;
 
 public class LevelGenerator {
 	private Noise[] noise;
 	private final int GENERATESIZE = Chunk.GENERATESIZE;
 	private final int REPEATOFFSET = 10000;
+	private long seed;
+	private Land land;
 	private float[][][] values = new float[2][GENERATESIZE][GENERATESIZE];
 	private ArrayList<Populator> populators = new ArrayList<Populator>();
 
-	public LevelGenerator(long seed, int x, int y) {
-		noise = new Noise[2];
-		long biomeSize = Long.MAX_VALUE - seed;
-
-		noise[0] = new Noise(GENERATESIZE, 255, 5, 32, biomeSize + (REPEATOFFSET * x) + y, true, REPEATOFFSET);
-		noise[1] = new Noise(GENERATESIZE, 255, 3, 16, seed + (REPEATOFFSET * x) + y, true, REPEATOFFSET);
+	public LevelGenerator(Land land) {
+		this.seed = land.seed;
+		this.land = land;
 		addDefaultPopulators();
 	}
 
@@ -26,7 +26,12 @@ public class LevelGenerator {
 		addPopulator(new TestPopulator());
 	}
 
-	public Chunk generateLevel(Chunk chunk) {
+	public Chunk generateLevel(Chunk chunk, int x, int y) {
+		noise = new Noise[2];
+		long biomeSize = Long.MAX_VALUE - seed;
+		noise[0] = new Noise(GENERATESIZE, 255, 5, 32, biomeSize + (REPEATOFFSET * x) + y, true, REPEATOFFSET);
+		noise[1] = new Noise(GENERATESIZE, 255, 3, 16, seed + (REPEATOFFSET * x) + y, true, REPEATOFFSET);
+
 		for (int i = 0; i < GENERATESIZE; i++) {
 			for (int j = 0; j < GENERATESIZE; j++) {
 
@@ -56,8 +61,7 @@ public class LevelGenerator {
 			}
 		}
 		populate(chunk);
-		chunk.updateWalkableMap();
-		chunk.updateVbo();
+		chunk.updateMaps();
 		return chunk;
 	}
 

@@ -14,12 +14,14 @@ import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.ai.PathNode;
 
 public class Chunk {
 	public static final int CHUNKSIZE = 64;
 	public static final int GENERATESIZE = Chunk.CHUNKSIZE + 1;
 	public float[][] heightMap = new float[GENERATESIZE][GENERATESIZE];
 	public boolean[][] walkableMap = new boolean[CHUNKSIZE][CHUNKSIZE];
+	public PathNode[][] nodeMap;
 	public int[][] tileMap = new int[CHUNKSIZE][CHUNKSIZE];
 
 	private final String fileExtension = ".chu";
@@ -38,6 +40,12 @@ public class Chunk {
 		colorData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
 		textureData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 2);
 		this.world = world;
+	}
+
+	public void updateMaps() {
+		updateWalkableMap();
+		world.pathfinder.updateNodeMap(this);
+		updateVbo();
 	}
 
 	public void updateWalkableMap() {
@@ -211,9 +219,7 @@ public class Chunk {
 				spawnEntity(entity);
 			}
 
-			updateWalkableMap();
-			updateVbo();
-
+			updateMaps();
 			return true;
 		}
 		return false;

@@ -21,7 +21,8 @@ public class Land {
 	public int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
 	public int chunkUpdatesPerFrame = 4;
 	private Game game;
-	private World world;
+	public World world;
+	public LevelGenerator levelGenerator;
 	public EntityTestparticle markerCone;
 
 	public Land(Game game, World world) {
@@ -33,8 +34,7 @@ public class Land {
 	}
 
 	public Chunk generateLand(Chunk chunk, Position chunkPosition) {
-		LevelGenerator levelGen = new LevelGenerator(seed, (int) chunkPosition.x, (int) chunkPosition.z);
-		chunk = levelGen.generateLevel(new Chunk(chunkPosition, saveName, world));
+		chunk = levelGenerator.generateLevel(new Chunk(chunkPosition, saveName, world), (int) chunkPosition.x, (int) chunkPosition.z);
 
 		return chunk;
 	}
