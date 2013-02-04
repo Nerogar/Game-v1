@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.Display;
@@ -15,6 +16,7 @@ import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.level.Tile;
 import de.nerogar.gameV1.physics.ObjectMatrix;
+import de.nerogar.gameV1.sound.Sound;
 
 public class Game implements Runnable {
 	public boolean running = true;
@@ -41,6 +43,10 @@ public class Game implements Runnable {
 			InputHandler.registerGamepadButton("start", "7", 0.25f);
 			InputHandler.registerGamepadButton("back", "6", 0.25f);
 
+			// OpenAL Test
+			Sound jazz = new Sound(new File("res/sound/music.wav"));
+			jazz.play();
+
 			while (running) {
 				stressTimes[0] = System.nanoTime();
 				mainloop();
@@ -58,12 +64,16 @@ public class Game implements Runnable {
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
+			jazz.kill();
+			
 			if (world.isLoaded) world.closeWorld();
 			renderEngine.cleanup();
 			GameOptions.instance.save();
+
 		} catch (Throwable e) {
 			Logger.printThrowable(e, "gotta catch 'em all", false);
 		}
+
 	}
 
 	private void updateStressTimes() {
