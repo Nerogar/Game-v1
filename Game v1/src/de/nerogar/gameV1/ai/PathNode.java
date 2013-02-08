@@ -3,10 +3,13 @@ package de.nerogar.gameV1.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
+import de.nerogar.gameV1.level.Chunk;
+
 public class PathNode {
 	public PathNode parent;
 	public double g, f, h;
 	public int x, z;
+	public int locX, locZ;
 	public int size = 1;
 	public boolean mergeable = true;
 	public boolean walkable;
@@ -19,9 +22,12 @@ public class PathNode {
 	//unwichtiges zeug:
 	public int drawn = -1;
 
-	public PathNode(int x, int y) {
-		this.x = x;
-		this.z = y;
+	public PathNode(int x, int z, Chunk chunk) {
+		this.locX = x;
+		this.locZ = z;
+		this.x = x + chunk.chunkPosition.x * Chunk.CHUNKSIZE;
+		this.z = z + chunk.chunkPosition.z * Chunk.CHUNKSIZE;
+
 		Random rnd = new Random();
 
 		colR = rnd.nextFloat();

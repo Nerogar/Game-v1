@@ -63,11 +63,20 @@ public class Chunk {
 				}*/
 				if (tileMap[i][j] != Tile.TILE_WATER.id) {
 					walkable = true;
+				} else {
+					walkable = false;
 				}
 
 				walkableMap[i][j] = walkable;
 			}
 		}
+	}
+
+	public PathNode getPathNode(int x, int z) {
+		x = (int) MathHelper.modToInt(x,CHUNKSIZE);
+		z = (int) MathHelper.modToInt(z,CHUNKSIZE);
+
+		return nodeMap[x][z];
 	}
 
 	public void updateVbo() {
