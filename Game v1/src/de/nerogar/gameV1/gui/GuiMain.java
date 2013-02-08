@@ -9,6 +9,7 @@ public class GuiMain extends Gui {
 	private GElementButton videosettingsButton;
 	private GElementButton audioButtonPlay, audioButtonStop;
 	private GElementButton exitButton;
+	private GElementSlider pitchSlider;
 
 	public GuiMain(Game game) {
 		super(game);
@@ -41,26 +42,34 @@ public class GuiMain extends Gui {
 		newGameButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "new game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		loadGameButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "load game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.4f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		
+
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.5f, 0.3f, 0.05f,  "music:", FontRenderer.RIGHT));
+		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.5f, 0.3f, 0.05f, "jazz nyan cat:", FontRenderer.RIGHT));
+		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.2, 2.5, "", "Buttons/button.png", "Buttons/slider.png");
+		pitchSlider.position = 1.5;
 		
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-
+		
 		buttons.add(newGameButton);
 		buttons.add(loadGameButton);
 		buttons.add(videosettingsButton);
 		buttons.add(audioButtonPlay);
 		buttons.add(audioButtonStop);
 		buttons.add(exitButton);
+		sliders.add(pitchSlider);
 
 		updateGui();
 	}
 
 	@Override
 	public void updateGui() {
-
+		if (game.bgMusic == null) return;
+		if (!game.bgMusic.isPlaying())
+			audioButtonPlay.text = "play";
+		else
+			audioButtonPlay.text = "pause";
+		game.bgMusic.setPitch((float)pitchSlider.position);
 	}
 
 	@Override
@@ -83,16 +92,13 @@ public class GuiMain extends Gui {
 		} else if (id == exitButton.id && mouseButton == 0) {
 			game.running = false;
 		} else if (id == audioButtonPlay.id && mouseButton == 0) {
-			if (game.bgMusic.isPaused() || !game.bgMusic.isPlaying()) {
+			if (!game.bgMusic.isPlaying()) {
 				game.bgMusic.play();
-				audioButtonPlay.text = "pause";
 			} else {
 				game.bgMusic.pause();
-				audioButtonPlay.text = "play";
 			}
 		} else if (id == audioButtonStop.id && mouseButton == 0) {
 			game.bgMusic.stop();
-			audioButtonPlay.text = "play";
 		}
 	}
 }

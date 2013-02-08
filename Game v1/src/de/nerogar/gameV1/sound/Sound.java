@@ -20,19 +20,20 @@ public class Sound {
 	int source;
 	Vector3d position = new Vector3d();
 	Vector3d velocity = new Vector3d();
-	private boolean paused;
-	private boolean playing;
+	private boolean looping = true;
+	private int state;
 
-	public Sound(File file, String format) throws LWJGLException, IOException {
-		this(file, format, new Vector3d(0, 0, 0));
+	public Sound(File file) throws LWJGLException, IOException {
+		this(file, new Vector3d(0, 0, 0), false);
 	}
 
-	public Sound(File file, String format, Vector3d pos) throws LWJGLException, IOException {
+	public Sound(File file, Vector3d pos, boolean looping) throws LWJGLException, IOException {
 		// buffer und sources an OpenAL weiterleiten
 		buffer = AL10.alGenBuffers();
 		source = AL10.alGenSources();
 
 		// Datei in den Buffer laden
+		String format = "wav";
 		switch (format) {
 		case "wav":
 			setWaveFile(file);
@@ -49,6 +50,10 @@ public class Sound {
 
 		// Listener positionieren
 		setListener(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
+		
+		// OpenAL mitteilen, ob der Sound wiederholt werden soll
+		this.looping = looping;
+		updateLooping();
 	}
 
 	private void setWaveFile(File file) throws FileNotFoundException {
@@ -78,11 +83,19 @@ public class Sound {
 	private void setSource(Vector3d position, Vector3d velocity) {
 		//if (AL10.alGetError() != AL10.AL_NO_ERROR) return AL10.AL_FALSE;
 		AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
-		AL10.alSourcef(source, AL10.AL_PITCH, 1.0f);
-		AL10.alSourcef(source, AL10.AL_GAIN, 1.0f);
+		setPitch(1.5f);
+		setGain(1.0f);
 		AL10.alSource3f(source, AL10.AL_POSITION, position.getXf(), position.getYf(), position.getZf());
 		AL10.alSource3f(source, AL10.AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
 
+	}
+	
+	public void setPitch(float pitch) {
+		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+	}
+	
+	public void setGain(float gain) {
+		AL10.alSourcef(source, AL10.AL_GAIN, gain);
 	}
 
 	public static void setListener(Vector3d position, Vector3d velocity, Vector3d orientation) {
@@ -93,19 +106,14 @@ public class Sound {
 
 	public void play() {
 		AL10.alSourcePlay(source);
-		paused = false;
-		playing = true;
 	}
 
 	public void stop() {
 		AL10.alSourceStop(source);
-		paused = false;
-		playing = false;
 	}
-	
+
 	public void pause() {
 		AL10.alSourcePause(source);
-		paused = true;
 	}
 
 	public void destroy() {
@@ -114,12 +122,40 @@ public class Sound {
 	}
 
 	public boolean isPaused() {
-		return paused;
+		return (this.state == AL10.AL_PAUSED);
 	}
 
 	public boolean isPlaying() {
-		return playing;
+		return (this.state == AL10.AL_PLAYING);
 	}
 
+	public boolean isLooping() {
+		return looping;
+	}
+
+	public void setLooping(boolean looping) {
+		this.looping = looping;
+		updateLooping();
+	}
+
+	public void updateLooping() {
+		if (looping) {
+			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_TRUE);
+		} else {
+			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
+		}
+	}
+	
+	public void update() {
+		this.state = AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE);
+	}
+	
+	public boolean isStopped() {
+		return (this.state == AL10.AL_STOPPED);
+	}
+
+	public int getState() {
+		return this.state;
+	}
 
 }
