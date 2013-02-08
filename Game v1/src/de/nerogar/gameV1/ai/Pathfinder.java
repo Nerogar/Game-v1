@@ -82,8 +82,9 @@ public class Pathfinder {
 
 		//long time3 = System.nanoTime(); //time3
 
-		for (int i = chunk.chunkPosition.x; i < chunk.chunkPosition.x; i++) {
-			for (int j = chunk.chunkPosition.z; j < chunk.chunkPosition.z; j++) {
+		for (int i = chunk.chunkPosition.x - 1; i <= chunk.chunkPosition.x + 1; i++) {
+			for (int j = chunk.chunkPosition.z - 1; j <= chunk.chunkPosition.z + 1; j++) {
+				System.out.println("(" + i + "|" + j + ")");
 				updateNodeNeighbors(land.getChunk(new Position(i, j)));
 			}
 		}
@@ -97,6 +98,8 @@ public class Pathfinder {
 
 	public void updateNodeNeighbors(Chunk chunk) {
 		if (chunk == null) return;
+		System.out.println("daksjfhaöseiufhöaisdef");
+
 		PathNode[][] nodeMap = chunk.nodeMap;
 		for (int i = 0; i < nodeMap.length; i++) {
 			for (int j = 0; j < nodeMap[i].length; j = nodeMap[i][j].z + nodeMap[i][j].size) {
