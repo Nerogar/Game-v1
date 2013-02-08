@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.ai;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PathNode {
 	public PathNode parent;
@@ -13,6 +14,7 @@ public class PathNode {
 	public double[] neighborDistance;
 	public ArrayList<PathNode> neighborsTemp = new ArrayList<PathNode>();
 	public boolean neighborsProcessed = false;
+	public float colR, colG, colB;
 
 	//unwichtiges zeug:
 	public int drawn = -1;
@@ -20,6 +22,11 @@ public class PathNode {
 	public PathNode(int x, int y) {
 		this.x = x;
 		this.z = y;
+		Random rnd = new Random();
+
+		colR = rnd.nextFloat();
+		colG = rnd.nextFloat();
+		colB = rnd.nextFloat();
 	}
 
 	public void calcF(int x, int y) {

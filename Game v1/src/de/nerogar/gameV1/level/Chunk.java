@@ -85,6 +85,42 @@ public class Chunk {
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
+				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = nodeMap[i][j].colR;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = nodeMap[i][j].colG;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = nodeMap[i][j].colB;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = textPos1.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = textPos1.getYf();
+
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1];
+				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = nodeMap[i][j].colR;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = nodeMap[i][j].colG;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = nodeMap[i][j].colB;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = textPos2.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = textPos1.getYf();
+
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1];
+				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = nodeMap[i][j].colR;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = nodeMap[i][j].colG;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = nodeMap[i][j].colB;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = textPos2.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = textPos2.getYf();
+
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j];
+				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = nodeMap[i][j].colR;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = nodeMap[i][j].colG;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = nodeMap[i][j].colB;
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();
+
+				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
 				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = heightMap[i][j] / 5;
@@ -116,43 +152,7 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 5;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();
-
-				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = walkableMap[i][j] == true ? 1 : 0;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = 0f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = 0f;
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = walkableMap[i][j] == true ? 1 : 0;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = 1f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = 0f;
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = walkableMap[i][j] == true ? 1 : 0;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = 1f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = 1f;
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = walkableMap[i][j] == true ? 1 : 0;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = walkableMap[i][j] == true ? 1 : 0;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = 0f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = 1f;*/
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();*/
 			}
 		}
 
