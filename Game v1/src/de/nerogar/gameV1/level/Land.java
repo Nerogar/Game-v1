@@ -42,9 +42,7 @@ public class Land {
 	public Chunk getChunk(Position chunkPosition) {
 		int index = isChunkLoaded(chunkPosition);
 		if (index != -1) return chunks.get(index);
-		return new Chunk(new Position(0, 0), saveName, world); // wenn Chunk nicht vorhanden ist, wird ein leerer Chunk zurückgegeben.
-		// return null; 
-		// könnte auch NULL zurück geben, verursacht aber Schwierigkeitenin der späteren Verarbeitung!
+		return null;
 	}
 
 	public boolean loadChunksAroundXZ(Position blockPosition) {
@@ -71,14 +69,11 @@ public class Land {
 		}
 
 		return chunkUpdates > 0;
-
 	}
 
 	private int isChunkLoaded(Position chunkPosition) {
 		for (int i = 0; i < chunks.size(); i++) {
-			if (chunks.get(i).equals(chunkPosition)) {
-				return i;
-			}
+			if (chunks.get(i).equals(chunkPosition)) { return i; }
 		}
 
 		return -1;
@@ -100,7 +95,8 @@ public class Land {
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
-		while (loadChunksAroundXZ(blockPosition));
+		while (loadChunksAroundXZ(blockPosition))
+			;
 	}
 
 	public void regenChunk(Position chunkPosition) {
@@ -133,21 +129,32 @@ public class Land {
 		world.collisionComparer.newGrid();
 	}
 
-	private Position getChunkPosition(double x, double z) {
-
+	public Position getChunkPosition(double x, double z) {
 		int chPosX = MathHelper.divDownToInt(x, Chunk.CHUNKSIZE);
 		int chPosZ = MathHelper.divDownToInt(z, Chunk.CHUNKSIZE);
 
 		return new Position(chPosX, chPosZ);
 	}
 
-	private Position getChunkPosition(Position blockPosition) {
-		Position chunkPosition = new Position(0, 0);
+	public Position getChunkPosition(Position blockPosition) {
+		int chPosX = MathHelper.divDownToInt(blockPosition.x, Chunk.CHUNKSIZE);
+		int chPosZ = MathHelper.divDownToInt(blockPosition.z, Chunk.CHUNKSIZE);
 
-		chunkPosition.x = MathHelper.divDownToInt(blockPosition.x, Chunk.CHUNKSIZE);
-		chunkPosition.z = MathHelper.divDownToInt(blockPosition.z, Chunk.CHUNKSIZE);
+		return new Position(chPosX, chPosZ);
+	}
 
-		return chunkPosition;
+	public Position getPositionInChunk(double x, double z) {
+		int chPosX = (int) MathHelper.modToInt(x, Chunk.CHUNKSIZE);
+		int chPosZ = (int) MathHelper.modToInt(z, Chunk.CHUNKSIZE);
+
+		return new Position(chPosX, chPosZ);
+	}
+
+	public Position getPositionInChunk(Position blockPosition) {
+		int chPosX = (int) MathHelper.modToInt(blockPosition.x, Chunk.CHUNKSIZE);
+		int chPosZ = (int) MathHelper.modToInt(blockPosition.z, Chunk.CHUNKSIZE);
+
+		return new Position(chPosX, chPosZ);
 	}
 
 	private boolean isInChunk(Position blockPosition, Chunk chunk) {
@@ -294,11 +301,11 @@ public class Land {
 	}
 
 	public void click(int button, Vector3d pos) {
-		if (button == 0) {
-			markerCone.setForce(new Vector3d(0,0,0));
-			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0,10,0)));
-			markerCone.addForce(new Vector3d(0,-10000,0));
+		/*if (button == 0) {
+			markerCone.setForce(new Vector3d(0, 0, 0));
+			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0, 10, 0)));
+			markerCone.addForce(new Vector3d(0, -10000, 0));
 			if (!world.containsEntity(markerCone)) world.spawnEntity(markerCone);
-		}
+		}*/
 	}
 }

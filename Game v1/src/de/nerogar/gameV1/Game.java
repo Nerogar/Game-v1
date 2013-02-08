@@ -51,6 +51,7 @@ public class Game implements Runnable {
 
 			// OpenAL Test
 
+
 			bgMusic = new Sound(new File("res/sound/music.wav"), new Vector3d(0,0,0), true);
 
 			while (running) {
