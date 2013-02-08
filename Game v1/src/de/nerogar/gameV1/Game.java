@@ -5,8 +5,10 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
@@ -39,6 +41,7 @@ public class Game implements Runnable {
 		try {
 
 			init();
+
 			Timer.instance.registerEvent("gc", 10);
 
 			InputHandler.loadGamepad();
@@ -46,6 +49,7 @@ public class Game implements Runnable {
 			InputHandler.registerGamepadButton("back", "6", 0.25f);
 
 			// OpenAL Test
+
 			bgMusic = new Sound(new File("res/sound/music.wav"), "wav");
 
 			while (running) {
@@ -65,14 +69,15 @@ public class Game implements Runnable {
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
-			
+
 			bgMusic.destroy();
-			
+
 			if (world.isLoaded) world.closeWorld();
 			renderEngine.cleanup();
 			GameOptions.instance.save();
 
-		} catch (Throwable e) {
+			//} catch (LWJGLException | IOException e) {
+		} catch (Exception e) {
 			Logger.printThrowable(e, "gotta catch 'em all", false);
 		}
 
@@ -151,7 +156,7 @@ public class Game implements Runnable {
 		if (!guiList.pauseGame()) {
 			world.update();
 		}
-		Sound.setListener(new Vector3d(world.camera.scrollX,world.camera.scrollY,world.camera.scrollZ), new Vector3d(), new Vector3d());
+		Sound.setListener(new Vector3d(world.camera.scrollX, world.camera.scrollY, world.camera.scrollZ), new Vector3d(), new Vector3d());
 	}
 
 	private void render() {
@@ -160,7 +165,7 @@ public class Game implements Runnable {
 		guiList.render();
 	}
 
-	private void init() throws Exception {
+	private void init() {
 		world = new World(game);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(game));
@@ -169,7 +174,12 @@ public class Game implements Runnable {
 		Entity.initEntityList(game);
 		Tile.initTileList();
 		Timer.instance.init();
-		AL.create();
+
+		try {
+			AL.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

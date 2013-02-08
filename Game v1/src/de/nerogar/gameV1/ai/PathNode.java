@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PathNode {
 	public PathNode parent;
 	public double g, f, h;
-	public int x, y;
+	public int x, z;
 	public int size = 1;
 	public boolean mergeable = true;
 	public boolean walkable;
@@ -19,11 +19,11 @@ public class PathNode {
 
 	public PathNode(int x, int y) {
 		this.x = x;
-		this.y = y;
+		this.z = y;
 	}
 
 	public void calcF(int x, int y) {
-		h = (Math.abs(this.x - x) + Math.abs(this.y - y)) * 10;
+		h = (Math.abs(this.x - x) + Math.abs(this.z - y)) * 10;
 		//double hX = Math.abs(this.x - x);
 		//double hY = Math.abs(this.y - y);
 
@@ -48,7 +48,7 @@ public class PathNode {
 			neighbors[i] = neighborsTemp.get(i);
 
 			double distX = Math.abs(((x + (size / 2f)) - (neighbors[i].x + (neighbors[i].size / 2f))));
-			double distY = Math.abs(((y + (size / 2f)) - (neighbors[i].y + (neighbors[i].size / 2f))));
+			double distY = Math.abs(((z + (size / 2f)) - (neighbors[i].z + (neighbors[i].size / 2f))));
 
 			neighborDistance[i] = Math.sqrt(distX * distX + distY * distY) * 10;
 		}

@@ -58,8 +58,11 @@ public class Chunk {
 				float h3 = getLocalHeight(i, j + 1);
 				float h4 = getLocalHeight(i + 1, j + 1);
 				float maxHeightDifference = 0.6f;
-				if (MathHelper.getHightest(h1, h2, h3, h4) - MathHelper.getLowest(h1, h2, h3, h4) > maxHeightDifference) {
+				/*if (MathHelper.getHightest(h1, h2, h3, h4) - MathHelper.getLowest(h1, h2, h3, h4) > maxHeightDifference) {
 					walkable = false;
+				}*/
+				if (tileMap[i][j] != Tile.TILE_WATER.id) {
+					walkable = true;
 				}
 
 				walkableMap[i][j] = walkable;

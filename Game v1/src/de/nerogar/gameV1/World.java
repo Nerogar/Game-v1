@@ -7,6 +7,8 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
+import de.nerogar.gameV1.ai.Path;
+import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
@@ -21,7 +23,9 @@ public class World {
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
 	public Game game;
 	public CollisionComparer collisionComparer;
-	public Pathfinder pathfinder = new Pathfinder();
+	public Pathfinder pathfinder;
+	public Path path;
+	public PathNode pathEnd;
 
 	public World(Game game) {
 		this.game = game;
@@ -29,6 +33,7 @@ public class World {
 		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
 		entityList.setCollisionComparer(collisionComparer);
+		pathfinder = new Pathfinder(land);
 	}
 
 	public void initiateWorld(String levelName, long seed) {
@@ -43,7 +48,7 @@ public class World {
 			worldData.load();
 		}
 
-		land = new Land(game, this);
+		//land = new Land(game, this);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
 		land.levelGenerator = new LevelGenerator(land);
@@ -120,10 +125,20 @@ public class World {
 		if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
 				land.click(0, floorIntersection);
+				if (pathEnd != null) {
+					PathNode start = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
+					path = new Path(start, pathEnd, pathfinder);
+				}
 			} else if (InputHandler.isMouseButtonPressed(1)) {
 				land.click(1, floorIntersection);
+				pathEnd = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
 			}
 		}
+
+		/*PathNode start = pathfinder.getNode(new Position(36, 16));
+		PathNode pathEnd = pathfinder.getNode(new Position(0, 8));
+		path = new Path(start, pathEnd, pathfinder);*/
+
 	}
 
 	public void render() {
@@ -148,6 +163,16 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 
+		glDisable(GL_TEXTURE_2D);
+		glBegin(GL_LINES);
+		if (path != null) {
+			for (int i = 1; i < path.finalPath.size(); i++) {
+				glVertex3f(path.finalPath.get(i).x, 5, path.finalPath.get(i).z);
+				glVertex3f(path.finalPath.get(i - 1).x, 5, path.finalPath.get(i - 1).z);
+			}
+		}
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
 		glPopMatrix();
 	}
 
