@@ -5,12 +5,10 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
@@ -132,55 +130,48 @@ public class Game implements Runnable {
 			}
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-			System.out.println("playing: " + AL10.AL_PLAYING);
-			System.out.println("paused: " + AL10.AL_PAUSED);
-			System.out.println("stopped: " + AL10.AL_STOPPED);
-			System.out.println("initial: " + AL10.AL_INITIAL);
-
-			if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
-				bgMusic.setOffset((float) Math.random());
-			}
-
-			if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-				bgMusic.crash();
-			}
-
-			if (InputHandler.isKeyReleased(Keyboard.KEY_2)) {
-				bgMusic.uncrash();
-			}
-
-			/*if (true) { //test bei sichtbarer plane
-
-				Vector3d p1 = new Vector3d(-2f, 5f, 0f);
-				Vector3d p2 = new Vector3d(2f, 5f, 0f);
-				Vector3d p3 = new Vector3d(2f, 9f, 0f);
-				Vector3d p4 = new Vector3d(-2f, 9f, 0f);
-				Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-				Plane plane = new Plane(p1, p2, p3);
-
-				Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
-				Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
-
-				if (intersection == null) {
-					System.out.println("kein Schnittpunkt!");
-				} else {
-					System.out.println("Schnittpunkt bei: " + intersection.toString());
-				}
-				if (intersectionC != null) {
-					System.out.println("---" + intersectionC.toString());
-				}
-
-			}*/
-
-			//update game logics
-			Timer.instance.update();
-			guiList.update();
-			if (!guiList.pauseGame()) {
-				world.update();
-			}
-			Sound.setListener(new Vector3d(world.camera.scrollX, world.camera.scrollY, world.camera.scrollZ), new Vector3d(), new Vector3d());
+		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
+			bgMusic.setOffset((float) Math.random());
 		}
+
+		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
+			bgMusic.crash();
+		}
+
+		if (InputHandler.isKeyReleased(Keyboard.KEY_2)) {
+			bgMusic.uncrash();
+		}
+
+		/*if (true) { //test bei sichtbarer plane
+
+		Vector3d p1 = new Vector3d(-2f, 5f, 0f);
+		Vector3d p2 = new Vector3d(2f, 5f, 0f);
+		Vector3d p3 = new Vector3d(2f, 9f, 0f);
+		Vector3d p4 = new Vector3d(-2f, 9f, 0f);
+		Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		Plane plane = new Plane(p1, p2, p3);
+
+		Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
+		Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
+
+		if (intersection == null) {
+		System.out.println("kein Schnittpunkt!");
+		} else {
+		System.out.println("Schnittpunkt bei: " + intersection.toString());
+		}
+		if (intersectionC != null) {
+		System.out.println("---" + intersectionC.toString());
+		}
+
+		}*/
+
+		//update game logics
+		Timer.instance.update();
+		guiList.update();
+		if (!guiList.pauseGame()) {
+			world.update();
+		}
+		Sound.setListener(new Vector3d(world.camera.scrollX, world.camera.scrollY, world.camera.scrollZ), new Vector3d(), new Vector3d());
 	}
 
 	private void render() {
@@ -188,7 +179,7 @@ public class Game implements Runnable {
 		world.render();
 		guiList.render();
 	}
-
+	
 	private void init() {
 		world = new World(game);
 		if (GameOptions.instance.getBoolOption("debug")) {
