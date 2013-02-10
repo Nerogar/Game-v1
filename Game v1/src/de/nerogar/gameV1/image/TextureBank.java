@@ -15,20 +15,18 @@ import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.Texture;
 
 public class TextureBank {
-	//private ArrayList<Texture> textures;
-	//private ArrayList<String> textureNames;
-	private HashMap<String, Texture> textures;
+	//private HashMap<String, Texture> textures;
 	private HashMap<String, Integer> TextureIDs;
 
 	public static TextureBank instance = new TextureBank();
 
 	public TextureBank() {
-		textures = new HashMap<String, Texture>();
+		//textures = new HashMap<String, Texture>();
 		TextureIDs = new HashMap<String, Integer>();
 	}
 
 	public void loadTexture(String filename) {
-		if (textures.get(filename) == null) {
+		if (TextureIDs.get(filename) == null) {
 			/*BufferedImage image = null;
 			try {
 				InputStream in=TextureBank.class.getResourceAsStream("/" + filename);
@@ -54,7 +52,7 @@ public class TextureBank {
 				buffer.put(pixels);
 				buffer.rewind();
 				addTexture(filename, buffer, image.getWidth(), image.getHeight());
-
+				//System.out.println("loaded: "+filename);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

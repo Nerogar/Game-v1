@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import de.nerogar.gameV1.image.TextureBank;
+
 public class RenderHelper {
 	public static final int VERT = 1001;
 	public static final int HORIZ = 1002;
@@ -33,8 +35,8 @@ public class RenderHelper {
 		width *= xScale;
 		height *= yScale;
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBegin(GL11.GL_QUADS);
+		glDisable(GL_TEXTURE_2D);
+		glBegin(GL_QUADS);
 
 		if (direction == VERT) {
 			glColor4f(getR(color1), getG(color1), getB(color1), getA(color1));
@@ -53,9 +55,35 @@ public class RenderHelper {
 		}
 
 		glEnd();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 
-		GL11.glEnd();
+		glEnd();
+	}
+
+	public static void renderImage(float x, float y, float width, float height, String textureName) {
+		TextureBank.instance.bindTexture(textureName);
+
+		float xScale = Display.getWidth();
+		float yScale = Display.getHeight();
+		x *= xScale;
+		y *= yScale;
+		width *= xScale;
+		height *= yScale;
+
+		glEnable(GL_TEXTURE_2D);
+		glBegin(GL_QUADS);
+
+		glColor3f(1, 1, 1);
+		GL11.glTexCoord2f(0, 0);
+		glVertex3f(x, y, -1);
+		GL11.glTexCoord2f(0, 1);
+		glVertex3f(x, y + height, -1);
+		GL11.glTexCoord2f(1, 1);
+		glVertex3f(x + width, y + height, -1);
+		GL11.glTexCoord2f(1, 0);
+		glVertex3f(x + width, y, -1);
+
+		glEnd();
 	}
 
 	public static void renderDefaultWorldBackground() {
@@ -75,5 +103,14 @@ public class RenderHelper {
 		RenderHelper.renderColorTransition(0.02f, 0.3f, 0.08f, 0.4f, 0x00000000, 0x000000F0, RenderHelper.HORIZ);
 		RenderHelper.renderColorTransition(0.1f, 0.3f, 0.8f, 0.4f, 0x000000F0, 0x000000F0, RenderHelper.HORIZ);
 		RenderHelper.renderColorTransition(0.9f, 0.3f, 0.08f, 0.4f, 0x000000F0, 0x00000000, RenderHelper.HORIZ);
+	}
+	
+	public static void enableAlpha(){
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+	public static void disableAlpha(){
+		glDisable(GL_BLEND);
 	}
 }

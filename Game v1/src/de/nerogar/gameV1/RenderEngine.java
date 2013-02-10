@@ -6,6 +6,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
+
 import org.lwjgl.util.glu.GLU;
 
 public class RenderEngine {
@@ -217,5 +218,4 @@ public class RenderEngine {
 
 		GameOptions.instance.setOption("fullscreen", fullscreen);
 	}
-
 }

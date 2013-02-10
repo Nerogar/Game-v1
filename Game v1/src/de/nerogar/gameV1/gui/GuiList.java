@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 
 import de.nerogar.gameV1.RenderEngine;
+import de.nerogar.gameV1.RenderHelper;
 
 public class GuiList {
 	private ArrayList<Gui> guis = new ArrayList<Gui>();
@@ -125,15 +126,10 @@ public class GuiList {
 	}
 
 	public void beginRender() {
-
-		glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_DST_COLOR);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+		RenderHelper.enableAlpha();
 	}
 
 	public void endRender() {
-		glDisable(GL_BLEND);
+		RenderHelper.disableAlpha();
 	}
 }

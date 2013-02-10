@@ -32,7 +32,7 @@ public class Game implements Runnable {
 	public Sound bgMusic2;
 	public DebugFelk debugFelk = new DebugFelk(this);
 	public DebugNerogar debugNerogar = new DebugNerogar(this);
-	
+
 	public void run() {
 		this.game = this;
 
@@ -48,7 +48,8 @@ public class Game implements Runnable {
 
 			debugFelk.startup();
 			debugNerogar.startup();
-			
+
+			guiList.removeGui(new GuiLoadingScreen(game));
 			while (running) {
 				stressTimes[0] = System.nanoTime();
 				mainloop();
@@ -127,8 +128,19 @@ public class Game implements Runnable {
 		world.render();
 		guiList.render();
 	}
-	
+
+	private void renderStartupScreen() {
+		RenderHelper.enableAlpha();
+		renderEngine.setOrtho();
+		RenderHelper.renderDefaultGuiBackground();
+		RenderHelper.renderImage(0.2f, 0.2f, 0.6f, 0.6f, "loading.png");
+		RenderHelper.disableAlpha();
+		Display.update();
+	}
+
 	private void init() {
+		renderStartupScreen();
+
 		world = new World(game);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(game));
