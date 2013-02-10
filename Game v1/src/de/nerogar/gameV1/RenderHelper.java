@@ -11,6 +11,12 @@ public class RenderHelper {
 	public static final int VERT = 1001;
 	public static final int HORIZ = 1002;
 
+	public static final int LEFT = 2001;
+	public static final int RIGHT = 2002;
+	public static final int TOP = 2003;
+	public static final int BOTTOM = 2004;
+	public static final int CENTER = 2005;
+
 	public static float getR(int code) {
 		return ((code & 0xff000000) >>> 24) / 255f;
 	}
@@ -60,9 +66,34 @@ public class RenderHelper {
 		glEnd();
 	}
 
-	public static void renderImage(float x, float y, float width, float height, String textureName) {
+	public static void renderImageAbsolute(String textureName, int width, int height, int posX, int posY) {
+		int x = 0;
+		if (posX == RIGHT) x = Display.getWidth()-width;
+		if (posX == CENTER) x = (Display.getWidth()-width)/2;
+		int y = 0;
+		if (posY == BOTTOM) y = Display.getHeight()-height;
+		if (posY == CENTER) y = (Display.getHeight()-height)/2;
+		
 		TextureBank.instance.bindTexture(textureName);
+		
+		glEnable(GL_TEXTURE_2D);
+		glBegin(GL_QUADS);
 
+		glColor3f(1, 1, 1);
+		GL11.glTexCoord2f(0, 0);
+		glVertex3f(x, y, -1);
+		GL11.glTexCoord2f(0, 1);
+		glVertex3f(x, y + height, -1);
+		GL11.glTexCoord2f(1, 1);
+		glVertex3f(x + width, y + height, -1);
+		GL11.glTexCoord2f(1, 0);
+		glVertex3f(x + width, y, -1);
+
+		glEnd();
+		
+	}
+
+	public static void renderImage(String textureName, float x, float y, float width, float height) {
 		float xScale = Display.getWidth();
 		float yScale = Display.getHeight();
 		x *= xScale;
@@ -70,6 +101,8 @@ public class RenderHelper {
 		width *= xScale;
 		height *= yScale;
 
+		TextureBank.instance.bindTexture(textureName);
+		
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 
@@ -104,13 +137,22 @@ public class RenderHelper {
 		RenderHelper.renderColorTransition(0.1f, 0.3f, 0.8f, 0.4f, 0x000000F0, 0x000000F0, RenderHelper.HORIZ);
 		RenderHelper.renderColorTransition(0.9f, 0.3f, 0.08f, 0.4f, 0x000000F0, 0x00000000, RenderHelper.HORIZ);
 	}
-	
-	public static void enableAlpha(){
+
+	public static void renderLoadingScreen() {
+		RenderHelper.enableAlpha();
+		RenderEngine.instance.setOrtho();
+		RenderHelper.renderDefaultGuiBackground();
+		RenderHelper.renderImageAbsolute("loading.png", 470, 178, CENTER, CENTER);
+		RenderHelper.disableAlpha();
+		Display.update();
+	}
+
+	public static void enableAlpha() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
-	
-	public static void disableAlpha(){
+
+	public static void disableAlpha() {
 		glDisable(GL_BLEND);
 	}
 }

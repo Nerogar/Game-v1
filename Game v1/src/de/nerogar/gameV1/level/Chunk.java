@@ -53,11 +53,11 @@ public class Chunk {
 			for (int j = 0; j < CHUNKSIZE; j++) {
 				boolean walkable = true;
 
-				float h1 = getLocalHeight(i, j);
-				float h2 = getLocalHeight(i + 1, j);
-				float h3 = getLocalHeight(i, j + 1);
-				float h4 = getLocalHeight(i + 1, j + 1);
-				float maxHeightDifference = 0.6f;
+				//float h1 = getLocalHeight(i, j);
+				//float h2 = getLocalHeight(i + 1, j);
+				//float h3 = getLocalHeight(i, j + 1);
+				//float h4 = getLocalHeight(i + 1, j + 1);
+				//float maxHeightDifference = 0.6f;
 				/*if (MathHelper.getHightest(h1, h2, h3, h4) - MathHelper.getLowest(h1, h2, h3, h4) > maxHeightDifference) {
 					walkable = false;
 				}*/

@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import de.nerogar.gameV1.MathHelper;
 
 public class Path {
-	private Pathfinder pathfinder;
 	private PathNode start;
 	private PathNode destination;
 	public ArrayList<PathNode> openList = new ArrayList<PathNode>();
@@ -16,13 +15,10 @@ public class Path {
 	private boolean goalFound = false;
 	public double pathLength = 0;
 
-	public Path(PathNode start, PathNode destination, Pathfinder pathfinder) {
+	public Path(PathNode start, PathNode destination) {
 		this.start = start;
 		this.destination = destination;
-
 		//System.out.println(start.x + " " + start.z + "||" + destination.x + " " + destination.z);
-
-		this.pathfinder = pathfinder;
 		find();
 		cleanup();
 	}

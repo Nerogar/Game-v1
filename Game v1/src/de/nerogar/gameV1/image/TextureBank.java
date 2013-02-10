@@ -12,12 +12,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
 import org.lwjgl.BufferUtils;
-import org.newdawn.slick.opengl.Texture;
 
 public class TextureBank {
 	//private HashMap<String, Texture> textures;
 	private HashMap<String, Integer> TextureIDs;
-
+	
 	public static TextureBank instance = new TextureBank();
 
 	public TextureBank() {

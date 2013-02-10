@@ -44,6 +44,7 @@ public class World {
 	}
 
 	public void initiateWorld(String levelName) {
+		RenderHelper.renderLoadingScreen();
 		if (worldData == null) {
 			worldData = new WorldData(levelName);
 			worldData.load();
@@ -75,6 +76,7 @@ public class World {
 	}
 
 	public void closeWorld() {
+		RenderHelper.renderLoadingScreen();
 		isLoaded = false;
 		land.unloadAll();
 		entityList.unloadAll();
@@ -132,7 +134,7 @@ public class World {
 					int multiplier = 1;
 					long time1 = System.nanoTime();
 					for (int i = 0; i < multiplier; i++) {
-						path = new Path(pathStart, pathEnd, pathfinder);
+						path = new Path(pathStart, pathEnd);
 					}
 					long time2 = System.nanoTime();
 					System.out.println("Calculated "+multiplier+" Paths -> total: " + ((time2 - time1) / 1000000d) + "ms | individual: " + ((time2 - time1) / (1000000d * multiplier)));

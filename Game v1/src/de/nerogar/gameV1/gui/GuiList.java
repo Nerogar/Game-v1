@@ -1,7 +1,5 @@
 package de.nerogar.gameV1.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.ArrayList;
 
 import de.nerogar.gameV1.RenderEngine;

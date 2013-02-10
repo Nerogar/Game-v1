@@ -12,13 +12,11 @@ public class LevelGenerator {
 	private final int GENERATESIZE = Chunk.GENERATESIZE;
 	private final int REPEATOFFSET = 10000;
 	private long seed;
-	private Land land;
 	private float[][][] values = new float[2][GENERATESIZE][GENERATESIZE];
 	private ArrayList<Populator> populators = new ArrayList<Populator>();
 
 	public LevelGenerator(Land land) {
 		this.seed = land.seed;
-		this.land = land;
 		addDefaultPopulators();
 	}
 

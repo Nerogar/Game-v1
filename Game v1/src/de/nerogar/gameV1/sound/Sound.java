@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.*;
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.AL11.*;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
 import org.newdawn.slick.openal.*;
@@ -33,8 +35,8 @@ public class Sound {
 
 	public Sound(File file, Vector3d pos, boolean looping) throws LWJGLException, IOException {
 		// buffer und sources an OpenAL weiterleiten
-		buffer = AL10.alGenBuffers();
-		source = AL10.alGenSources();
+		buffer = alGenBuffers();
+		source = alGenSources();
 
 		// Datei in den Buffer laden
 		String format = getExtension(file);
@@ -71,63 +73,63 @@ public class Sound {
 	private void setVorbisFile(File file) throws IOException, LWJGLException {
 		FileInputStream fileStream = new FileInputStream(file);
 		OggData ogg = new OggDecoder().getData(fileStream);
-		int format = (ogg.channels == 2) ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
+		int format = (ogg.channels == 2) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 		setBuffer(format, ogg.data, ogg.rate);
 		fileStream.close();
 	}
 
 	private void setBuffer(int format, ByteBuffer data, int samplerate) {
-		AL10.alBufferData(buffer, format, data, samplerate);
-		this.size = AL10.alGetBufferi(buffer, AL10.AL_SIZE);
+		alBufferData(buffer, format, data, samplerate);
+		this.size = AL10.alGetBufferi(buffer, AL_SIZE);
 	}
 
 	private void setSource(Vector3d position, Vector3d velocity) {
 		//if (AL10.alGetError() != AL10.AL_NO_ERROR) return AL10.AL_FALSE;
-		AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
+		alSourcei(source, AL_BUFFER, buffer);
 		setPitch(1.5f);
 		setGain(1.0f);
-		AL10.alSource3f(source, AL10.AL_POSITION, position.getXf(), position.getYf(), position.getZf());
-		AL10.alSource3f(source, AL10.AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
+		alSource3f(source, AL_POSITION, position.getXf(), position.getYf(), position.getZf());
+		alSource3f(source, AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
 
 	}
 	
 	public void setPitch(float pitch) {
-		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+		alSourcef(source, AL_PITCH, pitch);
 	}
 	
 	public void setGain(float gain) {
-		AL10.alSourcef(source, AL10.AL_GAIN, gain);
+		alSourcef(source, AL_GAIN, gain);
 	}
 
 	public static void setListener(Vector3d position, Vector3d velocity, Vector3d orientation) {
-		AL10.alListener3f(AL10.AL_POSITION, position.getXf(), position.getYf(), position.getZf());
-		AL10.alListener3f(AL10.AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
-		AL10.alListener3f(AL10.AL_ORIENTATION, orientation.getXf(), orientation.getYf(), orientation.getZf());
+		alListener3f(AL_POSITION, position.getXf(), position.getYf(), position.getZf());
+		alListener3f(AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
+		alListener3f(AL_ORIENTATION, orientation.getXf(), orientation.getYf(), orientation.getZf());
 	}
 
 	public void play() {
-		AL10.alSourcePlay(source);
+		alSourcePlay(source);
 	}
 
 	public void stop() {
-		AL10.alSourceStop(source);
+		alSourceStop(source);
 	}
 
 	public void pause() {
-		AL10.alSourcePause(source);
+		alSourcePause(source);
 	}
 
 	public void destroy() {
-		AL10.alDeleteSources(source);
-		AL10.alDeleteBuffers(buffer);
+		alDeleteSources(source);
+		alDeleteBuffers(buffer);
 	}
 
 	public boolean isPaused() {
-		return (this.state == AL10.AL_PAUSED);
+		return (this.state == AL_PAUSED);
 	}
 
 	public boolean isPlaying() {
-		return (this.state == AL10.AL_PLAYING);
+		return (this.state == AL_PLAYING);
 	}
 
 	public boolean isLooping() {
@@ -141,15 +143,15 @@ public class Sound {
 
 	public void updateLooping() {
 		if (looping) {
-			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_TRUE);
+			alSourcei(source, AL_LOOPING, AL_TRUE);
 		} else {
-			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
+			alSourcei(source, AL_LOOPING, AL_FALSE);
 		}
 	}
 	
 	public void update() {
-		this.state = AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE);
-		this.offset = (float) AL10.alGetSourcei(source, AL11.AL_BYTE_OFFSET) / size;
+		this.state = alGetSourcei(source, AL_SOURCE_STATE);
+		this.offset = (float) alGetSourcei(source, AL_BYTE_OFFSET) / size;
 		if (crash < 1) {
 			setOffset(crash);
 		}
@@ -157,7 +159,7 @@ public class Sound {
 	}
 	
 	public boolean isStopped() {
-		return (this.state == AL10.AL_STOPPED);
+		return (this.state == AL_STOPPED);
 	}
 
 	public int getState() {
@@ -169,7 +171,7 @@ public class Sound {
 	}
 
 	public void setOffset(float offset) {
-		AL10.alSourcei(source, AL11.AL_BYTE_OFFSET, (int) (offset*size));
+		alSourcei(source, AL_BYTE_OFFSET, (int) (offset*size));
 	}
 	
 	public void crash() {
