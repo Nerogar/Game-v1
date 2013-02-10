@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import de.nerogar.gameV1.gui.FontRenderer;
 import de.nerogar.gameV1.image.TextureBank;
 
 public class RenderHelper {
@@ -138,13 +139,18 @@ public class RenderHelper {
 		RenderHelper.renderColorTransition(0.9f, 0.3f, 0.08f, 0.4f, 0x000000F0, 0x00000000, RenderHelper.HORIZ);
 	}
 
-	public static void renderLoadingScreen() {
+	public static void renderLoadingScreen(String text) {
 		RenderHelper.enableAlpha();
 		RenderEngine.instance.setOrtho();
 		RenderHelper.renderDefaultGuiBackground();
 		RenderHelper.renderImageAbsolute("loading.png", 470, 178, CENTER, CENTER);
+		FontRenderer.renderFont(text, 0, Display.getHeight()/2+130, Display.getWidth(), 20, FontRenderer.CENTERED);
 		RenderHelper.disableAlpha();
 		Display.update();
+	}
+	
+	public static void updateLoadingScreen(String text) {
+		RenderHelper.renderLoadingScreen(text);
 	}
 
 	public static void enableAlpha() {
@@ -155,4 +161,5 @@ public class RenderHelper {
 	public static void disableAlpha() {
 		glDisable(GL_BLEND);
 	}
+
 }

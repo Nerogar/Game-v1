@@ -15,6 +15,7 @@ import org.lwjgl.util.WaveData;
 
 import org.newdawn.slick.openal.*;
 
+import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
 
 public class Sound {
@@ -38,6 +39,7 @@ public class Sound {
 		buffer = alGenBuffers();
 		source = alGenSources();
 
+		RenderHelper.updateLoadingScreen("Lade "+file.getPath());
 		// Datei in den Buffer laden
 		String format = getExtension(file);
 		switch (format) {
@@ -187,6 +189,5 @@ public class Sound {
 		if (parts.length <= 1) return null;
 		return parts[parts.length-1].toLowerCase();
 	}
-	
 	
 }

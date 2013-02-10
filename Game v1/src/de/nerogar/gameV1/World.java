@@ -44,7 +44,7 @@ public class World {
 	}
 
 	public void initiateWorld(String levelName) {
-		RenderHelper.renderLoadingScreen();
+		RenderHelper.renderLoadingScreen("Lade Welt...");
 		if (worldData == null) {
 			worldData = new WorldData(levelName);
 			worldData.load();
@@ -76,7 +76,7 @@ public class World {
 	}
 
 	public void closeWorld() {
-		RenderHelper.renderLoadingScreen();
+		RenderHelper.renderLoadingScreen("Speichere Welt...");
 		isLoaded = false;
 		land.unloadAll();
 		entityList.unloadAll();

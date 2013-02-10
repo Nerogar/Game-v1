@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
@@ -88,7 +89,7 @@ public class Land {
 		}
 	}
 
-	public boolean loadChunksAroundXZ(Position blockPosition) {
+	public int loadChunksAroundXZ(Position blockPosition) {
 		maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
 		int chunkUpdates = 0;
 		for (int i = chunks.size() - 1; i >= 0; i--) {
@@ -111,7 +112,7 @@ public class Land {
 			}
 		}
 
-		return chunkUpdates > 0;
+		return chunkUpdates;
 	}
 
 	public Chunk getChunk(Position chunkPosition) {
@@ -139,8 +140,15 @@ public class Land {
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
-		while (loadChunksAroundXZ(blockPosition))
-			;
+		int i = 0;
+		int max = (GameOptions.instance.getIntOption("loaddistance") * 2) + 1;
+		max *= max;
+		int updates = loadChunksAroundXZ(blockPosition);
+		while (updates > 0) {
+			i += updates;
+			updates = loadChunksAroundXZ(blockPosition);
+			RenderHelper.updateLoadingScreen("Lade Chunk " + i + "/" + max);
+		}
 	}
 
 	public void regenChunk(Position chunkPosition) {
@@ -156,6 +164,7 @@ public class Land {
 
 	public void unloadAll() {
 		for (int i = chunks.size() - 1; i >= 0; i--) {
+			RenderHelper.updateLoadingScreen("Speichere Chunk " + i);
 			unloadChunk(chunks.get(i).chunkPosition);
 		}
 	}
