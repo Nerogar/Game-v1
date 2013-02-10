@@ -271,7 +271,7 @@ public final class InputHandler {
 		return false;
 	}
 	
-	public static boolean isKeyReleaseed(String name) {
+	public static boolean isKeyReleased(String name) {
 		int index = -1;
 
 		for (int i = 0; i < registeredKeys.size(); i++) {
