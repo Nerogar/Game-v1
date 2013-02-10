@@ -47,8 +47,8 @@ public class GuiMain extends Gui {
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.5f, 0.3f, 0.05f, "jazz nyan cat:", FontRenderer.RIGHT));
 		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.2, 2.5, "", "Buttons/button.png", "Buttons/slider.png");
-		pitchSlider.position = 1.5;
-		
+		pitchSlider.position = 1.3;
+
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		
 		buttons.add(newGameButton);

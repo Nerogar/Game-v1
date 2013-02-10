@@ -69,7 +69,8 @@ public class Game implements Runnable {
 				}
 				
 				bgMusic.update();
-
+				System.out.println(bgMusic.getOffset());
+				
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
@@ -132,16 +133,16 @@ public class Game implements Runnable {
 			}
 		}
 		
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-			System.out.println("playing: "+AL10.AL_PLAYING);
-			System.out.println("paused: "+AL10.AL_PAUSED);
-			System.out.println("stopped: "+AL10.AL_STOPPED);
-			System.out.println("initial: "+AL10.AL_INITIAL);
-			
+		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
+			bgMusic.setOffset((float) Math.random());
 		}
 		
 		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-			System.out.println(bgMusic.getState());
+			bgMusic.crash();
+		}
+		
+		if (InputHandler.isKeyReleased(Keyboard.KEY_2)) {
+			bgMusic.uncrash();
 		}
 
 		/*if (true) { //test bei sichtbarer plane
