@@ -9,7 +9,6 @@ import java.util.HashMap;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.level.Chunk;
@@ -291,7 +290,6 @@ public class CollisionComparer {
 		Double distance = Double.MAX_VALUE;
 		Double newDistance;
 		Vector3d newIntersection = null, intersection = null;
-		int comparations = 0;
 		for (Position pos : positions) {
 
 			Vector3d[][] polygons = new Vector3d[2][3];

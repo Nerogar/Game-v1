@@ -7,10 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.*;
 import org.lwjgl.util.WaveData;
+
+import org.newdawn.slick.openal.*;
 
 import de.nerogar.gameV1.Vector3d;
 
@@ -36,7 +37,7 @@ public class Sound {
 		source = AL10.alGenSources();
 
 		// Datei in den Buffer laden
-		String format = "wav";
+		String format = getExtension(file);
 		switch (format) {
 		case "wav":
 			setWaveFile(file);
@@ -47,7 +48,7 @@ public class Sound {
 		default:
 			setVorbisFile(file);
 		}
-
+		
 		// Source festlegen
 		setSource(pos, new Vector3d(0, 0, 0));
 
@@ -66,16 +67,10 @@ public class Sound {
 	}
 
 	private void setVorbisFile(File file) throws IOException, LWJGLException {
-		if (AL10.alIsExtensionPresent("AL_EXT_vorbis")) {
-			System.out.println("präsent");
-		} else {
-			System.out.println("nicht präsent");
-		}
 		FileInputStream fileStream = new FileInputStream(file);
-		ByteBuffer fileBuffer = BufferUtils.createByteBuffer((int) fileStream.getChannel().size());
-		fileStream.getChannel().read(fileBuffer);
-		fileBuffer.rewind();
-		setBuffer(AL10.AL_FORMAT_VORBIS_EXT, fileBuffer, fileBuffer.capacity());
+		OggData ogg = new OggDecoder().getData(fileStream);
+		int format = (ogg.channels == 2) ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
+		setBuffer(format, ogg.data, ogg.rate);
 		fileStream.close();
 	}
 
@@ -181,6 +176,12 @@ public class Sound {
 	
 	public void uncrash() {
 		crash = 2;
+	}
+	
+	public String getExtension(File file) {
+		String[] parts = file.getName().split("\\.");
+		if (parts.length <= 1) return null;
+		return parts[parts.length-1].toLowerCase();
 	}
 	
 	

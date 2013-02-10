@@ -4,20 +4,16 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Keyboard;
 
+import de.nerogar.gameV1.debug.DebugFelk;
+import de.nerogar.gameV1.debug.DebugNerogar;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.level.Entity;
-import de.nerogar.gameV1.level.EntityPhysic;
-import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.level.Tile;
-import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.Sound;
 
 public class Game implements Runnable {
@@ -33,7 +29,10 @@ public class Game implements Runnable {
 	public long stressTimeUpdate = 0;
 	public long stressTimeTotal = 0;
 	public Sound bgMusic;
-
+	public Sound bgMusic2;
+	public DebugFelk debugFelk = new DebugFelk(this);
+	public DebugNerogar debugNerogar = new DebugNerogar(this);
+	
 	public void run() {
 		this.game = this;
 
@@ -47,10 +46,9 @@ public class Game implements Runnable {
 			InputHandler.registerGamepadButton("start", "7", 0.25f);
 			InputHandler.registerGamepadButton("back", "6", 0.25f);
 
-			// OpenAL Test
-
-			bgMusic = new Sound(new File("res/sound/music.wav"), new Vector3d(0, 0, 0), true);
-
+			debugFelk.startup();
+			debugNerogar.startup();
+			
 			while (running) {
 				stressTimes[0] = System.nanoTime();
 				mainloop();
@@ -65,14 +63,12 @@ public class Game implements Runnable {
 					System.out.println("gc");
 				}
 
-				bgMusic.update();
-				System.out.println(bgMusic.getOffset());
-
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
 
-			bgMusic.destroy();
+			debugFelk.end();
+			debugNerogar.end();
 			AL.destroy();
 
 			if (world.isLoaded) world.closeWorld();
@@ -114,56 +110,8 @@ public class Game implements Runnable {
 			renderEngine.toggleFullscreen();
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
-			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
-			world.entityList.addEntity(entity);
-		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
-			ArrayList<Entity> entities = world.entityList.entities;
-			System.out.println(entities.size() + " entities gefunden.");
-			for (int i = 0; i < entities.size(); i++) {
-				if (entities.get(i) instanceof EntityPhysic) {
-					EntityPhysic entity = (EntityPhysic) entities.get(i);
-					entity.addForce(new Vector3d(0, 500, 0));
-				}
-			}
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
-			bgMusic.setOffset((float) Math.random());
-		}
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-			bgMusic.crash();
-		}
-
-		if (InputHandler.isKeyReleased(Keyboard.KEY_2)) {
-			bgMusic.uncrash();
-		}
-
-		/*if (true) { //test bei sichtbarer plane
-
-		Vector3d p1 = new Vector3d(-2f, 5f, 0f);
-		Vector3d p2 = new Vector3d(2f, 5f, 0f);
-		Vector3d p3 = new Vector3d(2f, 9f, 0f);
-		Vector3d p4 = new Vector3d(-2f, 9f, 0f);
-		Line ray = new Line(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
-		Plane plane = new Plane(p1, p2, p3);
-
-		Vector3d intersection = CollisionComparer.getLinePolygonIntersection(ray, new Vector3d[] { p1, p2, p3, p4 });
-		Vector3d intersectionC = PhysicHelper.getLinePlaneIntersection(ray, plane);
-
-		if (intersection == null) {
-		System.out.println("kein Schnittpunkt!");
-		} else {
-		System.out.println("Schnittpunkt bei: " + intersection.toString());
-		}
-		if (intersectionC != null) {
-		System.out.println("---" + intersectionC.toString());
-		}
-
-		}*/
+		debugFelk.run();
+		debugNerogar.run();
 
 		//update game logics
 		Timer.instance.update();
