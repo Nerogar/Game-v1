@@ -58,6 +58,8 @@ public class Sound {
 		// OpenAL mitteilen, ob der Sound wiederholt werden soll
 		this.looping = looping;
 		updateLooping();
+		setGain(1);
+		setPitch(1);
 	}
 
 	private void setWaveFile(File file) throws FileNotFoundException {

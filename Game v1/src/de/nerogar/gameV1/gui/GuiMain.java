@@ -46,8 +46,8 @@ public class GuiMain extends Gui {
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.5f, 0.3f, 0.05f, "jazz nyan cat:", FontRenderer.RIGHT));
-		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.2, 2.5, "", "Buttons/button.png", "Buttons/slider.png");
-		pitchSlider.position = 1.0;
+		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 1.0, "", "Buttons/button.png", "Buttons/slider.png");
+		pitchSlider.position = 0.1;
 
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		
@@ -70,8 +70,8 @@ public class GuiMain extends Gui {
 			audioButtonPlay.text = "play";
 		else
 			audioButtonPlay.text = "pause";
-		game.debugFelk.bgMusic.setPitch((float)pitchSlider.position);
-		game.debugFelk.bgMusic2.setPitch((float)pitchSlider.position);
+		game.debugFelk.bgMusic.setGain((float)pitchSlider.position);
+		game.debugFelk.bgMusic2.setGain((float)pitchSlider.position);
 	}
 
 	@Override
