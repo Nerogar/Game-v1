@@ -270,6 +270,16 @@ public final class InputHandler {
 		if (index != -1) return isKeyPressed(registeredKeys.get(index).button);
 		return false;
 	}
+	
+	public static boolean isKeyReleaseed(String name) {
+		int index = -1;
+
+		for (int i = 0; i < registeredKeys.size(); i++) {
+			if (registeredKeys.get(i).name.equals(name)) index = i;
+		}
+		if (index != -1) return isKeyReleased(registeredKeys.get(index).button);
+		return false;
+	}
 
 	public static boolean isKeyDown(int key) {
 		boolean state = Keyboard.isKeyDown(key);
@@ -283,6 +293,14 @@ public final class InputHandler {
 		pressedKeys.add(key);
 		updateKey(key, state);
 		return state && lastState;
+	}
+	
+	public static boolean isKeyReleased(int key) {
+		boolean state = Keyboard.isKeyDown(key);
+		boolean lastState = pressedKeys.indexOf(key) == -1;
+		pressedKeys.add(key);
+		updateKey(key, state);
+		return !state && !lastState;
 	}
 
 	public static char getPressedKey() {

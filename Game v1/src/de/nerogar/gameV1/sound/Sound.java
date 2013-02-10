@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.*;
 import org.lwjgl.util.WaveData;
 
 import de.nerogar.gameV1.Vector3d;
@@ -22,6 +22,9 @@ public class Sound {
 	Vector3d velocity = new Vector3d();
 	private boolean looping = true;
 	private int state;
+	private float offset;
+	private float size;
+	public float crash = 2f;
 
 	public Sound(File file) throws LWJGLException, IOException {
 		this(file, new Vector3d(0, 0, 0), false);
@@ -78,6 +81,7 @@ public class Sound {
 
 	private void setBuffer(int format, ByteBuffer data, int samplerate) {
 		AL10.alBufferData(buffer, format, data, samplerate);
+		this.size = AL10.alGetBufferi(buffer, AL10.AL_SIZE);
 	}
 
 	private void setSource(Vector3d position, Vector3d velocity) {
@@ -148,6 +152,11 @@ public class Sound {
 	
 	public void update() {
 		this.state = AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE);
+		this.offset = (float) AL10.alGetSourcei(source, AL11.AL_BYTE_OFFSET) / size;
+		if (crash < 1) {
+			setOffset(crash);
+		}
+		//System.out.println(offset);
 	}
 	
 	public boolean isStopped() {
@@ -158,4 +167,21 @@ public class Sound {
 		return this.state;
 	}
 
+	public float getOffset() {
+		return offset;
+	}
+
+	public void setOffset(float offset) {
+		AL10.alSourcei(source, AL11.AL_BYTE_OFFSET, (int) (offset*size));
+	}
+	
+	public void crash() {
+		crash = getOffset();
+	}
+	
+	public void uncrash() {
+		crash = 2;
+	}
+	
+	
 }
