@@ -7,6 +7,7 @@ import de.nerogar.gameV1.level.Position;
 public class Pathfinder {
 
 	private Land land;
+	private static final int MAX_NODE_SIZE = 8;
 
 	public Pathfinder(Land land) {
 		this.land = land;
@@ -31,7 +32,7 @@ public class Pathfinder {
 
 		int iteration = 2;
 		int iterationHalf = 1;
-		while (iteration <= walkableMap.length && iteration <= 4) {
+		while (iteration <= walkableMap.length && iteration <= MAX_NODE_SIZE) {
 
 			for (int i = 0; i < walkableMap.length; i += iteration) {
 				for (int j = 0; j < walkableMap.length; j += iteration) {
@@ -82,12 +83,14 @@ public class Pathfinder {
 
 		//long time3 = System.nanoTime(); //time3
 
-		for (int i = chunk.chunkPosition.x - 1; i <= chunk.chunkPosition.x + 1; i++) {
+		//wird jetzt in land gemacht
+		/*for (int i = chunk.chunkPosition.x - 1; i <= chunk.chunkPosition.x + 1; i++) {
 			for (int j = chunk.chunkPosition.z - 1; j <= chunk.chunkPosition.z + 1; j++) {
-				System.out.println("update neighbors of (" + i + "|" + j + ")");
+				//System.out.println("update neighbors of (" + i + "|" + j + ")");
 				updateNodeNeighbors(land.getChunk(new Position(i, j)));
 			}
 		}
+		updateNodeNeighbors(chunk);*/
 
 		//long time4 = System.nanoTime(); //time4
 
@@ -102,7 +105,8 @@ public class Pathfinder {
 		PathNode[][] nodeMap = chunk.nodeMap;
 		for (int i = 0; i < nodeMap.length; i++) {
 			for (int j = 0; j < nodeMap[i].length; j = nodeMap[i][j].locZ + nodeMap[i][j].size) {
-				System.out.println(nodeMap[i][j].locZ);
+				//System.out.println(nodeMap[i][j].locZ);
+
 				if (!nodeMap[i][j].neighborsProcessed) {
 					PathNode node = nodeMap[i][j];
 
@@ -117,11 +121,11 @@ public class Pathfinder {
 					y1 = y1 < nodeMap.length ? y1 : nodeMap.length - 1;*/
 
 					if (y0 != node.z) {
-						System.out.println("step1");
-						System.out.println(x0 + " - " + x1);
+						//System.out.println("step1");
+						//System.out.println(x0 + " - " + x1);
 						PathNode tempNode;
 						for (int i1 = x0; i1 <= x1; i1 = tempNode.x + tempNode.size) {
-							System.out.println(i1);
+							//System.out.println(i1);
 							Chunk tempChunk;
 							if (x0 >= chunk.chunkPosition.x * Chunk.CHUNKSIZE && x1 < nodeMap.length + chunk.chunkPosition.x * Chunk.CHUNKSIZE && y0 >= chunk.chunkPosition.z * Chunk.CHUNKSIZE && y1 < nodeMap.length + chunk.chunkPosition.z * Chunk.CHUNKSIZE) {
 								tempChunk = chunk;
@@ -130,7 +134,9 @@ public class Pathfinder {
 							}
 							if (tempChunk != null) {
 								tempNode = tempChunk.getPathNode(i1, y0);
-								node.addNeighbor(tempNode);
+								if (isWalkable(node, tempNode)) {
+									node.addNeighbor(tempNode);
+								}
 							} else {
 								tempNode = new PathNode(0, 0, chunk);
 								tempNode.x = i1;
@@ -143,8 +149,8 @@ public class Pathfinder {
 					}
 
 					if (y1 != node.z + node.size - 1) {
-						System.out.println("step2");
-						System.out.println(x0 + " - " + x1);
+						//System.out.println("step2");
+						//System.out.println(x0 + " - " + x1);
 						PathNode tempNode;
 						for (int i1 = x0; i1 <= x1; i1 = tempNode.x + tempNode.size) {
 							Chunk tempChunk;
@@ -156,7 +162,9 @@ public class Pathfinder {
 							}
 							if (tempChunk != null) {
 								tempNode = tempChunk.getPathNode(i1, y1);
-								node.addNeighbor(tempNode);
+								if (isWalkable(node, tempNode)) {
+									node.addNeighbor(tempNode);
+								}
 							} else {
 								tempNode = new PathNode(0, 0, chunk);
 								tempNode.x = i1;
@@ -168,8 +176,8 @@ public class Pathfinder {
 					}
 
 					if (x0 != node.x) {
-						System.out.println("step3");
-						System.out.println((y0 + 1) + " - " + y1);
+						//System.out.println("step3");
+						//System.out.println((y0 + 1) + " - " + y1);
 						PathNode tempNode;
 						for (int i1 = y0 + 1; i1 < y1; i1 = tempNode.z + tempNode.size) {
 							Chunk tempChunk;
@@ -180,7 +188,9 @@ public class Pathfinder {
 							}
 							if (tempChunk != null) {
 								tempNode = tempChunk.getPathNode(x0, i1);
-								node.addNeighbor(tempNode);
+								if (isWalkable(node, tempNode)) {
+									node.addNeighbor(tempNode);
+								}
 							} else {
 								tempNode = new PathNode(0, 0, chunk);
 								tempNode.x = x0;
@@ -192,11 +202,11 @@ public class Pathfinder {
 					}
 
 					if (x1 != node.x + node.size - 1) {
-						System.out.println("step4");
-						System.out.println((y0 + 1) + " - " + y1);
+						//System.out.println("step4");
+						//System.out.println((y0 + 1) + " - " + y1);
 						PathNode tempNode;
 						for (int i1 = y0 + 1; i1 < y1; i1 = tempNode.z + tempNode.size) {
-							System.out.println(i1);
+							//System.out.println(i1);
 							Chunk tempChunk;
 							if (x0 >= chunk.chunkPosition.x * Chunk.CHUNKSIZE && x1 < nodeMap.length + chunk.chunkPosition.x * Chunk.CHUNKSIZE && y0 >= chunk.chunkPosition.z * Chunk.CHUNKSIZE && y1 < nodeMap.length + chunk.chunkPosition.z * Chunk.CHUNKSIZE) {
 								tempChunk = chunk;
@@ -205,8 +215,9 @@ public class Pathfinder {
 							}
 							if (tempChunk != null) {
 								tempNode = tempChunk.getPathNode(x1, i1);
-								node.addNeighbor(tempNode);
-								System.out.println("loc"+tempNode.locZ+"  abs"+tempNode.z);
+								if (isWalkable(node, tempNode)) {
+									node.addNeighbor(tempNode);
+								}
 							} else {
 								tempNode = new PathNode(0, 0, chunk);
 								tempNode.x = x1;
@@ -222,6 +233,12 @@ public class Pathfinder {
 				}
 			}
 		}
+
+		for (int i = 0; i < nodeMap.length; i++) {
+			for (int j = 0; j < nodeMap[i].length; j = nodeMap[i][j].locZ + nodeMap[i][j].size) {
+				nodeMap[i][j].neighborsProcessed = false;
+			}
+		}
 	}
 
 	public boolean isWalkable(PathNode source, PathNode target) {
@@ -235,12 +252,14 @@ public class Pathfinder {
 		} else {
 			for (int i = (source.x < target.x ? source.x : target.x); i <= (source.x < target.x ? target.x : source.x); i++) {
 				Chunk tempChunk;
-				int nodeSize;
+				int nodeSize = 1;
 				for (int j = (source.z < target.z ? source.z : target.z); j <= (source.z < target.z ? target.z : source.z); j += nodeSize) {
 					Position posInChunk = land.getPositionInChunk(i, j);
 					tempChunk = land.getChunk(land.getChunkPosition(i, j));
-					nodeSize = tempChunk.nodeMap[posInChunk.x][posInChunk.z].size;
-					if (!tempChunk.walkableMap[posInChunk.x][posInChunk.z]) { return false; }
+					if (tempChunk != null) {
+						nodeSize = tempChunk.nodeMap[posInChunk.x][posInChunk.z].size; //gibt manchmal NullPointerExceptions (beobachten)
+						if (!tempChunk.walkableMap[posInChunk.x][posInChunk.z]) { return false; }
+					}
 				}
 			}
 		}

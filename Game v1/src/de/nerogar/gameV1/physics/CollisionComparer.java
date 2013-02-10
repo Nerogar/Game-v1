@@ -318,7 +318,7 @@ public class CollisionComparer {
 
 		}
 
-		if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println(comparations + " Bodenvergleiche letzten Frame.");
+		//if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println(comparations + " Bodenvergleiche letzten Frame.");
 
 		return intersection;
 

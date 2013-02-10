@@ -21,11 +21,11 @@ public class Position {
 
 	@Override
 	public String toString() {
-		return "Position X: " + x + " | Z: " + z;
+		return "(X: " + x + "|Z: " + z + ")";
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return (this.x &0xffff)|((this.z & 0xffff)<<16);
+		return (this.x & 0xffff) | ((this.z & 0xffff) << 16);
 	}
 }

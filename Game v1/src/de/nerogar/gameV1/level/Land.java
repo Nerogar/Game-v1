@@ -16,6 +16,8 @@ import de.nerogar.gameV1.physics.Ray;
 
 public class Land {
 	public ArrayList<Chunk> chunks;
+	private Chunk[][] chunkGrid;
+	private int chunkGridMinX, chunkGridMinZ;
 	public long seed;
 	public String saveName;
 	public int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
@@ -39,10 +41,51 @@ public class Land {
 		return chunk;
 	}
 
-	public Chunk getChunk(Position chunkPosition) {
+	/*public Chunk getChunk(Position chunkPosition) {
 		int index = isChunkLoaded(chunkPosition);
 		if (index != -1) return chunks.get(index);
 		return null;
+	}*/
+
+	private void rebuildChunkGrid() {
+		if (chunks.size() == 0) {
+			chunkGrid = null;
+			return;
+		}
+
+		int minX = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int minZ = Integer.MAX_VALUE;
+		int maxZ = Integer.MIN_VALUE;
+
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk tempChunk = chunks.get(i);
+			if (tempChunk.chunkPosition.x < minX) minX = tempChunk.chunkPosition.x;
+			if (tempChunk.chunkPosition.x > maxX) maxX = tempChunk.chunkPosition.x;
+			if (tempChunk.chunkPosition.z < minZ) minZ = tempChunk.chunkPosition.z;
+			if (tempChunk.chunkPosition.z > maxZ) maxZ = tempChunk.chunkPosition.z;
+		}
+
+		chunkGridMinX = minX;
+		chunkGridMinZ = minZ;
+
+		chunkGrid = new Chunk[maxX - minX + 1][maxZ - minZ + 1];
+
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk tempChunk = chunks.get(i);
+			chunkGrid[tempChunk.chunkPosition.x - chunkGridMinX][tempChunk.chunkPosition.z - chunkGridMinZ] = tempChunk;
+		}
+	}
+
+	private void rebuildChunkList() {
+		if (chunkGrid == null) return;
+		chunks = new ArrayList<Chunk>();
+		chunks.ensureCapacity(chunkGrid.length * chunkGrid[0].length);
+		for (int i = 0; i < chunkGrid.length; i++) {
+			for (int j = 0; j < chunkGrid[0].length; j++) {
+				if (chunkGrid[i][j] != null) chunks.add(chunkGrid[i][j]);
+			}
+		}
 	}
 
 	public boolean loadChunksAroundXZ(Position blockPosition) {
@@ -61,7 +104,7 @@ public class Land {
 
 		for (int i = getChunkPosition(blockPosition).x - maxChunkLoadDistance; i < getChunkPosition(blockPosition).x + maxChunkLoadDistance + 1; i++) {
 			for (int j = getChunkPosition(blockPosition).z - maxChunkLoadDistance; j < getChunkPosition(blockPosition).z + maxChunkLoadDistance + 1; j++) {
-				if (isChunkLoaded(new Position(i, j)) == -1 && chunkUpdates < chunkUpdatesPerFrame) {
+				if (getChunk(new Position(i, j)) == null && chunkUpdates < chunkUpdatesPerFrame) {
 					loadChunk(new Position(i, j));
 					chunkUpdates++;
 				}
@@ -71,15 +114,15 @@ public class Land {
 		return chunkUpdates > 0;
 	}
 
-	private int isChunkLoaded(Position chunkPosition) {
-		for (int i = 0; i < chunks.size(); i++) {
-			if (chunks.get(i).equals(chunkPosition)) { return i; }
-		}
+	public Chunk getChunk(Position chunkPosition) {
+		if (chunkGrid == null) return null;
+		if (chunkPosition.x < chunkGridMinX || chunkPosition.z < chunkGridMinZ || chunkPosition.x > chunkGridMinX + chunkGrid.length - 1 || chunkPosition.z > chunkGridMinZ + chunkGrid[0].length - 1) return null;
 
-		return -1;
+		Chunk tempChunk = chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ];
+		return tempChunk;
 	}
 
-	public void loadChunk(Position chunkPosition) {
+	private void loadChunk(Position chunkPosition) {
 		Chunk chunk = new Chunk(chunkPosition, saveName, world);
 		if (!chunk.load()) {
 
@@ -90,7 +133,8 @@ public class Land {
 		}
 
 		chunks.add(chunk);
-
+		rebuildChunkGrid();
+		updateWalkMapNodeNeighbors(chunk);
 		game.world.collisionComparer.newGrid();
 	}
 
@@ -100,33 +144,45 @@ public class Land {
 	}
 
 	public void regenChunk(Position chunkPosition) {
-		if (isChunkLoaded(chunkPosition) != -1) unloadChunk(chunkPosition);
+		if (getChunk(chunkPosition) != null) unloadChunk(chunkPosition);
 
 		Chunk chunk = new Chunk(chunkPosition, saveName, world);
-
 		chunk = generateLand(chunk, chunkPosition);
-
 		chunks.add(chunk);
 
+		updateWalkMapNodeNeighbors(chunk);
 		game.world.collisionComparer.newGrid();
 	}
 
 	public void unloadAll() {
 		for (int i = chunks.size() - 1; i >= 0; i--) {
-			unloadChunk(i);
+			unloadChunk(chunks.get(i).chunkPosition);
 		}
 	}
 
-	public void unloadChunk(Position chunkPosition) {
-		unloadChunk(isChunkLoaded(chunkPosition));
+	private void unloadChunk(int index) {
+		unloadChunk(chunks.get(index).chunkPosition);
 	}
 
-	public void unloadChunk(int chunkIndex) {
-		if (chunkIndex == -1) return;
-		chunks.get(chunkIndex).save();
-		chunks.get(chunkIndex).cleanup();
-		chunks.remove(chunkIndex);
+	private void unloadChunk(Position chunkPosition) {
+		Chunk tempChunk = getChunk(chunkPosition);
+		if (tempChunk == null) return;
+		tempChunk.save();
+		updateWalkMapNodeNeighbors(tempChunk);
+		tempChunk.cleanup();
+		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
+		rebuildChunkList();
 		world.collisionComparer.newGrid();
+	}
+
+	public void updateWalkMapNodeNeighbors(Chunk chunk) {
+		for (int i = chunk.chunkPosition.x - 1; i <= chunk.chunkPosition.x + 1; i++) {
+			for (int j = chunk.chunkPosition.z - 1; j <= chunk.chunkPosition.z + 1; j++) {
+				//System.out.println("update neighbors of (" + i + "|" + j + ")");
+				//System.out.println("chunkpos: " + chunk.chunkPosition + " || --> " + i + "|" + j);
+				world.pathfinder.updateNodeNeighbors(getChunk(new Position(i, j)));
+			}
+		}
 	}
 
 	public Position getChunkPosition(double x, double z) {

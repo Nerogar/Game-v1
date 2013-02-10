@@ -73,8 +73,8 @@ public class Chunk {
 	}
 
 	public PathNode getPathNode(int x, int z) {
-		x = (int) MathHelper.modToInt(x,CHUNKSIZE);
-		z = (int) MathHelper.modToInt(z,CHUNKSIZE);
+		x = (int) MathHelper.modToInt(x, CHUNKSIZE);
+		z = (int) MathHelper.modToInt(z, CHUNKSIZE);
 
 		return nodeMap[x][z];
 	}
@@ -91,7 +91,7 @@ public class Chunk {
 				Vector2d textPos1 = Tile.getTileByID(tileMap[i][j]).texturePos1;
 				Vector2d textPos2 = Tile.getTileByID(tileMap[i][j]).texturePos2;
 
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
+				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
 				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = nodeMap[i][j].colR;
@@ -125,9 +125,9 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = nodeMap[i][j].colG;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = nodeMap[i][j].colB;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();*/
 
-				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
+				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
 				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 5;
@@ -161,7 +161,7 @@ public class Chunk {
 				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 5;
 				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 5;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();*/
+				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();
 			}
 		}
 
@@ -268,6 +268,8 @@ public class Chunk {
 		glDeleteBuffers(vboColorHandle);
 		glDeleteBuffers(vboTextureHandle);
 		heightMap = null;
+		walkableMap = null;
+		nodeMap = null;
 	}
 
 	public float getLocalHeight(int x, int z) {

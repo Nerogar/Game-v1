@@ -107,7 +107,7 @@ public final class MathHelper {
 	public static int roundUpToInt(double d, int n) {
 		int ret = (int) (d / n);
 		ret = (ret + 1) * n;
-		if (((int) (d / n)) != (d / n)) if (d < 0) ret -= n;
+		if (((int) (d / n)) == (d / n)) ret -= n;
 		return ret;
 	}
 

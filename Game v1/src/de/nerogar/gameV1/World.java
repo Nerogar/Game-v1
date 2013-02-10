@@ -26,6 +26,7 @@ public class World {
 	public Pathfinder pathfinder;
 	public Path path;
 	public PathNode pathEnd;
+	public PathNode pathStart;
 
 	public World(Game game) {
 		this.game = game;
@@ -125,13 +126,21 @@ public class World {
 		if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
 				land.click(0, floorIntersection);
-				if (pathEnd != null) {
-					PathNode start = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
-					path = new Path(start, pathEnd, pathfinder);
+				if (pathStart != null) {
+					pathEnd = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
+					//pathEnd = pathfinder.getNode(new Position(-28, 0));
+					int multiplier = 1;
+					long time1 = System.nanoTime();
+					for (int i = 0; i < multiplier; i++) {
+						path = new Path(pathStart, pathEnd, pathfinder);
+					}
+					long time2 = System.nanoTime();
+					System.out.println("Calculated "+multiplier+" Paths -> total: " + ((time2 - time1) / 1000000d) + "ms | individual: " + ((time2 - time1) / (1000000d * multiplier)));
 				}
 			} else if (InputHandler.isMouseButtonPressed(1)) {
 				land.click(1, floorIntersection);
-				pathEnd = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
+				pathStart = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
+				//pathStart = pathfinder.getNode(new Position(12, 28));
 			}
 		}
 
@@ -163,16 +172,26 @@ public class World {
 		game.world.collisionComparer.renderGrid();
 		InputHandler.renderMouseRay();
 
-		glDisable(GL_TEXTURE_2D);
-		glBegin(GL_LINES);
 		if (path != null) {
+			glDisable(GL_TEXTURE_2D);
+			glBegin(GL_LINES);
 			for (int i = 1; i < path.finalPath.size(); i++) {
-				glVertex3f(path.finalPath.get(i).x, 5, path.finalPath.get(i).z);
-				glVertex3f(path.finalPath.get(i - 1).x, 5, path.finalPath.get(i - 1).z);
+				glVertex3f((float) path.finalPath.get(i).getCenter().x, 5.1f, (float) path.finalPath.get(i).getCenter().y);
+				glVertex3f((float) path.finalPath.get(i - 1).getCenter().x, 5.1f, (float) path.finalPath.get(i - 1).getCenter().y);
 			}
+			glEnd();
+			glEnable(GL_TEXTURE_2D);
+
+			for (int i = 1; i < path.openList.size(); i++) {
+				path.openList.get(i).draw(1.0f, 0.5f, 0.5f);
+			}
+			for (PathNode node :path.closedList) {
+				node.draw(0.5f, 1.0f, 0.5f);
+			}
+			pathStart.draw(0.5f, 0.5f, 1.0f);
+			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}
-		glEnd();
-		glEnable(GL_TEXTURE_2D);
+
 		glPopMatrix();
 	}
 

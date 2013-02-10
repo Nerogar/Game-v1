@@ -3,6 +3,9 @@ package de.nerogar.gameV1.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.lwjgl.opengl.GL11.*;
+
+import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.level.Chunk;
 
 public class PathNode {
@@ -17,10 +20,11 @@ public class PathNode {
 	public double[] neighborDistance;
 	public ArrayList<PathNode> neighborsTemp = new ArrayList<PathNode>();
 	public boolean neighborsProcessed = false;
+	public boolean closed = false;
+	public boolean opened = false;
+	
+	//
 	public float colR, colG, colB;
-
-	//unwichtiges zeug:
-	public int drawn = -1;
 
 	public PathNode(int x, int z, Chunk chunk) {
 		this.locX = x;
@@ -66,5 +70,21 @@ public class PathNode {
 			neighborDistance[i] = Math.sqrt(distX * distX + distY * distY) * 10;
 		}
 
+	}
+
+	public Vector2d getCenter() {
+		return new Vector2d(x + (size / 2f), z + (size / 2f));
+	}
+
+	public void draw(float r, float g, float b) {
+		glDisable(GL_TEXTURE_2D);
+		glColor3f(r, g, b);
+		glBegin(GL_QUADS);
+		glVertex3f(x, 5, z);
+		glVertex3f(x, 5, z + size);
+		glVertex3f(x + size, 5, z + size);
+		glVertex3f(x + size, 5, z);
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
 	}
 }

@@ -51,8 +51,7 @@ public class Game implements Runnable {
 
 			// OpenAL Test
 
-
-			bgMusic = new Sound(new File("res/sound/music.wav"), new Vector3d(0,0,0), true);
+			bgMusic = new Sound(new File("res/sound/music.wav"), new Vector3d(0, 0, 0), true);
 
 			while (running) {
 				stressTimes[0] = System.nanoTime();
@@ -67,7 +66,7 @@ public class Game implements Runnable {
 					System.gc();
 					System.out.println("gc");
 				}
-				
+
 				bgMusic.update();
 
 				updateStressTimes();
@@ -131,15 +130,15 @@ public class Game implements Runnable {
 				}
 			}
 		}
-		
+
 		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) {
-			System.out.println("playing: "+AL10.AL_PLAYING);
-			System.out.println("paused: "+AL10.AL_PAUSED);
-			System.out.println("stopped: "+AL10.AL_STOPPED);
-			System.out.println("initial: "+AL10.AL_INITIAL);
-			
+			System.out.println("playing: " + AL10.AL_PLAYING);
+			System.out.println("paused: " + AL10.AL_PAUSED);
+			System.out.println("stopped: " + AL10.AL_STOPPED);
+			System.out.println("initial: " + AL10.AL_INITIAL);
+
 		}
-		
+
 		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
 			System.out.println(bgMusic.getState());
 		}
