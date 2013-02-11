@@ -98,17 +98,18 @@ public final class MathHelper {
 	}
 
 	public static int roundDownToInt(double d, int n) {
-		int ret = (int) (d / n);
-		ret = ret * n;
-		if (((int) (d / n)) != (d / n)) if (d < 0) ret -= n;
-		return ret;
+		double ret = d / n;
+		ret = Math.floor(ret);
+		ret *= n;
+		return (int) ret;
 	}
 
 	public static int roundUpToInt(double d, int n) {
-		int ret = (int) (d / n);
-		ret = (ret + 1) * n;
-		if (((int) (d / n)) == (d / n)) ret -= n;
-		return ret;
+
+		double ret = d / n;
+		ret = Math.ceil(ret);
+		ret *= n;
+		return (int) ret;
 	}
 
 	public static double modToInt(double d, int n) {

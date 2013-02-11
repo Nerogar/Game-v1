@@ -30,6 +30,7 @@ public class DebugFelk {
 		try {
 			bgMusic = new Sound(new File("res/sound/forecast.ogg"), new Vector3d(0, 0, 0), true);
 			bgMusic2 = new Sound(new File("res/sound/forecast_elevator.ogg"), new Vector3d(0, 0, 0), true);
+			bgMusic2.play();
 		} catch (LWJGLException | IOException e) {
 			e.printStackTrace();
 		}

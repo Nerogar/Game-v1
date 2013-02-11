@@ -347,14 +347,14 @@ public class Land {
 
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
 		TextureBank.instance.bindTexture("terrainSheet");
-
-		for (int i = 0; i < chunks.size(); i++) {
-			Chunk chunk = chunks.get(i);
-			if (chunk.chunkPosition.x >= MathHelper.divDownToInt(loadPosition.x, Chunk.CHUNKSIZE) - maxChunkRenderDistance && chunk.chunkPosition.x <= MathHelper.divDownToInt(loadPosition.x, Chunk.CHUNKSIZE) + maxChunkRenderDistance) {
-				if (chunk.chunkPosition.z >= MathHelper.divDownToInt(loadPosition.z, Chunk.CHUNKSIZE) - maxChunkRenderDistance && chunk.chunkPosition.z <= MathHelper.divDownToInt(loadPosition.z, Chunk.CHUNKSIZE) + maxChunkRenderDistance) {
+		Position chunkLoadPosition = getChunkPosition(loadPosition);
+		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
+			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
+				Chunk tempChunk = getChunk(new Position(i, j));
+				if (tempChunk != null) {
 					glPushMatrix();
-					glTranslatef(chunks.get(i).chunkPosition.x * Chunk.CHUNKSIZE, 0, chunks.get(i).chunkPosition.z * Chunk.CHUNKSIZE);//position anpassen
-					chunks.get(i).render();
+					glTranslatef(tempChunk.chunkPosition.x * Chunk.CHUNKSIZE, 0, tempChunk.chunkPosition.z * Chunk.CHUNKSIZE);//position anpassen
+					tempChunk.render();
 					glPopMatrix();
 				}
 			}
