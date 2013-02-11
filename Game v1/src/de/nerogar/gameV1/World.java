@@ -131,7 +131,7 @@ public class World {
 				if (pathStart != null) {
 					pathEnd = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
 					//pathEnd = pathfinder.getNode(new Position(-28, 0));
-					int multiplier = 1;
+					int multiplier = 10;
 					long time1 = System.nanoTime();
 					for (int i = 0; i < multiplier; i++) {
 						path = new Path(pathStart, pathEnd);
