@@ -349,7 +349,7 @@ public class Land {
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
 		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
-			for (int j = chunkLoadPosition.x - maxChunkRenderDistance; j <= chunkLoadPosition.x + maxChunkRenderDistance; j++) {
+			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
 				Chunk tempChunk = getChunk(new Position(i, j));
 				if (tempChunk != null) {
 					glPushMatrix();
