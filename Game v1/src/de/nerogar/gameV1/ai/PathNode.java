@@ -22,7 +22,7 @@ public class PathNode {
 	public boolean neighborsProcessed = false;
 	public boolean closed = false;
 	public boolean opened = false;
-	
+
 	//
 	public float colR, colG, colB;
 
@@ -51,6 +51,10 @@ public class PathNode {
 		//System.out.println("G: " + g + "|H: " + h);
 	}
 
+	public void clearNeighbors() {
+		neighborsTemp = new ArrayList<PathNode>();
+	}
+
 	public void addNeighbor(PathNode node) {
 		for (int i = 0; i < neighborsTemp.size(); i++) {
 			if (neighborsTemp.get(i) == node) { return; }
@@ -69,7 +73,6 @@ public class PathNode {
 
 			neighborDistance[i] = Math.sqrt(distX * distX + distY * distY) * 10;
 		}
-
 	}
 
 	public Vector2d getCenter() {

@@ -177,10 +177,11 @@ public class Land {
 		Chunk tempChunk = getChunk(chunkPosition);
 		if (tempChunk == null) return;
 		tempChunk.save();
-		updateWalkMapNodeNeighbors(tempChunk);
+		
 		tempChunk.cleanup();
 		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
 		rebuildChunkList();
+		updateWalkMapNodeNeighbors(tempChunk);
 		world.collisionComparer.newGrid();
 	}
 

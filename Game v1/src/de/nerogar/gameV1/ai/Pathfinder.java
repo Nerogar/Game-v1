@@ -109,6 +109,7 @@ public class Pathfinder {
 
 				if (!nodeMap[i][j].neighborsProcessed) {
 					PathNode node = nodeMap[i][j];
+					node.clearNeighbors();
 
 					int x0 = node.x - 1;
 					int x1 = node.x + node.size;
