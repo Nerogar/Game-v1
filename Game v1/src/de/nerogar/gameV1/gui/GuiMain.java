@@ -45,9 +45,10 @@ public class GuiMain extends Gui {
 
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.5f, 0.3f, 0.05f, "music:", FontRenderer.RIGHT));
+		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.7f, 1f, 0.05f, "Benutze die Pfeiltasten, um die Musik zu bewegen.", FontRenderer.CENTERED));
+		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.75f, 1f, 0.05f, "Sogar mit Doppler-Effekt!", FontRenderer.CENTERED));
 		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 1.0, "", "Buttons/button.png", "Buttons/slider.png");
-		pitchSlider.position = 0.1;
+		pitchSlider.position = 1;
 
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		
@@ -64,14 +65,16 @@ public class GuiMain extends Gui {
 
 	@Override
 	public void updateGui() {
-		if (game.debugFelk.bgMusic == null) return;
-		if (game.debugFelk.bgMusic2 == null) return;
-		if (!game.debugFelk.bgMusic.isPlaying())
-			audioButtonPlay.text = "play";
-		else
-			audioButtonPlay.text = "pause";
-		game.debugFelk.bgMusic.setGain((float)pitchSlider.position);
-		game.debugFelk.bgMusic2.setGain((float)pitchSlider.position);
+		//if (game.debugFelk.bgMusic == null) return;
+		//if (game.debugFelk.bgMusic2 == null) return;
+		//if (!game.debugFelk.bgMusic.isPlaying())
+		//	audioButtonPlay.text = "play";
+		//else
+		//	audioButtonPlay.text = "pause";
+		//game.debugFelk.bgMusic.setGain((float)pitchSlider.position);
+		//game.debugFelk.bgMusic2.setGain((float)pitchSlider.position);
+		if (game.debugFelk.sound == null) return;
+		game.debugFelk.sound.setGain((float)pitchSlider.position);
 	}
 
 	@Override
@@ -94,18 +97,13 @@ public class GuiMain extends Gui {
 		} else if (id == exitButton.id && mouseButton == 0) {
 			game.running = false;
 		} else if (id == audioButtonPlay.id && mouseButton == 0) {
-			if (!game.debugFelk.bgMusic.isPlaying()) {
-				game.debugFelk.bgMusic2.pause();
-				game.debugFelk.bgMusic.setOffset(game.debugFelk.bgMusic2.getOffset());
-				game.debugFelk.bgMusic.play();
+			if (!game.debugFelk.sound.isPlaying()) {
+				game.debugFelk.sound.play();
 			} else {
-				game.debugFelk.bgMusic2.play();
-				game.debugFelk.bgMusic2.setOffset(game.debugFelk.bgMusic.getOffset());
-				game.debugFelk.bgMusic.pause();
+				game.debugFelk.sound.pause();
 			}
 		} else if (id == audioButtonStop.id && mouseButton == 0) {
-			game.debugFelk.bgMusic.stop();
-			game.debugFelk.bgMusic2.stop();
+			game.debugFelk.sound.stop();
 		}
 	}
 }

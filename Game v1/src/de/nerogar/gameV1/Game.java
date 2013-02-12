@@ -14,7 +14,6 @@ import de.nerogar.gameV1.debug.DebugNerogar;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.Tile;
-import de.nerogar.gameV1.sound.Sound;
 
 public class Game implements Runnable {
 	public boolean running = true;
@@ -117,7 +116,6 @@ public class Game implements Runnable {
 		if (!guiList.pauseGame()) {
 			world.update();
 		}
-		Sound.setListener(new Vector3d(world.camera.scrollX, world.camera.scrollY, world.camera.scrollZ), new Vector3d(), new Vector3d());
 	}
 
 	private void render() {

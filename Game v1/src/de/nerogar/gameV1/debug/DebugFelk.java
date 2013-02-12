@@ -1,10 +1,7 @@
 package de.nerogar.gameV1.debug;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.Game;
@@ -14,32 +11,40 @@ import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.ObjectMatrix;
-import de.nerogar.gameV1.sound.Sound;
+import de.nerogar.gameV1.sound.ALBufferBank;
+import de.nerogar.gameV1.sound.ALSource;
+import de.nerogar.gameV1.sound.SoundManager;
 
 public class DebugFelk {
 
 	private Game game;
-	public Sound bgMusic;
-	public Sound bgMusic2;
+	//public Testsound bgMusic;
+	//public Testsound bgMusic2;
+	public ALSource sound;
 
 	public DebugFelk(Game game) {
 		this.game = game;
 	}
 
 	public void startup() {
-		try {
-			bgMusic = new Sound(new File("res/sound/forecast.ogg"), new Vector3d(0, 0, 0), true);
-			bgMusic2 = new Sound(new File("res/sound/forecast_elevator.ogg"), new Vector3d(0, 0, 0), true);
+		/*try {
+			bgMusic = new Testsound(new File("res/sound/forecast.ogg"), new Vector3d(0, 0, 0), true);
+			bgMusic2 = new Testsound(new File("res/sound/forecast_elevator.ogg"), new Vector3d(0, 0, 0), true);
 			bgMusic2.play();
 		} catch (LWJGLException | IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+		SoundManager.instance.preLoadSounds();
+		SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
+		sound = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(100,0,-15), new Vector3d(100, 0, 0), true, 1f, 1f);
+		if (sound != null) sound.play();
 	}
 
 	public void run() {
-		bgMusic.update();
-		bgMusic2.update();
-
+		SoundManager.instance.update();
+		//bgMusic.update();
+		//bgMusic2.update();
+		
 		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
 			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
 			game.world.entityList.addEntity(entity);
@@ -56,23 +61,23 @@ public class DebugFelk {
 			}
 		}
 
-		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
-			bgMusic.setOffset((float) Math.random());
+		if (InputHandler.isKeyDown(Keyboard.KEY_LEFT)) {
+			sound.setPosition(sound.getPosition().add(new Vector3d(-1,0,0)));
+			sound.setVelocity(new Vector3d(-10,0,0));
 		}
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) {
-			bgMusic.crash();
-		}
-
-		if (InputHandler.isKeyReleased(Keyboard.KEY_2)) {
-			bgMusic.uncrash();
+		if (InputHandler.isKeyDown(Keyboard.KEY_RIGHT)) {
+			sound.setPosition(sound.getPosition().add(new Vector3d(+1,0,0)));	
+			sound.setVelocity(new Vector3d(10,0,0));
 		}
 		
 	}
 
 	public void end() {
-		bgMusic.destroy();
-		bgMusic2.destroy();
+		SoundManager.instance.clear();
+		ALBufferBank.instance.clear();
+		//bgMusic.destroy();
+		//bgMusic2.destroy();
 	}
 
 }

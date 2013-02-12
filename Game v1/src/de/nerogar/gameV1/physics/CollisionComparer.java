@@ -262,7 +262,7 @@ public class CollisionComparer {
 			minZ = (int) Math.floor(Math.max(minLoadZ, minZ));
 			maxZ = (int) Math.floor(Math.min(maxLoadZ, maxZ));
 			maxZ = (int) Math.floor(Math.max(minLoadZ, maxZ));
-			
+
 			for (int j = minZ; j <= maxZ; j++) {
 
 				ymin = (ray.getDirection().getZ() > 0) ? ray.getYatZ(j) : ray.getYatZ(j + 1);
@@ -273,7 +273,7 @@ public class CollisionComparer {
 					if (ray.getDirection().getZ() < 0 && ray.getDirection().getY() < 0 && ymax > MAX_HEIGHT) break;
 					if (ymin < MIN_HEIGHT || ymax > MAX_HEIGHT) continue;
 				}
-				
+
 				Position pos = new Position(i, j);
 				Position posX = new Position(i + 1, j);
 				Position posZ = new Position(i, j + 1);
@@ -401,6 +401,10 @@ public class CollisionComparer {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		for (int i = 0; i < positions.size(); i++) {
 			Position pos = positions.get(i);
+			if (pos.x < 0 || pos.z < 0 || pos.x >= grid.length || pos.z >= grid[0].length) {
+				System.out.println("getEntitiesInRay(" + ray.toString() + ") error: pos.x = " + pos.x + ", " + pos.z + " = " + pos.z);
+				continue;
+			}
 			for (int j = 0; j < grid[pos.x][pos.z].size(); j++) {
 				ids.add(grid[pos.x][pos.z].get(j));
 				BoundingRender.renderAABB(new BoundingAABB(new Vector3d(pos.x * GRIDSIZE - shift.x, 0, pos.z * GRIDSIZE - shift.z), new Vector3d((pos.x + 1) * GRIDSIZE - shift.x, 10, (pos.z + 1) * GRIDSIZE - shift.z)), 0xffff00);
