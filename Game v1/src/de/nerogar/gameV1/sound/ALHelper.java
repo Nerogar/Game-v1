@@ -106,7 +106,9 @@ public class ALHelper {
 	
 	public static void setListener(Vector3d position, Vector3d velocity, Vector3d orientationAt, Vector3d orientationUp) {
 		alListener3f(AL_POSITION, position.getXf(), position.getYf(), position.getZf());
+		checkAndThrowALError();
 		alListener3f(AL_VELOCITY, velocity.getXf(), velocity.getYf(), velocity.getZf());
+		checkAndThrowALError();
 		FloatBuffer ori = BufferUtils.createFloatBuffer(6);
 		ori.put(0, orientationAt.getXf());
 		ori.put(1, orientationAt.getYf());

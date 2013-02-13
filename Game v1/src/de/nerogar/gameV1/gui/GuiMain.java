@@ -73,8 +73,8 @@ public class GuiMain extends Gui {
 		//	audioButtonPlay.text = "pause";
 		//game.debugFelk.bgMusic.setGain((float)pitchSlider.position);
 		//game.debugFelk.bgMusic2.setGain((float)pitchSlider.position);
-		if (game.debugFelk.sound == null) return;
-		game.debugFelk.sound.setGain((float)pitchSlider.position);
+		//if (game.debugFelk.sound == null) return;
+		//game.debugFelk.sound.setGain((float)pitchSlider.position);
 	}
 
 	@Override

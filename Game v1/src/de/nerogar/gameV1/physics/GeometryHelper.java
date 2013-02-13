@@ -1,5 +1,7 @@
 package de.nerogar.gameV1.physics;
 
+import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 
 public class GeometryHelper {
@@ -138,6 +140,16 @@ public class GeometryHelper {
 		}
 		if (intersections % 2 == 1) return candidate;
 		return null;
+	}
+	
+	public static Vector2d getDirVector(float rot) {
+		//Vector2d vector = null;
+		//Vector2d zeroDegrees = new Vector2d(0, -1);
+		//cos(rotation) = vector.x*0 + vector.z*-1;
+		// Grenzwerte aus Faulheit eliminieren
+		if (rot == 90 || rot == 270) rot += .00001f;
+		float newY = (float) (-1*MathHelper.cos(rot));	
+		return new Vector2d(0, newY);
 	}
 	
 }

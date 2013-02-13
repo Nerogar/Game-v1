@@ -23,16 +23,20 @@ public class ALSource {
 	private float gain;
 	private float pitch;
 	private boolean looping;
+	public boolean destroyWhenDone;
 	private int byteOffset;
 	private float offset;
 	private int state;
+	
+	private boolean deleted = false;
 
-	public ALSource(int sourceID, ALBuffer alBuffer, Vector3d position, Vector3d velocity, boolean looping, float gain, float pitch) {
+	public ALSource(int sourceID, ALBuffer alBuffer, Vector3d position, Vector3d velocity, boolean looping, boolean destroyWhenDone, float gain, float pitch) {
 		this.sourceID = sourceID;
 		this.setALBuffer(alBuffer);
 		this.setPosition(position);
 		this.setVelocity(velocity);
 		this.setLooping(looping);
+		this.destroyWhenDone = destroyWhenDone;
 		this.setGain(gain);
 		this.setPitch(pitch);
 		ALHelper.bindBufferToSource(alBuffer, this);
@@ -42,22 +46,22 @@ public class ALSource {
 		try {
 			byteOffset = ALHelper.getByteOffset(this);
 			state = ALHelper.getSourceState(this);
-		} catch(OpenALException e) {
+		} catch (OpenALException e) {
 			e.printStackTrace();
-			System.out.println("error fetching offset for Source-ID "+sourceID);
+			System.out.println("error fetching offset for Source-ID " + sourceID);
 		}
 		offset = (float) byteOffset / alBuffer.getSize();
-		setVelocity(new Vector3d(0,0,0));
+		setVelocity(new Vector3d(0, 0, 0));
 	}
-	
+
 	public void play() {
 		ALHelper.play(this);
 	}
-	
+
 	public void stop() {
 		ALHelper.stop(this);
 	}
-	
+
 	public void pause() {
 		ALHelper.pause(this);
 	}
@@ -140,7 +144,22 @@ public class ALSource {
 	}
 
 	public void setLooping(boolean looping) {
+		ALHelper.setLooping(this, looping);
 		this.looping = looping;
+	}
+
+	public boolean equals(Object o) {
+		if (!(o instanceof ALSource)) return false;
+		if (((ALSource) o).sourceID == sourceID) return true;
+		return false;
+	}
+	
+	public void markDeleted() {
+		deleted = true;
+	}
+	
+	public boolean isDeleted() {
+		return deleted;
 	}
 
 }
