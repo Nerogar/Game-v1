@@ -143,4 +143,8 @@ public class Camera {
 	public Vector2d getCamCenter(){
 		return new Vector2d(scrollXLoc, scrollZLoc);
 	}
+	
+	public Vector3d getCamPosition(){
+		return new Vector3d(scrollX, scrollY, scrollZ);
+	}
 }

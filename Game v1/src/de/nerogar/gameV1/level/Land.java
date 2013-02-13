@@ -124,7 +124,6 @@ public class Land {
 	}
 
 	private void loadChunk(Position chunkPosition) {
-		RenderHelper.updateLoadingScreen("Lade Chunk!");
 		Chunk chunk = new Chunk(chunkPosition, saveName, world);
 		if (!chunk.load()) {
 
