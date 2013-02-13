@@ -3,6 +3,7 @@ package de.nerogar.gameV1.debug;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL10;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
@@ -38,6 +39,7 @@ public class DebugFelk {
 		SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(100,0,-15), new Vector3d(100, 0, 0), true, 1f, 1f);
 		if (sound != null) sound.play();
+		AL10.alDopplerVelocity(1f);
 	}
 
 	public void run() {
@@ -63,12 +65,12 @@ public class DebugFelk {
 
 		if (InputHandler.isKeyDown(Keyboard.KEY_LEFT)) {
 			sound.setPosition(sound.getPosition().add(new Vector3d(-1,0,0)));
-			sound.setVelocity(new Vector3d(-10,0,0));
+			sound.setVelocity(new Vector3d(-60,0,0));
 		}
 
 		if (InputHandler.isKeyDown(Keyboard.KEY_RIGHT)) {
 			sound.setPosition(sound.getPosition().add(new Vector3d(+1,0,0)));	
-			sound.setVelocity(new Vector3d(10,0,0));
+			sound.setVelocity(new Vector3d(60,0,0));
 		}
 		
 	}

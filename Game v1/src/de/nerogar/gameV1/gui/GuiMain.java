@@ -47,8 +47,8 @@ public class GuiMain extends Gui {
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.7f, 1f, 0.05f, "Benutze die Pfeiltasten, um die Musik zu bewegen.", FontRenderer.CENTERED));
 		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.75f, 1f, 0.05f, "Sogar mit Doppler-Effekt!", FontRenderer.CENTERED));
-		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 1.0, "", "Buttons/button.png", "Buttons/slider.png");
-		pitchSlider.position = 1;
+		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 100.0, "", "Buttons/button.png", "Buttons/slider.png");
+		pitchSlider.position = 5;
 
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		
