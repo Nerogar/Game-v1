@@ -5,12 +5,13 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityHouse extends EntityBlockDebug {
+public class EntityHouse extends Entity {
 
 	public EntityHouse(Game game, ObjectMatrix matrix) {
 		//super(game, matrix, data, "houses/cone");
-		super(game, matrix, 1f, 1f);
-		texture = "houses/cone.png";/*Textur name*/
+		super(game, matrix, "houses/test1");
+		//texture = "houses/test1.png";/*Textur name*/
+		setObject("houses/test1", "houses/test1.png");
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 2, 1));
 	}
 
@@ -41,7 +42,9 @@ public class EntityHouse extends EntityBlockDebug {
 
 	@Override
 	public void click(int key) {
-		// TODO Auto-generated method stub
+		if(key == 1){
+			markToRemove = true;
+		}
 
 	}
 }

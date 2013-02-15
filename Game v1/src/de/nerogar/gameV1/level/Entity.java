@@ -24,6 +24,7 @@ public abstract class Entity {
 	public Object3D object;
 	public String texture;
 	public boolean saveEntity = true;
+	public boolean markToRemove = false;
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
@@ -32,10 +33,6 @@ public abstract class Entity {
 		world = game.world;
 		this.matrix = matrix;
 		setObject(objectName, null);
-	}
-
-	public Entity() {
-
 	}
 
 	public void setObject(String objectName, String textureName) {

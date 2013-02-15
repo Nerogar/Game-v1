@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
+import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.Ray;
 import de.nerogar.gameV1.ai.Path;
 import de.nerogar.gameV1.ai.PathNode;
@@ -104,10 +105,6 @@ public class World {
 
 		//if (Keyboard.isKeyDown(Keyboard.KEY_M)) entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(), null, 10, 1F));
 
-		//soll exception verursachen
-		/*Vector3d vTest = null;
-		System.out.println(vTest.getValue());*/
-
 		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
 		//long time1 = System.nanoTime();
 		Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
@@ -126,7 +123,7 @@ public class World {
 			}
 		}
 
-		if (floorIntersection != null) {
+		/*if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
 				land.click(0, floorIntersection);
 				if (pathStart != null) {
@@ -144,6 +141,13 @@ public class World {
 				land.click(1, floorIntersection);
 				pathStart = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
 				//pathStart = pathfinder.getNode(new Position(12, 28));
+			}
+		}*/
+
+		if (floorIntersection != null) {
+			if (InputHandler.isMouseButtonPressed(0)) {
+				ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
+				spawnEntity(new EntityHouse(game, om));
 			}
 		}
 
@@ -188,7 +192,7 @@ public class World {
 			for (int i = 1; i < path.openList.size(); i++) {
 				path.openList.get(i).draw(1.0f, 0.5f, 0.5f);
 			}
-			for (PathNode node :path.closedList) {
+			for (PathNode node : path.closedList) {
 				node.draw(0.5f, 1.0f, 0.5f);
 			}
 			pathStart.draw(0.5f, 0.5f, 1.0f);

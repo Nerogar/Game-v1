@@ -22,7 +22,7 @@ public class EntityList {
 	public Entity getEntity(int id) {
 		return entities.get(entityID.indexOf(id));
 	}
-	
+
 	public boolean containsEntity(Entity entity) {
 		return entities.contains(entity);
 	}
@@ -35,7 +35,7 @@ public class EntityList {
 
 	public void removeNullEntities() {
 		for (int i = entities.size() - 1; i >= 0; i--) {
-			if (entities.get(i) == null) {
+			if (entities.get(i) == null || entities.get(i).markToRemove) {
 				entities.remove(i);
 			}
 		}
@@ -49,6 +49,7 @@ public class EntityList {
 		//for (int i = 0; i < entities.size(); i++) {
 		//	entities.get(i).update(Timer.instance.delta / 1000F);
 		//}
+		removeNullEntities();
 		for (Entity e : entities) {
 			e.update(Timer.instance.delta / 1000F);
 		}

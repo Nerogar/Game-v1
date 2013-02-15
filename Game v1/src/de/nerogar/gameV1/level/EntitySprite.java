@@ -11,6 +11,7 @@ public abstract class EntitySprite extends Entity {
 	public Object3D object;
 
 	public EntitySprite(Game game, ObjectMatrix matrix, String objectName) {
+		super(game, matrix, objectName);
 		this.game = game;
 		this.matrix = matrix;
 		setObject(objectName, null);

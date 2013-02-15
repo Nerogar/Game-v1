@@ -22,7 +22,7 @@ public class Land {
 	public long seed;
 	public String saveName;
 	public int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
-	public int chunkUpdatesPerFrame = 4;
+	public int chunkUpdatesPerFrame = 1;
 	private Game game;
 	public World world;
 	public LevelGenerator levelGenerator;
@@ -90,6 +90,7 @@ public class Land {
 	}
 
 	public int loadChunksAroundXZ(Position blockPosition) {
+		//long time1 = System.nanoTime();
 		maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
 		int chunkUpdates = 0;
 		for (int i = chunks.size() - 1; i >= 0; i--) {
@@ -111,7 +112,8 @@ public class Land {
 				}
 			}
 		}
-
+		//long time2 = System.nanoTime();
+		//System.out.println("chunk updates: "+((time2-time1)/1000000d)+"ms");
 		return chunkUpdates;
 	}
 
