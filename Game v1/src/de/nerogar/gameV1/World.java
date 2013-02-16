@@ -31,7 +31,7 @@ public class World {
 
 	public World(Game game) {
 		this.game = game;
-		entityList = new EntityList(game);
+		entityList = new EntityList(game, this);
 		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
 		entityList.setCollisionComparer(collisionComparer);
@@ -203,7 +203,7 @@ public class World {
 	}
 
 	public void spawnEntity(Entity entity) {
-		if (isLoaded) entityList.addEntity(entity);
+		if (isLoaded) entityList.addEntity(entity, this);
 	}
 
 	public boolean containsEntity(Entity entity) {

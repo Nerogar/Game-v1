@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Timer;
+import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
@@ -14,9 +15,11 @@ public class EntityList {
 	public int maxID;
 	CollisionComparer collisionComparer;
 	Game game;
+	World world;
 
-	public EntityList(Game game) {
+	public EntityList(Game game, World world) {
 		this.game = game;
+		this.world = world;
 	}
 
 	public Entity getEntity(int id) {
@@ -27,10 +30,11 @@ public class EntityList {
 		return entities.contains(entity);
 	}
 
-	public void addEntity(Entity entity) {
+	public void addEntity(Entity entity, World world) {
 		entities.add(entity);
 		entityID.add(maxID + 1);
 		entity.game = game;
+		entity.init(world);
 	}
 
 	public void removeNullEntities() {

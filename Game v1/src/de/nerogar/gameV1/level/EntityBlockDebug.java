@@ -50,10 +50,4 @@ public abstract class EntityBlockDebug extends EntityBlock {
 		updatePosition(time);
 
 	}
-
-	@Override
-	public String getNameTag() {
-		return "BlockDebug";
-	}
-
 }

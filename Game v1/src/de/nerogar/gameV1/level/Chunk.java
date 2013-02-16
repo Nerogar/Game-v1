@@ -305,7 +305,7 @@ public class Chunk {
 	}
 
 	public void spawnEntity(Entity entity) {
-		world.entityList.addEntity(entity);
+		world.entityList.addEntity(entity, world);
 	}
 
 	public void spawnEntityLocal(Entity entity) {
@@ -316,7 +316,7 @@ public class Chunk {
 		//position.x += chunkPosition.x * CHUNKSIZE;
 		//position.z += chunkPosition.z * CHUNKSIZE;
 
-		world.entityList.addEntity(entity);
+		world.entityList.addEntity(entity, world);
 	}
 
 	@Override

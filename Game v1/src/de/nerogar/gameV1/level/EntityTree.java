@@ -4,6 +4,8 @@ import java.util.Random;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.ALSource;
@@ -16,19 +18,24 @@ public class EntityTree extends Entity {
 	private float elapsedTime;
 
 	public EntityTree(Game game, ObjectMatrix matrix) {
-		super(game, matrix, "tree");
-		texture = "tree.png";/*Textur name*/
+		super(game, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 4, 1));
+	}
+	
+	@Override
+	public void init(World world) {
+		setObject("tree", "tree.png");
+		//setSprite(1, "houses/test1-1.png");
 	}
 
 	@Override
-	public void saveProperties() {
+	public void saveProperties(DNFile chunkFile, String folder) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void loadProperties() {
+	public void loadProperties(DNFile chunkFile, String folder) {
 		// TODO Auto-generated method stub
 
 	}

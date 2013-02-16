@@ -29,11 +29,10 @@ public abstract class Entity {
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
-	public Entity(Game game, ObjectMatrix matrix, String objectName) {
+	public Entity(Game game, ObjectMatrix matrix) {
 		this.game = game;
 		world = game.world;
 		this.matrix = matrix;
-		setObject(objectName, null);
 	}
 
 	public void setObject(String objectName, String textureName) {
@@ -44,7 +43,7 @@ public abstract class Entity {
 		}
 		texture = textureName;
 	}
-	
+
 	public void setSprite(float size, String textureName) {
 		object = new ObjectSprite(size, world.camera);
 		texture = textureName;
@@ -78,7 +77,8 @@ public abstract class Entity {
 		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
 		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
 		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
-		loadProperties();
+
+		loadProperties(chunkFile, folder);
 	}
 
 	public void save(DNFile chunkFile, String folder) {
@@ -87,12 +87,12 @@ public abstract class Entity {
 		chunkFile.addNode(folder + ".position.y", matrix.position.getY());
 		chunkFile.addNode(folder + ".position.z", matrix.position.getZ());
 
-		saveProperties();
+		saveProperties(chunkFile, folder);
 	}
 
-	public abstract void saveProperties();
+	public abstract void saveProperties(DNFile chunkFile, String folder);
 
-	public abstract void loadProperties();
+	public abstract void loadProperties(DNFile chunkFile, String folder);
 
 	public void render() {
 		// BoundingRender.renderAABB((BoundingAABB)getBoundingBox(), 0x00FF00);
@@ -118,10 +118,10 @@ public abstract class Entity {
 
 	public abstract void click(int key);// klick mit der maus, macht sinn, oder?
 
-	public String getNameTag() {
-		return "DefaultEntity";
-	}
+	public abstract String getNameTag();
 
+	public abstract void init(World world);
+	
 	// register der Entities, wird zum laden/speichern gebraucht
 	public static void registerEntity(Entity entity) {
 		entityList.put(entity.getNameTag(), (Class<? extends Entity>) entity.getClass());

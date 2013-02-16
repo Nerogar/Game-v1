@@ -10,8 +10,8 @@ public abstract class EntityPhysic extends Entity {
 	public Vector3d velocity = new Vector3d(0, 0, 0);
 	public Vector3d force = new Vector3d(0, 0, 0);
 
-	public EntityPhysic(Game game, ObjectMatrix matrix, String objectName, float mass) {
-		super(game, matrix, objectName);
+	public EntityPhysic(Game game, ObjectMatrix matrix, float mass) {
+		super(game, matrix);
 		setMass(mass);
 	}
 

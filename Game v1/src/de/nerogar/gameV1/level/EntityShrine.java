@@ -2,25 +2,32 @@ package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityShrine extends Entity {
 
 	public EntityShrine(Game game, ObjectMatrix matrix) {
-		super(game, matrix, "entities/shrine 1");
-		texture = "entities/shrine 1.png";/*Texture name*/
+		super(game, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(-2, 0, -2), new Vector3d(2, 4, 2));
+	}
+	
+	@Override
+	public void init(World world) {
+		setObject("entities/shrine 1", "entities/shrine 1.png");
+		//setSprite(1, "houses/test1-1.png");
 	}
 
 	@Override
-	public void saveProperties() {
+	public void saveProperties(DNFile chunkFile, String folder) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void loadProperties() {
+	public void loadProperties(DNFile chunkFile, String folder) {
 		// TODO Auto-generated method stub
 
 	}

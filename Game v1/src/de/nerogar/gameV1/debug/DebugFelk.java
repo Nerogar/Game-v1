@@ -45,7 +45,7 @@ public class DebugFelk {
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
 			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
-			game.world.entityList.addEntity(entity);
+			game.world.entityList.addEntity(entity, game.world);
 		}
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
