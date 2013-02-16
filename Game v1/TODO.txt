@@ -1,6 +1,5 @@
 //// Engine
 
-nodeMap auch wieder entladen bei chunkunload
 fehler beim collisionComparer wegen MathHelper.round...ToInt beheben
 
 //// Gameplay

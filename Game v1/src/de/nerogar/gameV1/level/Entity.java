@@ -11,6 +11,7 @@ import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.object.Object3D;
 import de.nerogar.gameV1.object.Object3DBank;
+import de.nerogar.gameV1.object.ObjectSprite;
 import de.nerogar.gameV1.physics.*;
 
 public abstract class Entity {
@@ -36,7 +37,16 @@ public abstract class Entity {
 	}
 
 	public void setObject(String objectName, String textureName) {
-		object = Object3DBank.instance.getObject(objectName);
+		if (objectName != "") {
+			object = Object3DBank.instance.getObject(objectName);
+		} else {
+			object = null;
+		}
+		texture = textureName;
+	}
+	
+	public void setSprite(float size, String textureName) {
+		object = new ObjectSprite(size, world.camera);
 		texture = textureName;
 	}
 
@@ -90,7 +100,9 @@ public abstract class Entity {
 			displayBoundingBox(getBoundingBox(), 0x00FF00);
 
 		}
-		object.render(matrix, texture);
+		if (object != null) {
+			object.render(matrix, texture);
+		}
 	}
 
 	public void displayBoundingBox(Bounding b, int color) {

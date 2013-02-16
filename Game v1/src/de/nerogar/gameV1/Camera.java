@@ -147,4 +147,14 @@ public class Camera {
 	public Vector3d getCamPosition(){
 		return new Vector3d(scrollX, scrollY, scrollZ);
 	}
+	
+	public void setCenter(Vector2d pos){
+		scrollXLoc = pos.getXf();
+		scrollZLoc = pos.getYf();
+	}
+	
+	public void setRotation(float rot, float rotDown){
+		this.rotation = rot;
+		this.rotationDown = rotDown;
+	}
 }

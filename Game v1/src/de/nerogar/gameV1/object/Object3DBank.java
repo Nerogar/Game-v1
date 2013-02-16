@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Object3DBank {
 	private HashMap<String, Object3D> objects;
-
+	
 	public static Object3DBank instance = new Object3DBank();
 
 	public Object3DBank() {

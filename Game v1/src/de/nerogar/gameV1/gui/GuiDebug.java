@@ -1,8 +1,8 @@
 package de.nerogar.gameV1.gui;
 
-import de.nerogar.gameV1.Camera;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Timer;
+import de.nerogar.gameV1.Vector2d;
 
 public class GuiDebug extends Gui {
 	private GElementTextLabel fpsLabel;
@@ -44,7 +44,7 @@ public class GuiDebug extends Gui {
 		for (int i = 0; i < labels.length; i++)
 			textLabels.add(labels[i]);
 		textLabels.add(fpsLabel);
-		
+
 		buttons.add(resetCamButton);
 
 		//textLabels.add(label1);
@@ -89,9 +89,8 @@ public class GuiDebug extends Gui {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == resetCamButton.id && mouseButton == 0) {
-			game.world.camera = new Camera();
-			game.world.camera.scrollX = 1000000;
-			game.world.camera.scrollZ = -20000000;
+			game.world.camera.setCenter(new Vector2d(0, 0));
+			game.world.camera.setRotation(0, 0);
 			game.world.camera.updatePostition();
 		}
 	}

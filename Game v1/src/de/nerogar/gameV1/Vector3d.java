@@ -212,6 +212,7 @@ public class Vector3d {
 	}
 	
 	public Vector3d normalize() {
+		if(isValueDirty)recalculateValue();
 		this.x /= this.value;
 		this.y /= this.value;
 		this.z /= this.value;

@@ -11,7 +11,8 @@ public class EntityHouse extends Entity {
 		//super(game, matrix, data, "houses/cone");
 		super(game, matrix, "houses/test1");
 		//texture = "houses/test1.png";/*Textur name*/
-		setObject("houses/test1", "houses/test1.png");
+		setObject("houses/test1", "houses/test1-1.png");
+		//setSprite(1, "houses/test1-1.png");
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 2, 1));
 	}
 
