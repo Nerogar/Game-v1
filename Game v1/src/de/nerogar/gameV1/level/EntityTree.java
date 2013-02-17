@@ -21,7 +21,7 @@ public class EntityTree extends Entity {
 		super(game, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 4, 1));
 	}
-	
+
 	@Override
 	public void init(World world) {
 		setObject("tree", "tree.png");

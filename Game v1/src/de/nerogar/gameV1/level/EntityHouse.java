@@ -12,7 +12,7 @@ public class EntityHouse extends Entity {
 	public EntityHouse(Game game, ObjectMatrix matrix) {
 		//super(game, matrix, data, "houses/cone");
 		super(game, matrix);
-		
+
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 2, 1));
 	}
 
@@ -21,7 +21,7 @@ public class EntityHouse extends Entity {
 		setObject("houses/test1", "houses/test1-1.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
-	
+
 	//public void update(float time) {
 	//	matrix.getPosition().y = game.world.land.getHeight(matrix.getPosition().x, matrix.getPosition().z);
 	//}
@@ -49,9 +49,8 @@ public class EntityHouse extends Entity {
 
 	@Override
 	public void click(int key) {
-		if(key == 1){
+		if (key == 1) {
 			markToRemove = true;
 		}
-
 	}
 }

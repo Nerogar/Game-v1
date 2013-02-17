@@ -26,7 +26,7 @@ public abstract class Entity {
 	public String texture;
 	public boolean saveEntity = true;
 	public boolean markToRemove = false;
-	public float opacity;
+	public float opacity = 1;
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
@@ -78,7 +78,6 @@ public abstract class Entity {
 		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
 		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
 		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
-		opacity = 1f;
 
 		loadProperties(chunkFile, folder);
 	}
