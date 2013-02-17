@@ -275,7 +275,7 @@ public class Chunk {
 	public float getLocalHeight(int x, int z) {
 		return heightMap[x][z];
 	}
-
+	
 	public float getLocalHeight(double x, double z) {
 		float v11 = getLocalHeight((int) x, (int) z);
 		float v10 = getLocalHeight((int) x, (int) z + 1);

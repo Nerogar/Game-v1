@@ -233,6 +233,35 @@ public class Land {
 		return (blockPosition.x / Chunk.CHUNKSIZE) == chunk.chunkPosition.x && (int) (blockPosition.z / Chunk.CHUNKSIZE) == chunk.chunkPosition.z;
 	}
 
+	public ArrayList<Chunk> setHeight(double x, double z, float d) {
+		Position chunkPosition[] = new Position[9];
+		chunkPosition[0] = getChunkPosition(x, z);
+		chunkPosition[1] = getChunkPosition(x, z + 1);
+		chunkPosition[2] = getChunkPosition(x, z - 1);
+		chunkPosition[3] = getChunkPosition(x + 1, z);
+		chunkPosition[4] = getChunkPosition(x + 1, z + 1);
+		chunkPosition[5] = getChunkPosition(x + 1, z - 1);
+		chunkPosition[6] = getChunkPosition(x - 1, z);
+		chunkPosition[7] = getChunkPosition(x - 1, z + 1);
+		chunkPosition[8] = getChunkPosition(x - 1, z - 1);
+
+		ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
+		Chunk mainchunk = getChunk(chunkPosition[0]);
+		affectedChunks.add(mainchunk);
+		for (int i = 1; i < chunkPosition.length; i++) {
+			Chunk chunk = getChunk(chunkPosition[i]);
+			if (chunk != null) {
+				if (!affectedChunks.contains(chunk)) affectedChunks.add(chunk);
+				mainchunk.setLocalHeight((int) MathHelper.modToInt(x, Chunk.CHUNKSIZE), (int) MathHelper.modToInt(z, Chunk.CHUNKSIZE), d);
+			}
+		}
+
+		//if (mainchunk != null) {
+		//	mainchunk.setLocalHeight((int) MathHelper.modToInt(x, Chunk.CHUNKSIZE), (int) MathHelper.modToInt(z, Chunk.CHUNKSIZE), d);
+		//}
+		return affectedChunks;
+	}
+
 	public float getHeight(double x, double z) {
 		Position chunkPosition = getChunkPosition(x, z);
 		Chunk chunk = getChunk(chunkPosition);
@@ -417,6 +446,25 @@ public class Land {
 			// hier gehört der Schmarrn eher hin ;)
 			if (buildable) {
 				game.world.spawnEntity(buildableEntity);
+				ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
+				for (int i = (int) Math.floor(buildableEntity.getAABB().a.getX()); i <= Math.ceil(buildableEntity.getAABB().b.getX()); i++) {
+					for (int j = (int) Math.floor(buildableEntity.getAABB().a.getZ()); j <= Math.ceil(buildableEntity.getAABB().b.getZ()); j++) {
+						ArrayList<Chunk> changedChunks = setHeight(i, j, buildableEntity.matrix.position.getYf());
+						for (Chunk chunk : changedChunks) {
+							if (!affectedChunks.contains(chunk)) affectedChunks.add(chunk);
+						}
+					}
+				}
+				System.out.println(affectedChunks.size() + " chunks affected");
+				/*for (Chunk chunk : affectedChunks) {
+					chunk.updateVbo();
+					chunk.updateMaps();
+					System.out.println("updated chunk "+chunk.chunkPosition);
+				}*/
+				for (int i = affectedChunks.size() - 1; i >= 0; i--) {
+					Chunk chunk = affectedChunks.get(i);
+					chunk.updateVbo();
+				}
 				buildableEntity.opacity = 1f;
 				buildableEntity = null;
 			}
