@@ -414,21 +414,40 @@ public class Land {
 
 	}
 
+	public boolean isBuildable(EntityBuilding entity, Position pos) {
+		// Hier kannst du den kram ändern
+		if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) {
+			return false;
+		}
+		float lowest = Float.MAX_VALUE;
+		float highest = Float.MIN_VALUE;
+		for (int i = pos.x; i <= pos.x+entity.size.x; i++) {
+			for (int j = pos.z; j <= pos.z+entity.size.z; j++) {
+				float height = getHeight(i,j);
+				lowest = (height < lowest) ? height : lowest;
+				highest = (height > highest) ? height : highest;
+			}
+		}
+		if (highest - lowest > 0.25) return false;
+		return true;
+	}
+
 	public void updateBuildable() {
 		if (buildableEntity != null) world.despawnEntity(buildableEntity);
 		this.buildableEntity = null;
 		this.buildable = false;
 		int buildingID = game.debugFelk.selectedBuildingID;
 		if (buildingID != -1 && mousePosition != null) {
-			Entity entity = Entity.getEntity(game, BuildingBank.getBuildingName(buildingID));
-			entity.matrix.setPosition(mousePosition);
+			EntityBuilding entity = (EntityBuilding) Entity.getEntity(game, BuildingBank.getBuildingName(buildingID));
+			double x = Math.round(mousePosition.getX());
+			double z = Math.round(mousePosition.getZ());
+			double y = getHeight(x, z);
+			Vector3d roundMousePosition = new Vector3d(x, y, z);
+			entity.matrix.setPosition(roundMousePosition);
 			entity.opacity = 0.7f;
 			this.buildableEntity = entity;
 			world.spawnEntity(buildableEntity);
-			this.buildable = true;
-			if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) {
-				this.buildable = false;
-			}
+			this.buildable = isBuildable(entity, new Position((int) x, (int) z));
 		}
 	}
 
@@ -446,7 +465,7 @@ public class Land {
 			// hier gehört der Schmarrn eher hin ;)
 			if (buildable) {
 				game.world.spawnEntity(buildableEntity);
-				ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
+				/*ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
 				for (int i = (int) Math.floor(buildableEntity.getAABB().a.getX()); i <= Math.ceil(buildableEntity.getAABB().b.getX()); i++) {
 					for (int j = (int) Math.floor(buildableEntity.getAABB().a.getZ()); j <= Math.ceil(buildableEntity.getAABB().b.getZ()); j++) {
 						ArrayList<Chunk> changedChunks = setHeight(i, j, buildableEntity.matrix.position.getYf());
@@ -454,17 +473,17 @@ public class Land {
 							if (!affectedChunks.contains(chunk)) affectedChunks.add(chunk);
 						}
 					}
-				}
-				System.out.println(affectedChunks.size() + " chunks affected");
+				}*/
+				//System.out.println(affectedChunks.size() + " chunks affected");
 				/*for (Chunk chunk : affectedChunks) {
 					chunk.updateVbo();
 					chunk.updateMaps();
 					System.out.println("updated chunk "+chunk.chunkPosition);
 				}*/
-				for (int i = affectedChunks.size() - 1; i >= 0; i--) {
-					Chunk chunk = affectedChunks.get(i);
-					chunk.updateVbo();
-				}
+				//for (int i = affectedChunks.size() - 1; i >= 0; i--) {
+				//	Chunk chunk = affectedChunks.get(i);
+				//	chunk.updateVbo();
+				//}
 				buildableEntity.opacity = 1f;
 				buildableEntity = null;
 			}

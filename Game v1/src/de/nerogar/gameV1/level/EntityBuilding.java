@@ -11,7 +11,7 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityBuilding extends Entity {
 
-	public Vector2d size = new Vector2d(1, 1);
+	public Position size = new Position(1, 1);
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 
 	public EntityBuilding(Game game, ObjectMatrix matrix) {

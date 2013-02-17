@@ -2,7 +2,6 @@ package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameResources;
-import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
@@ -11,7 +10,7 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityHouseBlue extends EntityBuilding {
 
-	public Vector2d size = new Vector2d(2, 2);
+	public Position size = new Position(2, 2);
 	public GameResources resourceCost = new GameResources(200, 100, 100);
 
 	public EntityHouseBlue(Game game, ObjectMatrix matrix) {

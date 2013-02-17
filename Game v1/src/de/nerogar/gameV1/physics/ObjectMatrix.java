@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.physics;
 
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.level.Position;
 
 public class ObjectMatrix {
 	public Vector3d position;
