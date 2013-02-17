@@ -29,6 +29,7 @@ public class Game implements Runnable {
 	public long stressTimeTotal = 0;
 	public DebugFelk debugFelk = new DebugFelk(this);
 	public DebugNerogar debugNerogar = new DebugNerogar(this);
+	public GameResources gameResources = new GameResources();
 
 	public void run() {
 		this.game = this;

@@ -69,14 +69,14 @@ public class RenderHelper {
 
 	public static void renderImageAbsolute(String textureName, int width, int height, int posX, int posY) {
 		int x = 0;
-		if (posX == RIGHT) x = Display.getWidth()-width;
-		if (posX == CENTER) x = (Display.getWidth()-width)/2;
+		if (posX == RIGHT) x = Display.getWidth() - width;
+		if (posX == CENTER) x = (Display.getWidth() - width) / 2;
 		int y = 0;
-		if (posY == BOTTOM) y = Display.getHeight()-height;
-		if (posY == CENTER) y = (Display.getHeight()-height)/2;
-		
+		if (posY == BOTTOM) y = Display.getHeight() - height;
+		if (posY == CENTER) y = (Display.getHeight() - height) / 2;
+
 		TextureBank.instance.bindTexture(textureName);
-		
+
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 
@@ -91,7 +91,7 @@ public class RenderHelper {
 		glVertex3f(x + width, y, -1);
 
 		glEnd();
-		
+
 	}
 
 	public static void renderImage(String textureName, float x, float y, float width, float height) {
@@ -103,7 +103,7 @@ public class RenderHelper {
 		height *= yScale;
 
 		TextureBank.instance.bindTexture(textureName);
-		
+
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 
@@ -144,11 +144,11 @@ public class RenderHelper {
 		RenderEngine.instance.setOrtho();
 		RenderHelper.renderDefaultGuiBackground();
 		RenderHelper.renderImageAbsolute("loading.png", 470, 178, CENTER, CENTER);
-		FontRenderer.renderFont(text, 0, Display.getHeight()/2+130, Display.getWidth(), 20, FontRenderer.CENTERED);
+		FontRenderer.renderFont(text, 0, Display.getHeight() / 2 + 130, Display.getWidth(), 20, FontRenderer.CENTERED);
 		RenderHelper.disableAlpha();
 		Display.update();
 	}
-	
+
 	public static void updateLoadingScreen(String text) {
 		RenderHelper.renderLoadingScreen(text);
 	}
@@ -160,6 +160,31 @@ public class RenderHelper {
 
 	public static void disableAlpha() {
 		glDisable(GL_BLEND);
+	}
+
+	public static void drawTriangle(Vector3d a, Vector3d b, Vector3d c, float colorR, float colorG, float colorB) {
+		if (GameOptions.instance.getBoolOption("debug")) {
+			glDisable(GL_TEXTURE_2D);
+			glBegin(GL_TRIANGLES);
+			glColor3f(colorR, colorG, colorB);
+			glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
+			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
+			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
+			glEnd();
+			glEnable(GL_TEXTURE_2D);
+		}
+	}
+
+	public static void drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d, float colorR, float colorG, float colorB, float opacity) {
+		glDisable(GL_TEXTURE_2D);
+		glBegin(GL_QUADS);
+		glColor4f(colorR, colorG, colorB, opacity);
+		glVertex3f(a.getXf(), a.getYf(), a.getZf());
+		glVertex3f(b.getXf(), b.getYf(), b.getZf());
+		glVertex3f(c.getXf(), c.getYf(), c.getZf());
+		glVertex3f(d.getXf(), d.getYf(), d.getZf());
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
 	}
 
 }

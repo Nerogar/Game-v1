@@ -8,6 +8,7 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
@@ -27,6 +28,9 @@ public class Land {
 	public World world;
 	public LevelGenerator levelGenerator;
 	public EntityTestparticle markerCone;
+	private Vector3d mousePosition;
+	private Entity buildableEntity = null;
+	private boolean buildable = false;
 
 	public Land(Game game, World world) {
 		chunks = new ArrayList<Chunk>();
@@ -179,7 +183,7 @@ public class Land {
 		Chunk tempChunk = getChunk(chunkPosition);
 		if (tempChunk == null) return;
 		tempChunk.save();
-		
+
 		tempChunk.cleanup();
 		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
 		rebuildChunkList();
@@ -362,6 +366,45 @@ public class Land {
 				}
 			}
 		}
+		updateBuildable();
+		if (buildableEntity != null) {
+			RenderHelper.enableAlpha();
+			Vector2d posA = new Vector2d(buildableEntity.getAABB().a.getX(), buildableEntity.getAABB().a.getZ());
+			Vector2d posB = new Vector2d(buildableEntity.getAABB().b.getX(), buildableEntity.getAABB().b.getZ());
+			Vector3d a = new Vector3d(posA.getX(), getHeight(posA) + 0.1, posA.getZ());
+			Vector3d b = new Vector3d(posA.getX(), getHeight(posA.getX(), posB.getZ()) + 0.1, posB.getZ());
+			Vector3d c = new Vector3d(posB.getX(), getHeight(posB) + 0.1, posB.getZ());
+			Vector3d d = new Vector3d(posB.getX(), getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());
+			if (buildable) {
+				RenderHelper.drawQuad(a, b, c, d, 0, 1, 0, 0.3f);
+			} else {
+				RenderHelper.drawQuad(a, b, c, d, 1, 0, 0, 0.3f);
+			}
+			RenderHelper.disableAlpha();
+		}
+
+	}
+
+	public void updateBuildable() {
+		if (buildableEntity != null) world.despawnEntity(buildableEntity);
+		this.buildableEntity = null;
+		this.buildable = false;
+		int buildingID = game.debugFelk.selectedBuildingID;
+		if (buildingID != -1 && mousePosition != null) {
+			Entity entity = Entity.getEntity(game, BuildingBank.getBuildingName(buildingID));
+			entity.matrix.setPosition(mousePosition);
+			entity.opacity = 0.7f;
+			this.buildableEntity = entity;
+			world.spawnEntity(buildableEntity);
+			this.buildable = true;
+			if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) {
+				this.buildable = false;
+			}
+		}
+	}
+
+	private double getHeight(Vector2d pos) {
+		return getHeight(pos.getX(), pos.getZ());
 	}
 
 	public double getHeight(Position pos) {
@@ -369,11 +412,28 @@ public class Land {
 	}
 
 	public void click(int button, Vector3d pos) {
+		if (button == 0) {
+			//game.world.spawnEntity(new EntityHouse(game, new ObjectMatrix(pos)));
+			// hier gehört der Schmarrn eher hin ;)
+			if (buildable) {
+				game.world.spawnEntity(buildableEntity);
+				buildableEntity.opacity = 1f;
+				buildableEntity = null;
+			}
+		}
 		/*if (button == 0) {
 			markerCone.setForce(new Vector3d(0, 0, 0));
 			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0, 10, 0)));
 			markerCone.addForce(new Vector3d(0, -10000, 0));
 			if (!world.containsEntity(markerCone)) world.spawnEntity(markerCone);
 		}*/
+	}
+
+	public void setMousePos(Vector3d pos) {
+		this.mousePosition = pos;
+	}
+
+	public Vector3d getMousePos() {
+		return this.mousePosition;
 	}
 }

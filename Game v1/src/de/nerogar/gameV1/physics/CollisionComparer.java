@@ -1,13 +1,9 @@
 package de.nerogar.gameV1.physics;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
@@ -25,6 +21,8 @@ public class CollisionComparer {
 
 	private Game game;
 
+	// shift addieren: reale Koordinate -> grid-Index
+	// shift abziehen: grid-Index -> reale Koordinate
 	private Position shift = new Position(0, 0);
 	private Position max = new Position(0, 0);
 
@@ -111,6 +109,29 @@ public class CollisionComparer {
 			}
 		}
 
+	}
+
+	public boolean isColliding(Entity entity, Class<?> entitySample) {
+		BoundingAABB bound = entity.getAABB();
+		int startX = (int) Math.floor((bound.a.getX() + shift.x) / GRIDSIZE);
+		int startZ = (int) Math.floor((bound.a.getZ() + shift.z) / GRIDSIZE);
+		int endX = (int) Math.ceil((bound.b.getX() + shift.x) / GRIDSIZE);
+		int endZ = (int) Math.ceil((bound.b.getZ() + shift.z) / GRIDSIZE);
+		startX = Math.max(0, startX);
+		startZ = Math.max(0, startZ);
+		endX = Math.min(max.x, endX);
+		endZ = Math.min(max.z, endZ);
+		for (int i = startX; i < endX; i++) {
+			for (int j = startZ; j < endZ; j++) {
+				for (int k = 0; k < grid[i][j].size(); k++) {
+					Entity entity2 = game.world.entityList.entities.get(grid[i][j].get(k));
+					if (entity2.equals(entity)) continue;
+					//if (!(entitySample.isInstance(entity2))) continue;
+					if (PhysicHelper.isColliding(entity.getBoundingBox(), entity2.getBoundingBox())) return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -303,7 +324,7 @@ public class CollisionComparer {
 			for (Vector3d[] polygon : polygons) {
 
 				newIntersection = GeometryHelper.getLinePolygonIntersection(ray, polygon);
-				drawTriangle(polygon[0], polygon[1], polygon[2]);
+				//RenderHelper.drawTriangle(polygon[0], polygon[1], polygon[2], 1,0,0);
 				comparations++;
 				if (newIntersection != null) {
 					newDistance = Vector3d.subtract(ray.getStart(), newIntersection).getSquaredValue();
@@ -320,19 +341,6 @@ public class CollisionComparer {
 
 		return intersection;
 
-	}
-
-	private void drawTriangle(Vector3d a, Vector3d b, Vector3d c) {
-		if (GameOptions.instance.getBoolOption("debug")) {
-			glDisable(GL_TEXTURE_2D);
-			glBegin(GL_TRIANGLES);
-			glColor3f(1f, 0f, 0f);
-			glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
-			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
-			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
-			glEnd();
-			glEnable(GL_TEXTURE_2D);
-		}
 	}
 
 	public ArrayList<Position> getGridPositionsInRay(Ray ray) {

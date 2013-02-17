@@ -26,6 +26,7 @@ public abstract class Entity {
 	public String texture;
 	public boolean saveEntity = true;
 	public boolean markToRemove = false;
+	public float opacity;
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
@@ -77,6 +78,7 @@ public abstract class Entity {
 		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
 		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
 		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
+		opacity = 1f;
 
 		loadProperties(chunkFile, folder);
 	}
@@ -101,7 +103,7 @@ public abstract class Entity {
 
 		}
 		if (object != null) {
-			object.render(matrix, texture);
+			object.render(matrix, texture, opacity);
 		}
 	}
 
@@ -142,6 +144,12 @@ public abstract class Entity {
 		ObjectMatrix objectMatrix = new ObjectMatrix();
 		registerEntity(new EntityTree(game, objectMatrix));
 		registerEntity(new EntityHouse(game, objectMatrix));
+		registerEntity(new EntityHouseBlue(game, objectMatrix));
+		registerEntity(new EntityHouseGreen(game, objectMatrix));
+		registerEntity(new EntityHouseOrange(game, objectMatrix));
+		registerEntity(new EntityHousePink(game, objectMatrix));
+		registerEntity(new EntityHouseRed(game, objectMatrix));
+		registerEntity(new EntityHouseYellow(game, objectMatrix));
 		registerEntity(new EntityShrine(game, objectMatrix));
 		registerEntity(new EntityTestparticle(game, objectMatrix));
 	}

@@ -5,33 +5,33 @@ import de.nerogar.gameV1.level.Position;
 public class Vector2d {
 
 	public double x;
-	public double y;
+	public double z;
 
-	public Vector2d(double x, double y) {
+	public Vector2d(double x, double z) {
 		this.x = x;
-		this.y = y;
+		this.z = z;
 	}
 
 	public double getX() {
 		return this.x;
 	}
 
-	public double getY() {
-		return this.y;
+	public double getZ() {
+		return this.z;
 	}
 
 	public float getXf() {
 		return (float) this.getX();
 	}
 
-	public float getYf() {
-		return (float) this.getY();
+	public float getZf() {
+		return (float) this.getZ();
 	}
 
 	public Vector2d normalize() {
 		double value = getValue();
 		this.x /= value;
-		this.y /= value;
+		this.z /= value;
 		return this;
 	}
 
@@ -42,23 +42,23 @@ public class Vector2d {
 	}
 
 	private double getValue() {
-		return Math.sqrt(x * x + y * y);
+		return Math.sqrt(x * x + z * z);
 	}
 
 	@Override
 	public Vector2d clone() {
-		return new Vector2d(this.x, this.y);
+		return new Vector2d(this.x, this.z);
 	}
 
 	public static double dotProduct(Vector2d v1, Vector2d v2) {
-		return v1.x * v2.x + v1.y * v2.y;
+		return v1.x * v2.x + v1.z * v2.z;
 	}
 
 	public String toString() {
-		return "(" + Double.toString(this.getX()) + "," + Double.toString(this.getY()) + ")";
+		return "(" + Double.toString(this.getX()) + "," + Double.toString(this.getZ()) + ")";
 	}
 
 	public Position toPosition() {
-		return new Position((int) x, (int) y);
+		return new Position((int) x, (int) z);
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 
-import de.nerogar.gameV1.Camera;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.Vector3d;
@@ -22,6 +21,7 @@ public class DebugFelk {
 	//public Testsound bgMusic;
 	//public Testsound bgMusic2;
 	public ALSource sound;
+	public int selectedBuildingID = 0;
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -29,7 +29,7 @@ public class DebugFelk {
 
 	public void startup() {
 
-		SoundManager.instance.preLoadSounds();
+		//SoundManager.instance.preLoadSounds();
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forest.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
 		if (sound != null) sound.play();
@@ -43,10 +43,12 @@ public class DebugFelk {
 		SoundManager.instance.update();
 
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) {
-			EntityTestparticle entity = new EntityTestparticle(game, new ObjectMatrix());
-			game.world.entityList.addEntity(entity, game.world);
-		}
+		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) selectedBuildingID=0;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) selectedBuildingID=1;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) selectedBuildingID=2;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) selectedBuildingID=3;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) selectedBuildingID=4;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_5)) selectedBuildingID=5;
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = game.world.entityList.entities;

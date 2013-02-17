@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.image.TextureBank;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -86,12 +87,17 @@ public class Object3D {
 	}
 
 	public void render(ObjectMatrix om, String texture) {
+		render(om, texture, 1f);
+	}
+	
+	public void render(ObjectMatrix om, String texture, float opacity) {
 		//float x, float y, float z) {
 
 		TextureBank.instance.bindTexture(texture);
 
+		RenderHelper.enableAlpha();
 		glPushMatrix();
-		glColor3f(1f, 1f, 1f);
+		glColor4f(1f, 1f, 1f, opacity);
 		glTranslatef(om.getPosition().getXf(), om.getPosition().getYf(), om.getPosition().getZf());
 		glRotatef(om.getRotation().getZf(), 0, 1, 0);
 		glScalef(om.getScaling().getXf(), om.getScaling().getYf(), om.getScaling().getZf());
@@ -128,5 +134,6 @@ public class Object3D {
 		}
 
 		glPopMatrix();
+		RenderHelper.disableAlpha();
 	}
 }

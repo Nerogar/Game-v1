@@ -150,7 +150,7 @@ public class Camera {
 	
 	public void setCenter(Vector2d pos){
 		scrollXLoc = pos.getXf();
-		scrollZLoc = pos.getYf();
+		scrollZLoc = pos.getZf();
 	}
 	
 	public void setRotation(float rot, float rotDown){

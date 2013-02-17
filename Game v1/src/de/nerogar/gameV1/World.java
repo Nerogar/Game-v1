@@ -6,12 +6,12 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.Ray;
 import de.nerogar.gameV1.ai.Path;
 import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.gui.GuiBuildingTest;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
 
 public class World {
@@ -46,6 +46,7 @@ public class World {
 
 	public void initiateWorld(String levelName) {
 		RenderHelper.renderLoadingScreen("Lade Welt...");
+		game.guiList.addGui(new GuiBuildingTest(game));
 		if (worldData == null) {
 			worldData = new WorldData(levelName);
 			worldData.load();
@@ -85,6 +86,7 @@ public class World {
 		collisionComparer.cleanup();
 		worldData.save();
 		worldData = null;
+		game.guiList.removeGui("guiBuildingTest");
 		System.gc();
 	}
 
@@ -146,9 +148,18 @@ public class World {
 
 		if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
-				ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
-				spawnEntity(new EntityHouse(game, om));
+				land.click(0, floorIntersection);
+				//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
+				//spawnEntity(new EntityHouse(game, om));
+				// wtf, warum machst du das hierhin?
 			}
+			if (InputHandler.isMouseButtonPressed(1)) {
+				land.click(1, floorIntersection);
+			}
+			if (InputHandler.isMouseButtonPressed(2)) {
+				land.click(2, floorIntersection);
+			}
+			land.setMousePos(floorIntersection);
 		}
 
 		/*PathNode start = pathfinder.getNode(new Position(36, 16));
@@ -183,8 +194,8 @@ public class World {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			for (int i = 1; i < path.finalPath.size(); i++) {
-				glVertex3f((float) path.finalPath.get(i).getCenter().x, 5.1f, (float) path.finalPath.get(i).getCenter().y);
-				glVertex3f((float) path.finalPath.get(i - 1).getCenter().x, 5.1f, (float) path.finalPath.get(i - 1).getCenter().y);
+				glVertex3f((float) path.finalPath.get(i).getCenter().x, 5.1f, (float) path.finalPath.get(i).getCenter().z);
+				glVertex3f((float) path.finalPath.get(i - 1).getCenter().x, 5.1f, (float) path.finalPath.get(i - 1).getCenter().z);
 			}
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
@@ -204,6 +215,10 @@ public class World {
 
 	public void spawnEntity(Entity entity) {
 		if (isLoaded) entityList.addEntity(entity, this);
+	}
+	
+	public void despawnEntity(Entity entity) {
+		if (isLoaded) entityList.entities.remove(entity);
 	}
 
 	public boolean containsEntity(Entity entity) {
