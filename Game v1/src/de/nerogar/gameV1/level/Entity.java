@@ -129,6 +129,7 @@ public abstract class Entity {
 	}
 
 	public static Entity getEntity(Game game, String tagName) {
+		if(tagName == null)return null;
 		try {
 			Constructor<? extends Entity> contructor = entityList.get(tagName).getConstructor(new Class[] { Game.class, ObjectMatrix.class });
 			Entity entity = contructor.newInstance(game, new ObjectMatrix());

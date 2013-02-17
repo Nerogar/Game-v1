@@ -19,7 +19,7 @@ public class Game implements Runnable {
 	public boolean running = true;
 
 	public World world;
-	public Game game;
+	public Player player;
 	public GuiList guiList = new GuiList();
 	public RenderEngine renderEngine = RenderEngine.instance;
 	private long[] stressTimes = new long[4];
@@ -32,8 +32,6 @@ public class Game implements Runnable {
 	public GameResources gameResources = new GameResources();
 
 	public void run() {
-		this.game = this;
-
 		try {
 
 			init();
@@ -88,15 +86,15 @@ public class Game implements Runnable {
 	}
 
 	private void mainloop() {
-		InputHandler.update(game);
+		InputHandler.update(this);
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_F3) || InputHandler.isGamepadButtonPressed("back")) {
 			//GameOptions.instance.setOption("debug", String.valueOf(!GameOptions.instance.getBoolOption("debug")));
 			GameOptions.instance.switchBoolOption("debug");
 			if (!GameOptions.instance.getBoolOption("debug")) {
-				guiList.removeGui(new GuiDebug(game));
+				guiList.removeGui(new GuiDebug(this));
 			} else {
-				guiList.addGui(new GuiDebug(game));
+				guiList.addGui(new GuiDebug(this));
 			}
 		}
 
@@ -116,24 +114,26 @@ public class Game implements Runnable {
 		guiList.update();
 		if (!guiList.pauseGame()) {
 			world.update();
+			player.update(world);
 		}
 	}
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		world.render();
+		world.render(player);
 		guiList.render();
 	}
 
 	private void init() {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
 
-		world = new World(game);
+		world = new World(this);
+		player = new Player(this);
 		if (GameOptions.instance.getBoolOption("debug")) {
-			guiList.addGui(new GuiDebug(game));
+			guiList.addGui(new GuiDebug(this));
 		}
-		guiList.addGui(new GuiMain(game));
-		Entity.initEntityList(game);
+		guiList.addGui(new GuiMain(this));
+		Entity.initEntityList(this);
 		Tile.initTileList();
 		Timer.instance.init();
 

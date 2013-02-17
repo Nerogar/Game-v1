@@ -304,6 +304,10 @@ public class Chunk {
 		heightMap[x][y] = height;
 	}
 
+	public boolean getLocalWalkable(int x, int z) {
+		return walkableMap[x][z];
+	}
+	
 	public void spawnEntity(Entity entity) {
 		world.entityList.addEntity(entity, world);
 	}

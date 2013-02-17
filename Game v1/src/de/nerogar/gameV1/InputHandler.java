@@ -24,7 +24,8 @@ public final class InputHandler {
 	private static ArrayList<Key> registeredKeys = new ArrayList<Key>();
 	private static ArrayList<GamepadButton> registeredGamepadButtons = new ArrayList<GamepadButton>();
 	private static Vector3d start, dir;
-
+	private static Vector3d mousePosition;
+	
 	public static void update(Game game) {
 		updateOns(game);
 		pressedKeys.clear();
@@ -114,7 +115,7 @@ public final class InputHandler {
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	public static Vector3d get3DmousePosition() {
+	public static Vector3d get3DmouseStart() {
 		if (start == null) return new Vector3d(0, 0, 0);
 		return start;
 	}
@@ -122,6 +123,14 @@ public final class InputHandler {
 	public static Vector3d get3DmouseDirection() {
 		if (dir == null) return new Vector3d(0, 0, 0);
 		return dir;
+	}
+	
+	public static Vector3d get3DmousePosition(){
+		return mousePosition;
+	}
+	
+	public static void set3DmousePosition(Vector3d position){
+		mousePosition = position;
 	}
 
 	//update gamepad buttons

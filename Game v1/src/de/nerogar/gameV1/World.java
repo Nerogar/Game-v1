@@ -46,7 +46,6 @@ public class World {
 
 	public void initiateWorld(String levelName) {
 		RenderHelper.renderLoadingScreen("Lade Welt...");
-		game.guiList.addGui(new GuiBuildingTest(game));
 		if (worldData == null) {
 			worldData = new WorldData(levelName);
 			worldData.load();
@@ -86,7 +85,6 @@ public class World {
 		collisionComparer.cleanup();
 		worldData.save();
 		worldData = null;
-		game.guiList.removeGui("guiBuildingTest");
 		System.gc();
 	}
 
@@ -107,7 +105,7 @@ public class World {
 
 		//if (Keyboard.isKeyDown(Keyboard.KEY_M)) entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(), null, 10, 1F));
 
-		Ray sightRay = new Ray(InputHandler.get3DmousePosition(), InputHandler.get3DmouseDirection());
+		Ray sightRay = new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection());
 		//long time1 = System.nanoTime();
 		Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
 		//long time2 = System.nanoTime();
@@ -146,6 +144,7 @@ public class World {
 			}
 		}*/
 
+		InputHandler.set3DmousePosition(floorIntersection);
 		if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
 				land.click(0, floorIntersection);
@@ -168,7 +167,7 @@ public class World {
 
 	}
 
-	public void render() {
+	public void render(Player player) {
 		if (!isLoaded) return;
 
 		maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
@@ -209,7 +208,8 @@ public class World {
 			pathStart.draw(0.5f, 0.5f, 1.0f);
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}
-
+		
+		player.renderInWorld(this);
 		glPopMatrix();
 	}
 

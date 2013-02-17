@@ -4,7 +4,9 @@ import de.nerogar.gameV1.Game;
 
 public class GuiBuildingTest extends Gui {
 	private GElementButton buttonNone, buttonBlue, buttonGreen, buttonOrange, buttonPink, buttonRed, buttonYellow;
-
+	public int selectedID = 0;
+	public boolean idChanged = false;
+	
 	public GuiBuildingTest(Game game) {
 		super(game);
 	}
@@ -52,19 +54,38 @@ public class GuiBuildingTest extends Gui {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == buttonNone.id) {
+			idChanged = true;
+			selectedID = -1;
 			game.debugFelk.selectedBuildingID = -1;
 		} else if (id == buttonBlue.id) {
+			idChanged = true;
+			selectedID = 0;
 			game.debugFelk.selectedBuildingID = 0;
 		} else if (id == buttonGreen.id) {
+			idChanged = true;
+			selectedID = 1;
 			game.debugFelk.selectedBuildingID = 1;
 		} else if (id == buttonOrange.id) {
+			idChanged = true;
+			selectedID = 2;
 			game.debugFelk.selectedBuildingID = 2;
 		} else if (id == buttonPink.id) {
+			idChanged = true;
+			selectedID = 3;
 			game.debugFelk.selectedBuildingID = 3;
 		} else if (id == buttonRed.id) {
+			idChanged = true;
+			selectedID = 4;
 			game.debugFelk.selectedBuildingID = 4;
 		} else if (id == buttonYellow.id) {
+			idChanged = true;
+			selectedID = 5;
 			game.debugFelk.selectedBuildingID = 5;
 		}
+	}
+	
+	public int getBuildingId(){
+		idChanged = false;
+		return selectedID;
 	}
 }

@@ -339,6 +339,17 @@ public class Land {
 		return highest;
 	}
 
+	public boolean getWalkable(int x, int z) {
+		Position chunkPosition = getChunkPosition(x, z);
+		Chunk chunk = getChunk(chunkPosition);
+
+		if (chunk != null) {
+			return chunk.getLocalWalkable((int) MathHelper.modToInt(x, Chunk.CHUNKSIZE), (int) MathHelper.modToInt(z, Chunk.CHUNKSIZE));
+		} else {
+			return false;
+		}
+	}
+
 	public Vector3d getFloorpointInSight(Ray ray) {
 		return world.collisionComparer.getNearestFloorIntersectionWithRay(ray, world);
 	}
@@ -395,7 +406,7 @@ public class Land {
 				}
 			}
 		}
-		updateBuildable();
+		//updateBuildable();
 		if (buildableEntity != null) {
 			RenderHelper.enableAlpha();
 			Vector2d posA = new Vector2d(buildableEntity.getAABB().a.getX(), buildableEntity.getAABB().a.getZ());
@@ -416,23 +427,22 @@ public class Land {
 
 	public boolean isBuildable(EntityBuilding entity, Position pos) {
 		// Hier kannst du den kram ändern
-		if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) {
-			return false;
-		}
+		//if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) { return false; }
 		float lowest = Float.MAX_VALUE;
 		float highest = Float.MIN_VALUE;
-		for (int i = pos.x; i <= pos.x+entity.size.x; i++) {
-			for (int j = pos.z; j <= pos.z+entity.size.z; j++) {
-				float height = getHeight(i,j);
+		for (int i = pos.x; i <= pos.x + entity.size.x; i++) {
+			for (int j = pos.z; j <= pos.z + entity.size.z; j++) {
+				float height = getHeight(i, j);
 				lowest = (height < lowest) ? height : lowest;
 				highest = (height > highest) ? height : highest;
+				if (!getWalkable(i, j)) return false;
 			}
 		}
-		if (highest - lowest > 0.25) return false;
+		if (highest - lowest > 0.4) return false;
 		return true;
 	}
 
-	public void updateBuildable() {
+	/*public void updateBuildable() {
 		if (buildableEntity != null) world.despawnEntity(buildableEntity);
 		this.buildableEntity = null;
 		this.buildable = false;
@@ -449,9 +459,9 @@ public class Land {
 			world.spawnEntity(buildableEntity);
 			this.buildable = isBuildable(entity, new Position((int) x, (int) z));
 		}
-	}
+	}*/
 
-	private double getHeight(Vector2d pos) {
+	public double getHeight(Vector2d pos) {
 		return getHeight(pos.getX(), pos.getZ());
 	}
 
