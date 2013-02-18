@@ -48,15 +48,4 @@ public class EntityHouseRed extends EntityBuilding {
 		// TODO Auto-generated method stub
 		if (key == 1) markToRemove = true;
 	}
-
-	@Override
-	public Position getSize() {
-		return new Position(2, 2);
-	}
-
-	@Override
-	public GameResources getResourceCosts() {
-		return new GameResources(300, 200, 200);
-	}
-
 }

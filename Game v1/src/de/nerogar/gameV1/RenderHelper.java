@@ -162,11 +162,11 @@ public class RenderHelper {
 		glDisable(GL_BLEND);
 	}
 
-	public static void drawTriangle(Vector3d a, Vector3d b, Vector3d c, float colorR, float colorG, float colorB) {
+	public static void drawTriangle(Vector3d a, Vector3d b, Vector3d c, int color) {
 		if (GameOptions.instance.getBoolOption("debug")) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_TRIANGLES);
-			glColor3f(colorR, colorG, colorB);
+			glColor3f(getR(color), getG(color), getB(color));
 			glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
 			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
 			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
@@ -175,10 +175,10 @@ public class RenderHelper {
 		}
 	}
 
-	public static void drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d, float colorR, float colorG, float colorB, float opacity) {
+	public static void drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d, int color) {
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
-		glColor4f(colorR, colorG, colorB, opacity);
+		glColor4f(getR(color), getG(color), getB(color), getA(color));
 		glVertex3f(a.getXf(), a.getYf(), a.getZf());
 		glVertex3f(b.getXf(), b.getYf(), b.getZf());
 		glVertex3f(c.getXf(), c.getYf(), c.getZf());

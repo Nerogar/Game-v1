@@ -21,10 +21,6 @@ public abstract class EntityBuilding extends Entity {
 		boundingBox = new BoundingAABB(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
 	}
 
-	public abstract Position getSize();
-
-	public abstract GameResources getResourceCosts();
-
 	@Override
 	public abstract void init(World world);
 

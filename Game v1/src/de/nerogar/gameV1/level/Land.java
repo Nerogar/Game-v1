@@ -428,8 +428,7 @@ public class Land {
 	}
 
 	public boolean isBuildable(EntityBuilding entity, Position pos) {
-		// Hier kannst du den kram ändern
-		//if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) { return false; }
+		float maxheightDifference = 0.4f;
 		float lowest = Float.MAX_VALUE;
 		float highest = Float.MIN_VALUE;
 		for (int i = pos.x; i < pos.x + entity.size.x; i++) {
@@ -440,7 +439,7 @@ public class Land {
 				if (!getWalkable(i, j)) return false;
 			}
 		}
-		if (highest - lowest > 10.4) return false;
+		if (highest - lowest > maxheightDifference) return false;
 		return true;
 	}
 
