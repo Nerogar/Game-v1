@@ -34,7 +34,15 @@ public class Player {
 			}
 		}
 		if (buildingOnCursor != null) {
-			buildingOnCursor.matrix.setPosition(InputHandler.get3DmousePosition());
+			Vector3d mousePos = InputHandler.get3DmousePosition();
+			if (mousePos != null) {
+				int x = (int) Math.round(mousePos.getX());
+				int z = (int) Math.round(mousePos.getZ());
+				Vector3d pos = new Vector3d(x, game.world.land.getHeight(new Position(x, z)), z);
+				buildingOnCursor.matrix.setPosition(pos);
+			} else {
+				buildingOnCursor.matrix.setPosition(null);
+			}
 		}
 	}
 
@@ -43,7 +51,7 @@ public class Player {
 			buildingOnCursor.opacity = 0.5f;
 			buildingOnCursor.render();
 
-			Position pos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(),1),MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(),1));
+			Position pos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
 			boolean buildable = world.land.isBuildable(buildingOnCursor, pos);
 			RenderHelper.enableAlpha();
 			Vector2d posA = new Vector2d(buildingOnCursor.getAABB().a.getX(), buildingOnCursor.getAABB().a.getZ());

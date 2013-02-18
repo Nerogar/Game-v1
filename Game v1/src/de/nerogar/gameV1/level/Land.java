@@ -29,8 +29,9 @@ public class Land {
 	public LevelGenerator levelGenerator;
 	public EntityTestparticle markerCone;
 	private Vector3d mousePosition;
-	private Entity buildableEntity = null;
-	private boolean buildable = false;
+
+	//private Entity buildableEntity = null;
+	//private boolean buildable = false;
 
 	public Land(Game game, World world) {
 		chunks = new ArrayList<Chunk>();
@@ -407,6 +408,7 @@ public class Land {
 			}
 		}
 		//updateBuildable();
+		/*
 		if (buildableEntity != null) {
 			RenderHelper.enableAlpha();
 			Vector2d posA = new Vector2d(buildableEntity.getAABB().a.getX(), buildableEntity.getAABB().a.getZ());
@@ -421,7 +423,7 @@ public class Land {
 				RenderHelper.drawQuad(a, b, c, d, 1, 0, 0, 0.3f);
 			}
 			RenderHelper.disableAlpha();
-		}
+		}*/
 
 	}
 
@@ -438,7 +440,7 @@ public class Land {
 				if (!getWalkable(i, j)) return false;
 			}
 		}
-		if (highest - lowest > 0.4) return false;
+		if (highest - lowest > 10.4) return false;
 		return true;
 	}
 
@@ -470,34 +472,34 @@ public class Land {
 	}
 
 	public void click(int button, Vector3d pos) {
-		if (button == 0) {
-			//game.world.spawnEntity(new EntityHouse(game, new ObjectMatrix(pos)));
-			// hier gehört der Schmarrn eher hin ;)
-			if (buildable) {
-				game.world.spawnEntity(buildableEntity);
-				/*ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
-				for (int i = (int) Math.floor(buildableEntity.getAABB().a.getX()); i <= Math.ceil(buildableEntity.getAABB().b.getX()); i++) {
-					for (int j = (int) Math.floor(buildableEntity.getAABB().a.getZ()); j <= Math.ceil(buildableEntity.getAABB().b.getZ()); j++) {
-						ArrayList<Chunk> changedChunks = setHeight(i, j, buildableEntity.matrix.position.getYf());
-						for (Chunk chunk : changedChunks) {
-							if (!affectedChunks.contains(chunk)) affectedChunks.add(chunk);
-						}
-					}
-				}*/
-				//System.out.println(affectedChunks.size() + " chunks affected");
-				/*for (Chunk chunk : affectedChunks) {
-					chunk.updateVbo();
-					chunk.updateMaps();
-					System.out.println("updated chunk "+chunk.chunkPosition);
-				}*/
-				//for (int i = affectedChunks.size() - 1; i >= 0; i--) {
-				//	Chunk chunk = affectedChunks.get(i);
-				//	chunk.updateVbo();
-				//}
-				buildableEntity.opacity = 1f;
-				buildableEntity = null;
+		//if (button == 0) {
+		//game.world.spawnEntity(new EntityHouse(game, new ObjectMatrix(pos)));
+		// hier gehört der Schmarrn eher hin ;)
+		//if (buildable) {
+		//game.world.spawnEntity(buildableEntity);
+		/*ArrayList<Chunk> affectedChunks = new ArrayList<Chunk>();
+		for (int i = (int) Math.floor(buildableEntity.getAABB().a.getX()); i <= Math.ceil(buildableEntity.getAABB().b.getX()); i++) {
+			for (int j = (int) Math.floor(buildableEntity.getAABB().a.getZ()); j <= Math.ceil(buildableEntity.getAABB().b.getZ()); j++) {
+				ArrayList<Chunk> changedChunks = setHeight(i, j, buildableEntity.matrix.position.getYf());
+				for (Chunk chunk : changedChunks) {
+					if (!affectedChunks.contains(chunk)) affectedChunks.add(chunk);
+				}
 			}
-		}
+		}*/
+		//System.out.println(affectedChunks.size() + " chunks affected");
+		/*for (Chunk chunk : affectedChunks) {
+			chunk.updateVbo();
+			chunk.updateMaps();
+			System.out.println("updated chunk "+chunk.chunkPosition);
+		}*/
+		//for (int i = affectedChunks.size() - 1; i >= 0; i--) {
+		//	Chunk chunk = affectedChunks.get(i);
+		//	chunk.updateVbo();
+		//}
+		//buildableEntity.opacity = 1f;
+		//buildableEntity = null;
+		//}
+		//}
 		/*if (button == 0) {
 			markerCone.setForce(new Vector3d(0, 0, 0));
 			markerCone.matrix.position.set(Vector3d.add(pos, new Vector3d(0, 10, 0)));

@@ -11,7 +11,6 @@ public class BuildingBank {
 		buildings.put(2, "HouseOrange");
 		buildings.put(3, "HousePink");
 		buildings.put(4, "HouseRed");
-		buildings.put(5, "HouseYellow");
 	}
 	
 	/*public static EntityBuilding getNewInstance(int id, Object... ctorArgument) {

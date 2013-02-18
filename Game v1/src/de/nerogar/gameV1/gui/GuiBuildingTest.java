@@ -3,7 +3,7 @@ package de.nerogar.gameV1.gui;
 import de.nerogar.gameV1.Game;
 
 public class GuiBuildingTest extends Gui {
-	private GElementButton buttonNone, buttonBlue, buttonGreen, buttonOrange, buttonPink, buttonRed, buttonYellow;
+	private GElementButton buttonNone, buttonBlue, buttonGreen, buttonOrange, buttonPink, buttonRed;
 	public int selectedID = 0;
 	public boolean idChanged = false;
 	
@@ -30,7 +30,6 @@ public class GuiBuildingTest extends Gui {
 		buttonOrange = new GElementButton(genNewID(), 0.6f, 0.0f, 0.1f, 0.05f, "orange", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		buttonPink   = new GElementButton(genNewID(), 0.7f, 0.0f, 0.1f, 0.05f, "pink", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		buttonRed    = new GElementButton(genNewID(), 0.8f, 0.0f, 0.1f, 0.05f, "rot", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		buttonYellow = new GElementButton(genNewID(), 0.9f, 0.0f, 0.1f, 0.05f, "gelb", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
 		buttons.add(buttonNone);
 		buttons.add(buttonBlue);
@@ -38,7 +37,6 @@ public class GuiBuildingTest extends Gui {
 		buttons.add(buttonOrange);
 		buttons.add(buttonPink);
 		buttons.add(buttonRed);
-		buttons.add(buttonYellow);
 	}
 
 	@Override
@@ -77,10 +75,6 @@ public class GuiBuildingTest extends Gui {
 			idChanged = true;
 			selectedID = 4;
 			game.debugFelk.selectedBuildingID = 4;
-		} else if (id == buttonYellow.id) {
-			idChanged = true;
-			selectedID = 5;
-			game.debugFelk.selectedBuildingID = 5;
 		}
 	}
 	

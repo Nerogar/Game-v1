@@ -2,7 +2,6 @@ package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameResources;
-import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
@@ -20,8 +19,10 @@ public abstract class EntityBuilding extends Entity {
 		boundingBox = new BoundingAABB(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
 	}
 	
-	//public abstract Vector2d getSize2();
-
+	public abstract Position getSize();
+	
+	public abstract GameResources getResourceCosts();
+	
 	@Override
 	public abstract void init(World world);
 	//setObject("houses/test1", "houses/test1-1.png");

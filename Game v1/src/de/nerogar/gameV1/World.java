@@ -11,7 +11,6 @@ import de.nerogar.gameV1.ai.Path;
 import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
-import de.nerogar.gameV1.gui.GuiBuildingTest;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
 
 public class World {

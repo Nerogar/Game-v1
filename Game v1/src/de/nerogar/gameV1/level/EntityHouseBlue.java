@@ -15,7 +15,7 @@ public class EntityHouseBlue extends EntityBuilding {
 
 	public EntityHouseBlue(Game game, ObjectMatrix matrix) {
 		super(game, matrix);
-		boundingBox = new BoundingAABB(new Vector3d(-size.x/2, 0, -size.z/2), new Vector3d(size.x/2, 1, size.z/2));
+		boundingBox = new BoundingAABB(new Vector3d(-size.x / 2, 0, -size.z / 2), new Vector3d(size.x / 2, 1, size.z / 2));
 	}
 
 	@Override
@@ -46,7 +46,17 @@ public class EntityHouseBlue extends EntityBuilding {
 	@Override
 	public void click(int key) {
 		// TODO Auto-generated method stub
-		if(key == 1)	markToRemove = true;
+		if (key == 1) markToRemove = true;
+	}
+
+	@Override
+	public Position getSize() {
+		return new Position(2, 2);
+	}
+
+	@Override
+	public GameResources getResourceCosts() {
+		return new GameResources(300, 200, 200);
 	}
 
 }

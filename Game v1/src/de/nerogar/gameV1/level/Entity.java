@@ -149,7 +149,6 @@ public abstract class Entity {
 		registerEntity(new EntityHouseOrange(game, objectMatrix));
 		registerEntity(new EntityHousePink(game, objectMatrix));
 		registerEntity(new EntityHouseRed(game, objectMatrix));
-		registerEntity(new EntityHouseYellow(game, objectMatrix));
 		registerEntity(new EntityShrine(game, objectMatrix));
 		registerEntity(new EntityTestparticle(game, objectMatrix));
 	}
