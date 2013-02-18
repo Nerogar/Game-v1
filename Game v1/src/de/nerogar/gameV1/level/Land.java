@@ -432,8 +432,8 @@ public class Land {
 		//if (game.world.collisionComparer.isColliding(entity, EntityBuilding.class)) { return false; }
 		float lowest = Float.MAX_VALUE;
 		float highest = Float.MIN_VALUE;
-		for (int i = pos.x; i <= pos.x + entity.size.x; i++) {
-			for (int j = pos.z; j <= pos.z + entity.size.z; j++) {
+		for (int i = pos.x; i < pos.x + entity.size.x; i++) {
+			for (int j = pos.z; j < pos.z + entity.size.z; j++) {
 				float height = getHeight(i, j);
 				lowest = (height < lowest) ? height : lowest;
 				highest = (height > highest) ? height : highest;

@@ -10,6 +10,16 @@ public class Position {
 		this.z = z;
 	}
 
+	public void add(Position newPosition) {
+		x += newPosition.x;
+		z += newPosition.z;
+	}
+
+	public void subtract(Position newPosition) {
+		x -= newPosition.x;
+		z -= newPosition.z;
+	}
+
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Position) {

@@ -10,7 +10,9 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityBuilding extends Entity {
 
-	public Position size = new Position(1, 1);
+	public Position size;
+	public Position centerPosition;
+
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 
 	public EntityBuilding(Game game, ObjectMatrix matrix) {
@@ -18,13 +20,14 @@ public abstract class EntityBuilding extends Entity {
 		super(game, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
 	}
-	
+
 	public abstract Position getSize();
-	
+
 	public abstract GameResources getResourceCosts();
-	
+
 	@Override
 	public abstract void init(World world);
+
 	//setObject("houses/test1", "houses/test1-1.png");
 
 	//public void update(float time) {

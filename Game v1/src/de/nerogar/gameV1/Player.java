@@ -52,6 +52,7 @@ public class Player {
 			buildingOnCursor.render();
 
 			Position pos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
+			pos.subtract(buildingOnCursor.centerPosition);
 			boolean buildable = world.land.isBuildable(buildingOnCursor, pos);
 			RenderHelper.enableAlpha();
 			Vector2d posA = new Vector2d(buildingOnCursor.getAABB().a.getX(), buildingOnCursor.getAABB().a.getZ());

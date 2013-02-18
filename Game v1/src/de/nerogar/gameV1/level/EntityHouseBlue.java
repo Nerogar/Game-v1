@@ -10,11 +10,11 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityHouseBlue extends EntityBuilding {
 
-	public Position size = new Position(2, 2);
-	public GameResources resourceCost = new GameResources(200, 100, 100);
-
 	public EntityHouseBlue(Game game, ObjectMatrix matrix) {
 		super(game, matrix);
+		size = new Position(2, 2);
+		centerPosition = new Position(1, 1);
+		resourceCost = new GameResources(200, 100, 100);
 		boundingBox = new BoundingAABB(new Vector3d(-size.x / 2, 0, -size.z / 2), new Vector3d(size.x / 2, 1, size.z / 2));
 	}
 
