@@ -2,13 +2,11 @@ package de.nerogar.gameV1;
 
 import java.util.ArrayList;
 
-import org.lwjgl.Sys;
-
 public class Timer {
-	public long delta;
-	private long lastFrame;
+	public float delta;
+	private double lastFrame;
 	private int fps;
-	private long lastFps;
+	private double lastFps;
 	public int mfFps;
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private int framecount;
@@ -26,8 +24,7 @@ public class Timer {
 
 	private void printFPS() {
 		if (getTime() - lastFps > 1000) {
-			if (GameOptions.instance.getBoolOption("debug")) 
-				System.out.println("FPS: " + fps);
+			if (GameOptions.instance.getBoolOption("debug")) System.out.println("FPS: " + fps);
 			mfFps = fps;
 			fps = 0;
 			lastFps += 1000;
@@ -37,14 +34,15 @@ public class Timer {
 	public void update() {
 		fps++;
 		framecount++;
-		long time = getTime();
-		delta = time - lastFrame;
+		double time = getTime();
+		delta = (float) (time - lastFrame);
 		lastFrame = time;
 		printFPS();
 	}
 
-	private long getTime() {
-		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	private double getTime() {
+		//return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+		return System.nanoTime() / 1000000D;
 	}
 
 	//EVENTS

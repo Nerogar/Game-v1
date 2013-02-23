@@ -3,6 +3,7 @@ package de.nerogar.gameV1.object;
 import static org.lwjgl.opengl.GL11.*;
 
 import de.nerogar.gameV1.Camera;
+import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.image.TextureBank;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -16,7 +17,8 @@ public class ObjectSprite extends Object3D {
 		this.camera = camera;
 	}
 
-	public void render(ObjectMatrix om, String texture) {
+	@Override
+	public void render(ObjectMatrix om, String texture, float opacity) {
 		TextureBank.instance.bindTexture(texture);
 
 		glPushMatrix();
@@ -31,19 +33,23 @@ public class ObjectSprite extends Object3D {
 
 		glRotatef(rot, 0, 1, 0);
 
+		float renderSize = size / 2;
+		RenderHelper.enableAlpha();
+		glColor4f(1f, 1f, 1f, opacity);
+
 		//render quads
 		glBegin(GL_QUADS);
 		glTexCoord2f(1, 1);
-		glVertex3f(1, 0, 0);
+		glVertex3f(renderSize, 0, 0);
 		glTexCoord2f(1, 0);
-		glVertex3f(1, 2, 0);
+		glVertex3f(renderSize, size, 0);
 		glTexCoord2f(0, 0);
-		glVertex3f(-1, 2, 0);
+		glVertex3f(-renderSize, size, 0);
 		glTexCoord2f(0, 1);
-		glVertex3f(-1, 0, 0);
+		glVertex3f(-renderSize, 0, 0);
 
 		glEnd();
-
+		RenderHelper.disableAlpha();
 		glPopMatrix();
 	}
 }

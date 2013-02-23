@@ -39,7 +39,7 @@ public class Testsound {
 		buffer = alGenBuffers();
 		source = alGenSources();
 
-		RenderHelper.updateLoadingScreen("Lade "+file.getPath());
+		RenderHelper.renderLoadingScreen("Lade "+file.getPath());
 		// Datei in den Buffer laden
 		String format = getExtension(file);
 		switch (format) {

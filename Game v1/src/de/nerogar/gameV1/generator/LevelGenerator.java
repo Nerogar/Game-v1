@@ -32,8 +32,7 @@ public class LevelGenerator {
 
 		for (int i = 0; i < GENERATESIZE; i++) {
 			for (int j = 0; j < GENERATESIZE; j++) {
-
-				float m = (float) (noise[0].getNoisePoint(i, j));
+				/*float m = (float) (noise[0].getNoisePoint(i, j));
 				values[0][i][j] = (float) ((Math.cos(m * 8.0f) + 1.0f) / 2.0f);
 				values[0][i][j] = values[0][i][j] * 9.0f - 8.0f;
 				values[0][i][j] = (values[0][i][j] < 0.0f ? 1.0f : 0.0f);
@@ -41,8 +40,19 @@ public class LevelGenerator {
 				m = (float) (noise[1].getNoisePoint(i, j)) * 5;
 				values[1][i][j] = m;
 
-				//float n = values[0][i][j] * values[1][i][j];
-				float n = values[1][i][j];
+				float n = values[0][i][j] * values[1][i][j];
+				//float n = values[1][i][j];
+				chunk.heightMap[i][j] = n;*/
+
+				float m = (float) (noise[0].getNoisePoint(i, j));
+				values[0][i][j] = (float) (m * 1.8);
+
+				m = (float) (noise[1].getNoisePoint(i, j)) * 5;
+				values[1][i][j] = m;
+
+				float n = values[1][i][j] - values[0][i][j];
+				n = n < 0 ? 0 : n;
+				//float n = values[1][i][j];
 				chunk.heightMap[i][j] = n;
 			}
 		}

@@ -24,6 +24,14 @@ public class EntityHouseBlue extends EntityBuilding {
 	}
 
 	@Override
+	public void update(float time) {
+
+		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
+		world.spawnEntity(new EntityTestparticle(game, particleMatrix));
+
+	}
+
+	@Override
 	public void interact() {
 		// TODO Auto-generated method stub
 	}

@@ -60,7 +60,7 @@ public class SoundManager {
 	public void preLoadSounds() {
 		for (String filename : preLoadedFiles) {
 			try {
-				RenderHelper.updateLoadingScreen("Lade " + filename);
+				RenderHelper.renderLoadingScreen("Lade " + filename);
 				ALBufferBank.instance.addSound(filename);
 			} catch (OpenALException | IOException | LWJGLException e) {
 				e.printStackTrace();

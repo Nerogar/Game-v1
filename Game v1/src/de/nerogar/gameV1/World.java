@@ -60,7 +60,7 @@ public class World {
 		isLoaded = true;
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
-		RenderHelper.updateLoadingScreen("Starte Welt...");
+		RenderHelper.renderLoadingScreen("Starte Welt...");
 		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
 		/*
 				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
@@ -186,7 +186,7 @@ public class World {
 		entityList.render(loadPosition, maxChunkRenderDistance);
 
 		game.world.collisionComparer.renderGrid();
-		InputHandler.renderMouseRay();
+		//InputHandler.renderMouseRay();
 
 		if (path != null) {
 			glDisable(GL_TEXTURE_2D);

@@ -78,7 +78,7 @@ public class Player {
 			Vector3d c = new Vector3d(posB.getX(), world.land.getHeight(posB) + 0.1, posB.getZ());
 			Vector3d d = new Vector3d(posB.getX(), world.land.getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());
 			if (isbuildingOnCursorBuildable) {
-				RenderHelper.drawQuad(a, b, c, d, 0x00ff0066);
+				//RenderHelper.drawQuad(a, b, c, d, 0x00ff0066);
 			} else {
 				RenderHelper.drawQuad(a, b, c, d, 0xff000066);
 			}

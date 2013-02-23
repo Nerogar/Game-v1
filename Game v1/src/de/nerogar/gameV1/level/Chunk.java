@@ -130,36 +130,36 @@ public class Chunk {
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = heightMap[i][j] / 5;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = heightMap[i][j] / 6 + 0.2f;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = textPos1.getXf();
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = textPos1.getZf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = heightMap[i][j + 1] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = heightMap[i][j + 1] / 5;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = heightMap[i][j + 1] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = heightMap[i][j + 1] / 6 + 0.2f;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = textPos2.getXf();
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = textPos1.getZf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = heightMap[i + 1][j + 1] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = heightMap[i + 1][j + 1] / 5;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = heightMap[i + 1][j + 1] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = heightMap[i + 1][j + 1] / 6 + 0.2f;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = textPos2.getXf();
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = textPos2.getZf();
 
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j;
 				vertices[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = heightMap[i + 1][j] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 5;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 5;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = heightMap[i + 1][j] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 6 + 0.2f;
+				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 6 + 0.2f;
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getZf();
 			}
@@ -275,7 +275,7 @@ public class Chunk {
 	public float getLocalHeight(int x, int z) {
 		return heightMap[x][z];
 	}
-	
+
 	public float getLocalHeight(double x, double z) {
 		float v11 = getLocalHeight((int) x, (int) z);
 		float v10 = getLocalHeight((int) x, (int) z + 1);
@@ -307,7 +307,11 @@ public class Chunk {
 	public boolean getLocalWalkable(int x, int z) {
 		return walkableMap[x][z];
 	}
-	
+
+	public Tile getLocalTile(int x, int z) {
+		return Tile.getTileByID(tileMap[x][z]);
+	}
+
 	public void spawnEntity(Entity entity) {
 		world.entityList.addEntity(entity, world);
 	}

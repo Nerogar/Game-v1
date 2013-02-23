@@ -149,10 +149,6 @@ public class RenderHelper {
 		Display.update();
 	}
 
-	public static void updateLoadingScreen(String text) {
-		RenderHelper.renderLoadingScreen(text);
-	}
-
 	public static void enableAlpha() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

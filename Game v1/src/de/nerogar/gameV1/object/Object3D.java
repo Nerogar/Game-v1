@@ -89,7 +89,7 @@ public class Object3D {
 	public void render(ObjectMatrix om, String texture) {
 		render(om, texture, 1f);
 	}
-	
+
 	public void render(ObjectMatrix om, String texture, float opacity) {
 		//float x, float y, float z) {
 

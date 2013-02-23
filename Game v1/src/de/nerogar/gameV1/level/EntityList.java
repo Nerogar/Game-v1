@@ -11,6 +11,8 @@ import de.nerogar.gameV1.physics.Ray;
 
 public class EntityList {
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
+	public ArrayList<Entity> newEntities = new ArrayList<Entity>();
+	private boolean updateInProgress = false;
 	public ArrayList<Integer> entityID = new ArrayList<Integer>();
 	public int maxID;
 	CollisionComparer collisionComparer;
@@ -31,10 +33,23 @@ public class EntityList {
 	}
 
 	public void addEntity(Entity entity, World world) {
-		entities.add(entity);
-		entityID.add(maxID + 1);
-		entity.game = game;
-		entity.init(world);
+		if (!updateInProgress) {
+			entities.add(entity);
+			entityID.add(maxID + 1);
+			entity.game = game;
+			entity.init(world);
+		} else {
+			newEntities.add(entity);
+			entity.world = world;
+		}
+	}
+
+	private void addNewEntities() {
+		for (int i = 0; i < newEntities.size(); i++) {
+			addEntity(newEntities.get(i), newEntities.get(i).world);
+		}
+
+		newEntities = new ArrayList<Entity>();
 	}
 
 	public void removeNullEntities() {
@@ -54,9 +69,12 @@ public class EntityList {
 		//	entities.get(i).update(Timer.instance.delta / 1000F);
 		//}
 		removeNullEntities();
+		updateInProgress = true;
 		for (Entity e : entities) {
 			e.update(Timer.instance.delta / 1000F);
 		}
+		updateInProgress = false;
+		addNewEntities();
 
 		game.world.collisionComparer.updateGrid();
 		game.world.collisionComparer.compare();

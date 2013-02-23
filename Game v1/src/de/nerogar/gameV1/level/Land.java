@@ -154,7 +154,7 @@ public class Land {
 		while (updates > 0) {
 			i += updates;
 			updates = loadChunksAroundXZ(blockPosition);
-			RenderHelper.updateLoadingScreen("Lade Chunk " + i + "/" + max);
+			RenderHelper.renderLoadingScreen("Lade Chunk " + i + "/" + max);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class Land {
 
 	public void unloadAll() {
 		for (int i = chunks.size() - 1; i >= 0; i--) {
-			RenderHelper.updateLoadingScreen("Speichere Chunk " + i);
+			RenderHelper.renderLoadingScreen("Speichere Chunk " + i);
 			unloadChunk(chunks.get(i).chunkPosition);
 		}
 	}
