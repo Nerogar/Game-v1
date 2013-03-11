@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.InputHandler;
+import de.nerogar.gameV1.RenderEngine;
 import de.nerogar.gameV1.RenderHelper;
 
 public class GuiVideoSettings extends Gui {
@@ -109,7 +110,7 @@ public class GuiVideoSettings extends Gui {
 			if (resSlider.position != displayMode) {
 				renderEngine.setDisplayMode(resSlider.position);
 			}
-			//RenderEngine.instance.setVSync();
+			RenderEngine.instance.setVSync();
 			GameOptions.instance.setIntOption("fps", (int) fpsSlider.position);
 			GameOptions.instance.setIntOption("renderdistance", (int) renderdistanceSlider.position);
 			GameOptions.instance.setIntOption("loaddistance", (int) loaddistanceSlider.position);

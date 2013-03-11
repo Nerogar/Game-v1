@@ -39,7 +39,7 @@ public abstract class Gui {
 		return lastID;
 	}
 
-	public void update() {
+	public final void update() {
 		updateGui();
 		handleClicks();
 		if (activeTextField != -1) {

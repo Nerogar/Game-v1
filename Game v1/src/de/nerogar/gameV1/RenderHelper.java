@@ -63,8 +63,6 @@ public class RenderHelper {
 
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
-
-		glEnd();
 	}
 
 	public static void renderImageAbsolute(String textureName, int width, int height, int posX, int posY) {

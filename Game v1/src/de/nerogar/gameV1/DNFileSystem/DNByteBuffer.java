@@ -9,6 +9,11 @@ public class DNByteBuffer {
 		byteBuffer = ByteBuffer.allocate(length);
 	}
 
+	public DNByteBuffer(byte[] data) {
+		byteBuffer = ByteBuffer.allocate(data.length);
+		byteBuffer.put(data);
+	}
+
 	public int readInt() {
 		return byteBuffer.getInt();
 	}

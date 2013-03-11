@@ -9,6 +9,8 @@ public class GuiMain extends Gui {
 	private GElementButton videosettingsButton;
 	private GElementButton audioButtonPlay, audioButtonStop;
 	private GElementButton exitButton;
+	private GElementButton clientButton;
+	private GElementButton serverButton;
 	private GElementSlider pitchSlider;
 
 	public GuiMain(Game game) {
@@ -51,7 +53,13 @@ public class GuiMain extends Gui {
 		pitchSlider.position = 5;
 
 		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		
+
+		//network test
+		clientButton = new GElementButton(genNewID(), 0.3f, 0.95f, 0.2f, 0.05f, "client", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		serverButton = new GElementButton(genNewID(), 0.5f, 0.95f, 0.2f, 0.05f, "server", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		buttons.add(clientButton);
+		buttons.add(serverButton);
+
 		buttons.add(newGameButton);
 		buttons.add(loadGameButton);
 		buttons.add(videosettingsButton);
@@ -104,6 +112,12 @@ public class GuiMain extends Gui {
 			}
 		} else if (id == audioButtonStop.id && mouseButton == 0) {
 			game.debugFelk.sound.stop();
+		} else if (id == clientButton.id && mouseButton == 0) {
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiClient(game));
+		} else if (id == serverButton.id && mouseButton == 0) {
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiServer(game));
 		}
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Properties;
 public class GameOptions {
 
 	public final float GRAVITY = 9.81F;
+	public final int VERSION_NUMBER = 42;
 
 	private String filename = "options.txt";
 	private Properties options = new Properties();
@@ -28,7 +29,7 @@ public class GameOptions {
 	public void setOption(String option, String value) {
 		options.put(option, value);
 	}
-	
+
 	public void setOption(String option, boolean value) {
 		options.put(option, String.valueOf(value));
 	}

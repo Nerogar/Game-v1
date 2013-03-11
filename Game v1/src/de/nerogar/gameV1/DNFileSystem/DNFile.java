@@ -38,6 +38,19 @@ public class DNFile {
 		}
 	}
 
+	public void setFromArray(byte[] input) {
+		nodePath = new DNNodePath(null);
+
+		try {
+			DNByteBuffer in = new DNByteBuffer(input);
+			in.byteBuffer.flip();
+			readFile(in, nodePath, -1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private void readFile(DNByteBuffer in, DNNodePath path, int length) throws IOException {
 
 		int item = 0;
@@ -124,9 +137,7 @@ public class DNFile {
 		try {
 			File file = new File(filename);
 			FileOutputStream f = new FileOutputStream(file);
-			DNByteBuffer out = new DNByteBuffer(nodePath.calcSize());
-
-			writeFile(out, nodePath);
+			DNByteBuffer out = getAsBuffer();
 
 			out.byteBuffer.flip();
 			f.getChannel().write(out.byteBuffer);
@@ -136,6 +147,22 @@ public class DNFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public byte[] getAsArray() {
+		return getAsBuffer().byteBuffer.array();
+	}
+
+	public DNByteBuffer getAsBuffer() {
+		DNByteBuffer out = new DNByteBuffer(nodePath.calcSize());
+
+		try {
+			writeFile(out, nodePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return out;
 	}
 
 	private void writeFile(DNByteBuffer out, DNNodePath path) throws IOException {
@@ -163,8 +190,7 @@ public class DNFile {
 				intValue[i] = ((int[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.INTEGER, intValue.length, intValue);
-		}
-		else if (value instanceof Float) {
+		} else if (value instanceof Float) {
 			nodePath.addNodePath(name, DNHelper.FLOAT, 1, value);
 		} else if (value instanceof Float[]) {
 			nodePath.addNodePath(name, DNHelper.FLOAT, ((Float[]) value).length, value);
@@ -174,8 +200,7 @@ public class DNFile {
 				floatValue[i] = ((float[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.FLOAT, floatValue.length, floatValue);
-		}
-		else if (value instanceof Double) {
+		} else if (value instanceof Double) {
 			nodePath.addNodePath(name, DNHelper.DOUBLE, 1, value);
 		} else if (value instanceof Double[]) {
 			nodePath.addNodePath(name, DNHelper.DOUBLE, ((Double[]) value).length, value);
@@ -185,8 +210,7 @@ public class DNFile {
 				doubleValue[i] = ((double[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.DOUBLE, doubleValue.length, doubleValue);
-		}
-		else if (value instanceof Long) {
+		} else if (value instanceof Long) {
 			nodePath.addNodePath(name, DNHelper.LONG, 1, value);
 		} else if (value instanceof Long[]) {
 			nodePath.addNodePath(name, DNHelper.LONG, ((Long[]) value).length, value);
@@ -196,8 +220,7 @@ public class DNFile {
 				longValue[i] = ((long[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.LONG, longValue.length, longValue);
-		}
-		else if (value instanceof Byte) {
+		} else if (value instanceof Byte) {
 			nodePath.addNodePath(name, DNHelper.BYTE, 1, value);
 		} else if (value instanceof Byte[]) {
 			nodePath.addNodePath(name, DNHelper.BYTE, ((Byte[]) value).length, value);
@@ -207,8 +230,7 @@ public class DNFile {
 				byteValue[i] = ((byte[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.BYTE, byteValue.length, byteValue);
-		}
-		else if (value instanceof Character) {
+		} else if (value instanceof Character) {
 			nodePath.addNodePath(name, DNHelper.CHAR, 1, value);
 		} else if (value instanceof Character[]) {
 			nodePath.addNodePath(name, DNHelper.CHAR, ((Character[]) value).length, value);
@@ -218,8 +240,7 @@ public class DNFile {
 				charValue[i] = ((char[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.CHAR, charValue.length, charValue);
-		}
-		else if (value instanceof Boolean) {
+		} else if (value instanceof Boolean) {
 			nodePath.addNodePath(name, DNHelper.BOOLEAN, 1, value);
 		} else if (value instanceof Boolean[]) {
 			nodePath.addNodePath(name, DNHelper.BOOLEAN, ((Boolean[]) value).length, value);
@@ -229,8 +250,7 @@ public class DNFile {
 				boolValue[i] = ((boolean[]) value)[i];
 			}
 			nodePath.addNodePath(name, DNHelper.BOOLEAN, boolValue.length, boolValue);
-		}
-		else if (value instanceof String) {
+		} else if (value instanceof String) {
 			nodePath.addNodePath(name, DNHelper.STRING, 1, value);
 		} else if (value instanceof String[]) {
 			nodePath.addNodePath(name, DNHelper.STRING, ((String[]) value).length, value);
