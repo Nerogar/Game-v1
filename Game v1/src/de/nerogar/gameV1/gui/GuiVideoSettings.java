@@ -31,7 +31,7 @@ public class GuiVideoSettings extends Gui {
 	@Override
 	public void init() {
 		displayMode = renderEngine.displayMode;
-		renderTitel("Video Settings");
+		setTitel("Video Settings");
 
 		//resolution
 		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "resolution:", FontRenderer.LEFT));

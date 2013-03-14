@@ -9,14 +9,18 @@ import de.nerogar.gameV1.DNFileSystem.DNFile;
 public class Client extends Thread {
 	private LinkedList<DNFile> data = new LinkedList<DNFile>();
 	private Socket socket;
+	private String adress;
 	private int port;
 	private boolean running = true;
 	private Object syncObject;
+	public boolean connected = false;
 
-	public Client(Object syncObject) {
+	public Client(Object syncObject, String adress) {
+		this.adress = adress;
 		port = 4200;
 		try {
-			socket = new Socket("localhost", port);
+			socket = new Socket(adress, port);
+			connected = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,12 +79,15 @@ public class Client extends Thread {
 	}
 
 	public void stopClient() {
+		connected = false;
 		running = false;
 		stopWaiting();
 
 		try {
 			socket.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e){
 			e.printStackTrace();
 		}
 	}

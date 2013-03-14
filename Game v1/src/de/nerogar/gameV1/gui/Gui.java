@@ -15,12 +15,14 @@ public abstract class Gui {
 	public ArrayList<GElementSlider> sliders = new ArrayList<GElementSlider>();
 	public ArrayList<GElementOptionSlider> optionSliders = new ArrayList<GElementOptionSlider>();
 	public ArrayList<GElementListBox> lists = new ArrayList<GElementListBox>();
+	private GElementTextLabel titelLabel = new GElementTextLabel(genNewID(), 0.0f, 0.05f, 1.0f, 0.1f, "", FontRenderer.CENTERED);
 	public RenderEngine renderEngine = RenderEngine.instance;
 	public Game game;
 	public int lastID = -1;
 
 	public Gui(Game game) {
 		this.game = game;
+		textLabels.add(titelLabel);
 		init();
 	}
 
@@ -119,8 +121,8 @@ public abstract class Gui {
 		}
 	}
 
-	public void renderTitel(String titel) {
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 1.0f, 0.1f, titel, FontRenderer.CENTERED));
+	public void setTitel(String titel) {
+		titelLabel.text = titel;
 	}
 
 	private int[] getHoveredButtons() {

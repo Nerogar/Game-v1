@@ -27,7 +27,7 @@ public class GuiServer extends Gui {
 
 	@Override
 	public void init() {
-		renderTitel("Server");
+		setTitel("Server");
 
 		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		recievedText = new GElementTextLabel(genNewID(), 0.1f, 0.5f, 0.8f, 0.1f, "", FontRenderer.CENTERED);

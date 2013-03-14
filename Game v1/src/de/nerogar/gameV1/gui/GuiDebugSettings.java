@@ -29,7 +29,7 @@ public class GuiDebugSettings extends Gui {
 
 	@Override
 	public void init() {
-		renderTitel("Debug Settings");
+		setTitel("Debug Settings");
 
 		//AABBs
 		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));

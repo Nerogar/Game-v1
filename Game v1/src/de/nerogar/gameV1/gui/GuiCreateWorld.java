@@ -25,7 +25,7 @@ public class GuiCreateWorld extends Gui {
 
 	@Override
 	public void init() {
-		renderTitel("Create World");
+		setTitel("Create World");
 
 		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.4f, 0.1f, "name:", FontRenderer.LEFT));
 		worldNameTextField = new GElementTextField(0.5f, 0.2f, 0.4f, 0.1f, "", "Buttons/textField.png");
