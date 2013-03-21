@@ -9,7 +9,7 @@ public class Timer {
 	private double lastFps;
 	public int mfFps;
 	private ArrayList<Event> events = new ArrayList<Event>();
-	private int framecount;
+	private long framecount;
 	//private ArrayList<String> eventNames = new ArrayList<String>();
 	public static Timer instance = new Timer();
 
@@ -48,7 +48,7 @@ public class Timer {
 	//EVENTS
 	public void registerEvent(String name, long seconds) {
 		if (indexOfEvent(name) != -1) return;
-		events.add(new Event(name, seconds * 10000000000L));
+		events.add(new Event(name, seconds * 1000000000));
 	}
 
 	private int indexOfEvent(String name) {
@@ -63,7 +63,7 @@ public class Timer {
 		return events.get(index).shellExecute();
 	}
 
-	public int getFramecount() {
+	public long getFramecount() {
 		return framecount;
 	}
 

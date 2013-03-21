@@ -56,6 +56,7 @@ public class World {
 		land.levelGenerator = new LevelGenerator(land);
 
 		camera.init();
+		land.asyncLevelLoader.start();
 		land.loadAllAroundXZ(loadPosition);
 		isLoaded = true;
 
@@ -84,6 +85,7 @@ public class World {
 		collisionComparer.cleanup();
 		worldData.save();
 		worldData = null;
+		land.asyncLevelLoader.kill();
 		System.gc();
 	}
 

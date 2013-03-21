@@ -6,7 +6,7 @@ public class Logger {
 	public static final int DEBUG = 1;
 	public static final int ALL = 2;
 
-	private static int currentOutput = 1;
+	private static int currentOutput = DEBUG;
 
 	public static void log(String msg, int level) {
 		if (level >= currentOutput) {

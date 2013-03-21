@@ -2,93 +2,60 @@ package de.nerogar.gameV1.network;
 
 import java.io.*;
 import java.net.*;
-import java.util.LinkedList;
 
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 
-public class Client extends Thread {
-	private LinkedList<DNFile> data = new LinkedList<DNFile>();
+public class Client {
 	private Socket socket;
-	private String adress;
-	private int port;
-	private boolean running = true;
-	private Object syncObject;
 	public boolean connected = false;
+	SendThread sender;
+	ReceiveThread receiver;
 
-	public Client(Object syncObject, String adress) {
-		this.adress = adress;
-		port = 4200;
+	public Client(Socket socket) {
+		this.socket = socket;
+		connected = true;
+		init();
+	}
+
+	public Client(String adress, int port) {
 		try {
 			socket = new Socket(adress, port);
 			connected = true;
+			init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		running = true;
-		this.syncObject = syncObject;
+
 	}
 
-	@Override
-	public void run() {
-		if (socket != null) {
+	public void init() {
+		sender = new SendThread(socket);
+		receiver = new ReceiveThread(socket);
 
-			try {
-				while (running) {
-					startWaiting();
-
-					DataOutputStream out;
-					out = new DataOutputStream(socket.getOutputStream());
-
-					while (data.size() > 0) {
-						byte[] buffer = data.get(0).getAsArray();
-						data.remove(0);
-						out.writeInt(buffer.length);
-						out.write(buffer);
-
-					}
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		sender.start();
+		receiver.start();
 	}
 
-	private void startWaiting() {
-		try {
-			synchronized (syncObject) {
-				syncObject.wait();
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void stopWaiting() {
-		synchronized (syncObject) {
-			syncObject.notify();
-		}
-	}
-
-	public void startSending() {
-		stopWaiting();
-	}
-
-	public void addPackage(DNFile file) {
-		data.add(file);
+	public void sendPackage(DNFile file) {
+		sender.sendPackage(file);
 	}
 
 	public void stopClient() {
 		connected = false;
-		running = false;
-		stopWaiting();
 
+		receiver.stopThread();
 		try {
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		sender.stopThread();
+
+	}
+
+	public DNFile getData() {
+		return receiver.getData();
 	}
 }

@@ -13,7 +13,6 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.image.TextureBank;
-import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Land {
@@ -27,8 +26,8 @@ public class Land {
 	private Game game;
 	public World world;
 	public LevelGenerator levelGenerator;
-	public EntityTestparticle markerCone;
 	private Vector3d mousePosition;
+	public AsyncLevelLoader asyncLevelLoader = new AsyncLevelLoader();
 
 	//private Entity buildableEntity = null;
 	//private boolean buildable = false;
@@ -37,8 +36,6 @@ public class Land {
 		chunks = new ArrayList<Chunk>();
 		this.game = game;
 		this.world = world;
-		markerCone = new EntityTestparticle(game, new ObjectMatrix());
-		world.spawnEntity(markerCone);
 	}
 
 	public Chunk generateLand(Chunk chunk, Position chunkPosition) {
@@ -130,10 +127,12 @@ public class Land {
 		return tempChunk;
 	}
 
-	private void loadChunk(Position chunkPosition) {
+	@Deprecated
+	//TODO change Chunkloading to AsyncLevelLoader 
+	public void loadChunk(Position chunkPosition) {
+
 		Chunk chunk = new Chunk(chunkPosition, saveName, world);
 		if (!chunk.load()) {
-
 			chunk = generateLand(chunk, chunkPosition);
 			// System.out.println("generated Chunk: " + chunkPosition.x + " / "+ chunkPosition.y + "   (" + (chunks.size() + 1) + ")");
 		} else {

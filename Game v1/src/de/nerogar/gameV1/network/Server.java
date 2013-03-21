@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Server extends Thread {
 
-	private ArrayList<ConnectionThread> clients = new ArrayList<ConnectionThread>();
+	private ArrayList<Client> clients = new ArrayList<Client>();
 	private ServerSocket serverSocket;
 	private int port;
 	private boolean running = true;
@@ -27,12 +27,9 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			while (running) {
-
-				Socket newClient = serverSocket.accept();
-				ConnectionThread newThread = new ConnectionThread(newClient, this);
-				clients.add(newThread);
-				newThread.start();
-
+				Socket newClientSocket = serverSocket.accept();
+				Client newClient = new Client(newClientSocket);
+				clients.add(newClient);
 			}
 		} catch (SocketException e) {
 			return;
@@ -41,13 +38,13 @@ public class Server extends Thread {
 		}
 	}
 
-	public ArrayList<ConnectionThread> getClients() {
+	public ArrayList<Client> getClients() {
 		return clients;
 	}
 
 	public void stopServer() {
-		for (ConnectionThread thread : clients) {
-			thread.interrupt();
+		for (Client client : clients) {
+			client.stopClient();
 		}
 		running = false;
 
@@ -58,7 +55,8 @@ public class Server extends Thread {
 		}
 	}
 
-	public void removeClient(ConnectionThread connectionThread) {
-		clients.remove(connectionThread);
+	public void removeClient(Client client) {
+		client.stopClient();
+		clients.remove(client);
 	}
 }

@@ -9,11 +9,9 @@ public class GuiClient extends Gui {
 	private GElementButton startClientButton, backButton, sendDataButton;
 	private GElementTextField adressText, sendText;
 	private Client client;
-	private Object syncObject;
 
 	public GuiClient(Game game) {
 		super(game);
-		syncObject = new Object();
 
 	}
 
@@ -68,16 +66,16 @@ public class GuiClient extends Gui {
 				DNFile file = new DNFile("");
 				file.addNode("test", sendText.getText());
 				long time1 = System.nanoTime();
-				client.addPackage(file);
+				client.sendPackage(file);
 				long time2 = System.nanoTime();
-				client.startSending();
-				long time3 = System.nanoTime();
-				System.out.println("Add: " + (time2 - time1) / 1000000D + " ms");
-				System.out.println("Send: " + (time3 - time2) / 1000000D + " ms");
+				System.out.println("Send: " + (time2 - time1) / 1000000D + " ms");
 			}
 		} else if (id == startClientButton.id) {
-			client = new Client(syncObject, adressText.getText());
-			client.start();
+			if (client != null) {
+				client.stopClient();
+			}
+
+			client = new Client(adressText.getText(), 4200);
 		}
 	}
 }

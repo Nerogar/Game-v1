@@ -17,6 +17,7 @@ import de.nerogar.gameV1.level.Tile;
 
 public class Game implements Runnable {
 	public boolean running = true;
+	public static final String version = "test 0.1";
 
 	public World world;
 	public Player player;

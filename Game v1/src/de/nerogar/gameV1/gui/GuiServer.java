@@ -34,19 +34,20 @@ public class GuiServer extends Gui {
 
 		textLabels.add(recievedText);
 		buttons.add(backButton);
+		
 	}
 
 	@Override
 	public void updateGui() {
-		ConnectionThread connection = null;
+		Client client = null;
 		for (int i = 0; i < server.getClients().size(); i++) {
 			if (server.getClients().get(i) != null) {
-				connection = server.getClients().get(i);
+				client = server.getClients().get(i);
 			}
 
 		}
-		if (connection != null) {
-			DNFile file = connection.getData();
+		if (client != null) {
+			DNFile file = client.getData();
 			if (file != null) {
 				recievedText.text = file.getString("test");
 			}
