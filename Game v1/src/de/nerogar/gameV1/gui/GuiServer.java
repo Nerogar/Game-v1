@@ -34,7 +34,7 @@ public class GuiServer extends Gui {
 
 		textLabels.add(recievedText);
 		buttons.add(backButton);
-		
+
 	}
 
 	@Override
@@ -47,9 +47,9 @@ public class GuiServer extends Gui {
 
 		}
 		if (client != null) {
-			DNFile file = client.getData();
-			if (file != null) {
-				recievedText.text = file.getString("test");
+			Packet packet = client.getData();
+			if (packet != null && packet instanceof PacketTestString) {
+				recievedText.text = ((PacketTestString) packet).testString;
 			}
 		} else {
 			recievedText.text = "no client connected";

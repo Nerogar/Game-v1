@@ -7,21 +7,17 @@ import java.util.LinkedList;
 
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 
-public class ReceiveThread extends Thread{
+public class ReceiveThread extends Thread {
 	private Socket socket;
+	private Client client;
 	private boolean connectionClosed = false;
-	private LinkedList<DNFile> data = new LinkedList<DNFile>();
-	
-	public ReceiveThread(Socket socket) {
-		setName("ConnectionThread");
+	private LinkedList<Packet> data = new LinkedList<Packet>();
+
+	public ReceiveThread(Socket socket, Client client) {
+		setName("ReceiveThread");
 		this.socket = socket;
-		try {
-			System.out.println(socket.getInputStream().getClass().getName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.client = client;
 	}
-	
 
 	@Override
 	public void run() {
@@ -33,28 +29,36 @@ public class ReceiveThread extends Thread{
 
 			while (!connectionClosed) {
 				buffer = new byte[in.readInt()];
-				System.out.println("TESTTESTTEST");
+				int packetID = in.readInt();
 				in.read(buffer);
-				DNFile newFile = new DNFile("");
-				newFile.setFromArray(buffer);
-				data.add(newFile);
+
+				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
+				receivedPacket.packedData = buffer;
+				//hardcoded PacketID for connectionData (0)
+				if (packetID == 0) {
+					client.setConnectionInfo((PacketConnectionInfo) receivedPacket);
+				} else {
+					receivedPacket.unpack();
+					data.add(receivedPacket);
+				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			client.stopClient();
 		}
 	}
 
-	public DNFile getData() {
+	public Packet getData() {
 		if (data.size() > 0) {
-			DNFile retFile = data.get(0);
+			Packet retPacket = data.get(0);
 			data.remove(0);
-			return retFile;
+			return retPacket;
 		}
 		return null;
 	}
-	
-	public void stopThread(){
+
+	public void stopThread() {
 		connectionClosed = true;
 	}
 }

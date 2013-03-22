@@ -38,7 +38,7 @@ public class DNFile {
 		}
 	}
 
-	public void setFromArray(byte[] input) {
+	public void fromByteArray(byte[] input) {
 		nodePath = new DNNodePath(null);
 
 		try {
@@ -149,7 +149,7 @@ public class DNFile {
 		}
 	}
 
-	public byte[] getAsArray() {
+	public byte[] toByteArray() {
 		return getAsBuffer().byteBuffer.array();
 	}
 

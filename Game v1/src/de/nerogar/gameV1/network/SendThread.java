@@ -4,11 +4,9 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-
 public class SendThread extends Thread {
 
-	private LinkedList<DNFile> data = new LinkedList<DNFile>();
+	private LinkedList<Packet> data = new LinkedList<Packet>();
 	private Socket socket;
 	private boolean running = true;
 	private Object syncObject;
@@ -33,9 +31,13 @@ public class SendThread extends Thread {
 					startWaiting();
 
 					while (data.size() > 0) {
-						byte[] buffer = data.get(0).getAsArray();
+						Packet packet = data.get(0);
 						data.remove(0);
+						packet.pack();
+						
+						byte[] buffer = packet.packedData;
 						out.writeInt(buffer.length);
+						out.writeInt(packet.packetID);
 						out.write(buffer);
 
 					}
@@ -63,8 +65,8 @@ public class SendThread extends Thread {
 		}
 	}
 
-	public void sendPackage(DNFile file) {
-		data.add(file);
+	public void sendPacket(Packet packet) {
+		data.add(packet);
 		stopWaiting();
 	}
 

@@ -63,10 +63,12 @@ public class GuiClient extends Gui {
 			game.guiList.addGui(new GuiMain(game));
 		} else if (id == sendDataButton.id) {
 			if (client != null) {
-				DNFile file = new DNFile("");
-				file.addNode("test", sendText.getText());
+				PacketTestString testPacket = new PacketTestString();
+				testPacket.name = "sendTest";
+				testPacket.testString = sendText.getText();
+				
 				long time1 = System.nanoTime();
-				client.sendPackage(file);
+				client.sendPacket(testPacket);
 				long time2 = System.nanoTime();
 				System.out.println("Send: " + (time2 - time1) / 1000000D + " ms");
 			}
