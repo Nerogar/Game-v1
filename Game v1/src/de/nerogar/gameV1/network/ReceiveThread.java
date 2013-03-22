@@ -1,11 +1,8 @@
 package de.nerogar.gameV1.network;
 
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
-
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 
 public class ReceiveThread extends Thread {
 	private Socket socket;
@@ -35,7 +32,7 @@ public class ReceiveThread extends Thread {
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
 				receivedPacket.packedData = buffer;
 				//hardcoded PacketID for connectionData (0)
-				if (packetID == 0) {
+				if (client.clientType == Client.CLIENT && !client.connectionInfoReceived && packetID == 0) {
 					client.setConnectionInfo((PacketConnectionInfo) receivedPacket);
 				} else {
 					receivedPacket.unpack();

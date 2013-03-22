@@ -2,7 +2,6 @@ package de.nerogar.gameV1.gui;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.network.*;
 
 public class GuiServer extends Gui {

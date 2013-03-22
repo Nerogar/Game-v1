@@ -3,7 +3,7 @@ package de.nerogar.gameV1.network;
 import java.io.*;
 import java.net.*;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.Game;
 
 public class Client {
 	private Socket socket;
@@ -11,11 +11,13 @@ public class Client {
 	SendThread sender;
 	ReceiveThread receiver;
 
-	private static final int CLIENT = 0;
-	private static final int SERVER_CLIENT = 1;
-	private int clientType = CLIENT;
+	public static final int CLIENT = 0;
+	public static final int SERVER_CLIENT = 1;
+	public int clientType = CLIENT;
 	private PacketConnectionInfo connectionInfo;
 	public boolean connectionInfoReceived = false;
+
+	public String closeMessage = null;
 
 	public Client(Socket socket) {
 		this.socket = socket;
@@ -49,6 +51,11 @@ public class Client {
 	public void setConnectionInfo(PacketConnectionInfo connectionInfo) {
 		this.connectionInfo = connectionInfo;
 		connectionInfoReceived = true;
+
+		if (!connectionInfo.version.equals(Game.version)) {
+			stopClient();
+			closeMessage = "incorrect version number";
+		}
 	}
 
 	public void sendPacket(Packet packet) {

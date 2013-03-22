@@ -9,8 +9,6 @@ import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
-import de.nerogar.gameV1.level.EntityTestparticle;
-import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.ALBufferBank;
 import de.nerogar.gameV1.sound.ALSource;
 import de.nerogar.gameV1.sound.SoundManager;

@@ -1,7 +1,6 @@
 package de.nerogar.gameV1.debug;
 
 import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.MathHelper;
 
 public class DebugNerogar {
 
@@ -16,7 +15,7 @@ public class DebugNerogar {
 	}
 
 	public void run() {
-		//System.out.println(MathHelper.roundDownToInt(-4.9, 1));
+
 	}
 
 	public void end() {
