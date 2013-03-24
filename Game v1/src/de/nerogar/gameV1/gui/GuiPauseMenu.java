@@ -33,9 +33,9 @@ public class GuiPauseMenu extends Gui {
 		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.35f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		closeGameButton = new GElementButton(genNewID(), 0.3f, 0.5f, 0.4f, 0.1f, "close game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
-		buttons.add(resumeButton);
-		buttons.add(closeGameButton);
-		buttons.add(videosettingsButton);
+		addGElement(resumeButton);
+		addGElement(closeGameButton);
+		addGElement(videosettingsButton);
 		updateGui();
 	}
 

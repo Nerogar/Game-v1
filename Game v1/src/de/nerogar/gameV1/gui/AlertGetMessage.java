@@ -19,10 +19,10 @@ public class AlertGetMessage extends Alert {
 	@Override
 	public void init() {
 		messageLabel = new GElementTextLabel(genNewID(), 0.15f, 0.35f, 0.7f, 0.1f, message, FontRenderer.CENTERED);
-		textLabels.add(messageLabel);
+		addGElement(messageLabel);
 
 		textTextField = new GElementTextField(0.3f, 0.45f, 0.4f, 0.1f, "", "Buttons/textField.png");
-		textFields.add(textTextField);
+		addGElement(textTextField);
 
 	}
 
@@ -31,12 +31,12 @@ public class AlertGetMessage extends Alert {
 			okButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.2f, 0.07f, "ok", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 			cancelButton = new GElementButton(genNewID(), 0.5f, 0.6f, 0.2f, 0.07f, "cancel", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
-			buttons.add(cancelButton);
+			addGElement(cancelButton);
 		} else {
 			okButton = new GElementButton(genNewID(), 0.4f, 0.6f, 0.2f, 0.07f, "ok", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		}
 
-		buttons.add(okButton);
+		addGElement(okButton);
 	}
 
 	@Override

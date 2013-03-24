@@ -56,7 +56,7 @@ public class World {
 		land.levelGenerator = new LevelGenerator(land);
 
 		camera.init();
-		land.asyncLevelLoader.start();
+		//land.asyncLevelLoader.start();
 		land.loadAllAroundXZ(loadPosition);
 		isLoaded = true;
 

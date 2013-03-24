@@ -7,6 +7,7 @@ import de.nerogar.gameV1.network.*;
 public class GuiServer extends Gui {
 	private GElementButton backButton;
 	private GElementTextLabel recievedText;
+	private GElementTextArea clientArea;
 	private Server server;
 
 	public GuiServer(Game game) {
@@ -29,10 +30,12 @@ public class GuiServer extends Gui {
 		setTitel("Server");
 
 		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		recievedText = new GElementTextLabel(genNewID(), 0.1f, 0.5f, 0.8f, 0.1f, "", FontRenderer.CENTERED);
+		recievedText = new GElementTextLabel(genNewID(), 0.1f, 0.7f, 0.8f, 0.1f, "", FontRenderer.CENTERED);
+		clientArea = new GElementTextArea(genNewID(), 0.2f, 0.2f, 0.6f, 0.5f, 20, FontRenderer.LEFT);
 
-		textLabels.add(recievedText);
-		buttons.add(backButton);
+		addGElement(clientArea);
+		addGElement(recievedText);
+		addGElement(backButton);
 
 	}
 
@@ -40,15 +43,16 @@ public class GuiServer extends Gui {
 	public void updateGui() {
 		Client client = null;
 		for (int i = 0; i < server.getClients().size(); i++) {
-			if (server.getClients().get(i) != null) {
+			if (server.getClients().get(i) != null && server.getClients().get(i).connected) {
 				client = server.getClients().get(i);
 			}
-
 		}
-		if (client != null) {
+		if (client != null && client.connected) {
 			Packet packet = client.getData();
 			if (packet != null && packet instanceof PacketTestString) {
-				recievedText.text = ((PacketTestString) packet).testString;
+				clientArea.addTextLine(((PacketTestString) packet).testString);
+			} else {
+				recievedText.text = client.getAdress() + " connected";
 			}
 		} else {
 			recievedText.text = "no client connected";

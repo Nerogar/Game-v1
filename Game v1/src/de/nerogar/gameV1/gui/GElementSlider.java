@@ -1,16 +1,12 @@
 package de.nerogar.gameV1.gui;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.image.*;
 
-public class GElementSlider {
-	public int id;
-	private float xPos, yPos;
-	private float width, height, sliderWidth;
-	public boolean enabled = true;
+public class GElementSlider extends GElement {
+	private float sliderWidth;
 	public boolean visible = true;
 	public boolean allowFloat = true;
 	public boolean aktiveMessage;
@@ -21,8 +17,6 @@ public class GElementSlider {
 
 	public GElementSlider(int id, float xPos, float yPos, float width, float height, float sliderWidth, double min, double max, String text, String bgImage, String sliderImage) {
 		this.id = id;
-		float xScale = Display.getWidth();
-		float yScale = Display.getHeight();
 
 		this.xPos = xPos * xScale;
 		this.yPos = yPos * yScale;
@@ -40,18 +34,6 @@ public class GElementSlider {
 
 	public String getName() {
 		return "slider";
-	}
-
-	public boolean isHovered() {
-		if (!enabled) return false;
-		int x = Mouse.getX();
-		int y = Display.getHeight() - Mouse.getY();
-
-		boolean flagX = x >= xPos && x < xPos + width;
-		boolean flagY = y >= yPos && y < yPos + height;
-
-		if (flagX && flagY && enabled && visible) return true;
-		return false;
 	}
 
 	public void update(boolean leftClicked, boolean leftReleased) {

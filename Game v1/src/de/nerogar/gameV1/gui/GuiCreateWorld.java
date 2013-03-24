@@ -27,21 +27,21 @@ public class GuiCreateWorld extends Gui {
 	public void init() {
 		setTitel("Create World");
 
-		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.4f, 0.1f, "name:", FontRenderer.LEFT));
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.4f, 0.1f, "name:", FontRenderer.LEFT));
 		worldNameTextField = new GElementTextField(0.5f, 0.2f, 0.4f, 0.1f, "", "Buttons/textField.png");
 
-		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.3f, 0.4f, 0.1f, "seed:", FontRenderer.LEFT));
-		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.4f, 0.1f, "(leave blank for a random seed)", FontRenderer.LEFT));
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.3f, 0.4f, 0.1f, "seed:", FontRenderer.LEFT));
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.4f, 0.1f, "(leave blank for a random seed)", FontRenderer.LEFT));
 		seedTextField = new GElementTextField(0.5f, 0.3f, 0.4f, 0.1f, "", "Buttons/textField.png");
 		seedTextField.numOnly = true;
 
 		createButton = new GElementButton(genNewID(), 0.3f, 0.7f, 0.4f, 0.1f, "create new World", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
-		textFields.add(worldNameTextField);
-		textFields.add(seedTextField);
-		buttons.add(createButton);
-		buttons.add(backButton);
+		addGElement(worldNameTextField);
+		addGElement(seedTextField);
+		addGElement(createButton);
+		addGElement(backButton);
 	}
 
 	@Override

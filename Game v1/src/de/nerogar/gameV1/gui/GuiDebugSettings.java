@@ -32,14 +32,14 @@ public class GuiDebugSettings extends Gui {
 		setTitel("Debug Settings");
 
 		//AABBs
-		textLabels.add(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));
 		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showAABBs")), FontRenderer.LEFT, "Buttons/button.png", false, "");
 
 		//ok button
 		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");
 
-		buttons.add(showAABBsButton);
-		buttons.add(okButton);
+		addGElement(showAABBsButton);
+		addGElement(okButton);
 	}
 
 	@Override

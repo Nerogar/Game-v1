@@ -18,10 +18,10 @@ public class Alert extends Gui {
 	@Override
 	public void init() {
 		messageLabel = new GElementTextLabel(genNewID(), 0.15f, 0.35f, 0.7f, 0.1f, message, FontRenderer.CENTERED);
-		textLabels.add(messageLabel);
+		addGElement(messageLabel);
 
 		okButton = new GElementButton(genNewID(), 0.4f, 0.6f, 0.2f, 0.07f, "ok", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		buttons.add(okButton);
+		addGElement(okButton);
 	}
 
 	@Override

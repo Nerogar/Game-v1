@@ -34,11 +34,11 @@ public class GuiClient extends Gui {
 		sendText = new GElementTextField(0.1f, 0.5f, 0.8f, 0.1f, "text", "Buttons/textField.png");
 		adressText = new GElementTextField(0.1f, 0.3f, 0.4f, 0.1f, "localhost", "Buttons/textField.png");
 
-		buttons.add(backButton);
-		buttons.add(sendDataButton);
-		buttons.add(startClientButton);
-		textFields.add(adressText);
-		textFields.add(sendText);
+		addGElement(backButton);
+		addGElement(sendDataButton);
+		addGElement(startClientButton);
+		addGElement(adressText);
+		addGElement(sendText);
 	}
 
 	@Override

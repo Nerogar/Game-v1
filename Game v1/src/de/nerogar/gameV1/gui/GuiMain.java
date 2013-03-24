@@ -36,10 +36,10 @@ public class GuiMain extends Gui {
 		for (int i = 0; i < 9; i++) {
 			titel += (char) (Math.random() * (128 - 33) + 33);
 		}
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.0f, 1.0f, 0.2f, Character.valueOf((char) 16) + " " + titel + " " + Character.valueOf((char) 16), FontRenderer.CENTERED));
-		//textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.0f, 1.0f, 0.2f, Character.valueOf((char) 16) + " DEEN GAME " + Character.valueOf((char) 16), FontRenderer.CENTERED));
+		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.0f, 1.0f, 0.2f, Character.valueOf((char) 16) + " " + titel + " " + Character.valueOf((char) 16), FontRenderer.CENTERED));
+		//addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.0f, 1.0f, 0.2f, Character.valueOf((char) 16) + " DEEN GAME " + Character.valueOf((char) 16), FontRenderer.CENTERED));
 
-		//textLabels.add(new GElementTextLabel(genNewID(), 0.0f, -0.5f, 1.0f, 2.0f, "G", FontRenderer.CENTERED));
+		//addGElement(new GElementTextLabel(genNewID(), 0.0f, -0.5f, 1.0f, 2.0f, "G", FontRenderer.CENTERED));
 
 		newGameButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "new game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		loadGameButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "load game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
@@ -47,8 +47,8 @@ public class GuiMain extends Gui {
 
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.7f, 1f, 0.05f, "", FontRenderer.CENTERED));
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.75f, 1f, 0.05f, "", FontRenderer.CENTERED));
+		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.7f, 1f, 0.05f, "", FontRenderer.CENTERED));
+		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.75f, 1f, 0.05f, "", FontRenderer.CENTERED));
 		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 100.0, "", "Buttons/button.png", "Buttons/slider.png");
 		pitchSlider.position = 5;
 
@@ -57,16 +57,16 @@ public class GuiMain extends Gui {
 		//network test
 		clientButton = new GElementButton(genNewID(), 0.3f, 0.95f, 0.2f, 0.05f, "client", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		serverButton = new GElementButton(genNewID(), 0.5f, 0.95f, 0.2f, 0.05f, "server", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		buttons.add(clientButton);
-		buttons.add(serverButton);
+		addGElement(clientButton);
+		addGElement(serverButton);
 
-		buttons.add(newGameButton);
-		buttons.add(loadGameButton);
-		buttons.add(videosettingsButton);
-		buttons.add(audioButtonPlay);
-		buttons.add(audioButtonStop);
-		buttons.add(exitButton);
-		sliders.add(pitchSlider);
+		addGElement(newGameButton);
+		addGElement(loadGameButton);
+		addGElement(videosettingsButton);
+		addGElement(audioButtonPlay);
+		addGElement(audioButtonStop);
+		addGElement(exitButton);
+		addGElement(pitchSlider);
 
 		updateGui();
 	}

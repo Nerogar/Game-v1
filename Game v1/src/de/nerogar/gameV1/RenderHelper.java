@@ -158,14 +158,14 @@ public class RenderHelper {
 
 	public static void drawTriangle(Vector3d a, Vector3d b, Vector3d c, int color) {
 		//if (GameOptions.instance.getBoolOption("debug")) {
-			glDisable(GL_TEXTURE_2D);
-			glBegin(GL_TRIANGLES);
-			glColor4f(getR(color), getG(color), getB(color), getA(color));
-			glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
-			glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
-			glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
-			glEnd();
-			glEnable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
+		glBegin(GL_TRIANGLES);
+		glColor4f(getR(color), getG(color), getB(color), getA(color));
+		glVertex3f(a.getXf(), a.getYf() + .1f, a.getZf());
+		glVertex3f(b.getXf(), b.getYf() + .1f, b.getZf());
+		glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
 		//}
 	}
 

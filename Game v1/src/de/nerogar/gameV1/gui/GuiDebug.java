@@ -42,12 +42,12 @@ public class GuiDebug extends Gui {
 
 		//testLabel = new GuiTextLabel(genNewID(), 0.0f, 0.0f, 1.0f, 0.3f, "test");
 		for (int i = 0; i < labels.length; i++)
-			textLabels.add(labels[i]);
-		textLabels.add(fpsLabel);
+			addGElement(labels[i]);
+		addGElement(fpsLabel);
 
-		buttons.add(resetCamButton);
+		addGElement(resetCamButton);
 
-		//textLabels.add(label1);
+		//addGElement(label1);
 		//game.world.collisionComparer.renderGrid();
 		//updateGui();
 	}

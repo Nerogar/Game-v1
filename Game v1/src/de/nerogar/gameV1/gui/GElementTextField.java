@@ -2,25 +2,18 @@ package de.nerogar.gameV1.gui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.image.*;
 
-public class GElementTextField {
-	private float xPos, yPos;
-	private float width, height;
-	public boolean enabled = true, numOnly = false, aktiveMessage;
+public class GElementTextField extends GElement {
+	public boolean numOnly = false, aktiveMessage, active;
 	private ArrayList<Character> text = new ArrayList<Character>();
 	private String bgImage;
 	private TextureBank textureBank = TextureBank.instance;
 
 	public GElementTextField(float xPos, float yPos, float width, float height, String text, String bgImage) {
-		float xScale = Display.getWidth();
-		float yScale = Display.getHeight();
-
 		this.xPos = xPos * xScale;
 		this.yPos = yPos * yScale;
 		this.width = width * xScale;
@@ -32,16 +25,6 @@ public class GElementTextField {
 
 		this.bgImage = bgImage;
 		textureBank.loadTexture(bgImage);
-	}
-
-	public boolean isHovered() {
-		int x = Mouse.getX();
-		int y = Display.getHeight() - Mouse.getY();
-		boolean flagX = x >= xPos && x < xPos + width;
-		boolean flagY = y >= yPos && y < yPos + height;
-
-		if (flagX && flagY) return true;
-		return false;
 	}
 
 	public void handleKeyboardInput() {
@@ -81,7 +64,7 @@ public class GElementTextField {
 		}
 	}
 
-	public void render(boolean active) {
+	public void render() {
 		textureBank.bindTexture(bgImage);
 
 		int state;

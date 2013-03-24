@@ -66,6 +66,11 @@ public class Client {
 		return receiver.getData();
 	}
 
+	public String getAdress() {
+		if (socket != null) { return socket.getInetAddress().getHostAddress() + ":" + socket.getPort(); }
+		return "";
+	}
+
 	public void stopClient() {
 		connected = false;
 

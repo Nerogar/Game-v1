@@ -4,9 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.image.*;
 
-public class GElementPanel {
-	private float xPos, yPos;
-	private float width, height;
+public class GElementPanel extends GElement {
 	private String bgImage;
 	private TextureBank textureBank = TextureBank.instance;
 

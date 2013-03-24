@@ -35,7 +35,7 @@ public class GuiLoadWorld extends Gui {
 		saveProvider.updateSaves();
 		String[] saveNames = saveProvider.getSavesAsStrings();
 
-		textLabels.add(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "load world", FontRenderer.CENTERED));
+		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "load world", FontRenderer.CENTERED));
 
 		loadButton = new GElementButton(genNewID(), 0.05f, 0.35f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		loadButton.enabled = false;
@@ -51,11 +51,11 @@ public class GuiLoadWorld extends Gui {
 		saveList = new GElementListBox(genNewID(), 0.4f, 0.0f, 0.6f, 1.0f, saveNames, "Buttons/button.png", "Buttons/scrollbar.png");
 		saveList.showedItems = 10;
 
-		lists.add(saveList);
-		buttons.add(deleteButton);
-		buttons.add(loadButton);
-		buttons.add(renameButton);
-		buttons.add(backButton);
+		addGElement(saveList);
+		addGElement(deleteButton);
+		addGElement(loadButton);
+		addGElement(renameButton);
+		addGElement(backButton);
 
 		newWorldNameAlert = new AlertGetMessage(game, "Enter new worldname.", true);
 		deleteWorldAlert = new AlertYesNo(game, "delete?");

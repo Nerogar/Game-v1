@@ -7,12 +7,9 @@ import org.lwjgl.opengl.GL11;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.image.*;
 
-public class GElementListBox {
-	public int id, max;
-	private float xPos, yPos;
-	private float width, height, sliderHeight;
-	public boolean enabled = true;
-	public boolean visible = true;
+public class GElementListBox extends GElement {
+	public int max;
+	private float sliderHeight;
 	public float sliderWidth = 0.03f;
 	public float showedItems = 5;
 
@@ -23,9 +20,6 @@ public class GElementListBox {
 	public double position;
 	private boolean isDragging = false;
 	public int clickedIndex = -1;
-
-	float xScale = Display.getWidth();
-	float yScale = Display.getHeight();
 
 	public GElementListBox(int id, float xPos, float yPos, float width, float height, String[] text, String bgImage, String sliderImage) {
 		this.id = id;
@@ -46,19 +40,7 @@ public class GElementListBox {
 		return "slider";
 	}
 
-	public boolean isHovered() {
-		if (!enabled) return false;
-		int x = Mouse.getX();
-		int y = Display.getHeight() - Mouse.getY();
-
-		boolean flagX = x >= xPos && x < xPos + width;
-		boolean flagY = y >= yPos && y < yPos + height;
-
-		if (flagX && flagY && enabled && visible) return true;
-		return false;
-	}
-
-	public boolean isHovered(float x, float y, float width, float height) {
+	public boolean isHoveredInArea(float x, float y, float width, float height) {
 		if (!enabled) return false;
 		int MouseX = Mouse.getX();
 		int MouseY = Display.getHeight() - Mouse.getY();
@@ -75,7 +57,7 @@ public class GElementListBox {
 		this.max = (int) (text.length - showedItems);
 		if (max < 0) max = 0;
 
-		if (leftClicked && isHovered(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height)) isDragging = true;
+		if (leftClicked && isHoveredInArea(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height)) isDragging = true;
 		if (leftReleased) isDragging = false;
 
 		if (isDragging) {
@@ -86,7 +68,7 @@ public class GElementListBox {
 		}
 
 		if (leftClicked) {
-			if (isHovered(xPos, yPos, width - sliderWidth * xScale, height)) {
+			if (isHoveredInArea(xPos, yPos, width - sliderWidth * xScale, height)) {
 				int MouseY = (int) (Display.getHeight() - Mouse.getY() - yPos);
 
 				clickedIndex = (int) (position + MouseY / (height / showedItems));
@@ -114,7 +96,7 @@ public class GElementListBox {
 			float itemHeight = height / showedItems;
 
 			if (itemY < yPos + height && itemY + itemHeight >= yPos) {
-				boolean hovered = isHovered(itemX, itemY, itemWidth, itemHeight);
+				boolean hovered = isHoveredInArea(itemX, itemY, itemWidth, itemHeight);
 				int state;
 
 				if (!enabled) state = 0;
@@ -148,7 +130,7 @@ public class GElementListBox {
 		}
 
 		//render slider
-		boolean hovered = isHovered(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height);
+		boolean hovered = isHoveredInArea(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height);
 		int state;
 
 		if (!enabled) state = 0;
