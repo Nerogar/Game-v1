@@ -14,6 +14,16 @@ fehler beim collisionComparer wegen MathHelper.round...ToInt beheben
 Laden / generieren von Chunks asyncron
 
 
+##################################
+Info:
+-Seed: 64bit
+ -> terrain: 1-32
+ -> populators 33-64
+ 
+
+
+
+
 ###################################
 
 23.9.12 : 6818 Zeilen Code!

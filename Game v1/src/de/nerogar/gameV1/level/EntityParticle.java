@@ -7,7 +7,7 @@ import de.nerogar.gameV1.physics.*;
 
 public abstract class EntityParticle extends EntityPhysic {
 
-	private Vector3d standardAcceleration = new Vector3d(0, 0, 0);
+	public Vector3d standardAcceleration = new Vector3d(0, 0, 0);
 
 	public EntityParticle(Game game, ObjectMatrix matrix, float mass) {
 		super(game, matrix, mass);

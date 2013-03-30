@@ -113,7 +113,16 @@ public final class MathHelper {
 	}
 
 	public static double modToInt(double d, int n) {
-		return d - roundDownToInt(d, n);
+		double temp = d - roundDownToInt(d, n);
+		if (temp == n) {
+			temp -= n;
+		}
+		return temp;
+		/*int temp = ((int) d) % n;
+		if (d < 0 && temp < 0) temp += n;
+		double decimals = (d - Math.floor(d));
+		return temp + decimals;*/
+
 	}
 
 	public static double getHightest(double... d) {

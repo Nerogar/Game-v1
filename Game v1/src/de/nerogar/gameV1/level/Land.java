@@ -267,7 +267,10 @@ public class Land {
 		Chunk chunk = getChunk(chunkPosition);
 
 		if (chunk != null) {
-			return chunk.getLocalHeight(MathHelper.modToInt(x, Chunk.CHUNKSIZE), MathHelper.modToInt(z, Chunk.CHUNKSIZE));
+			float temph = 0;
+			temph = chunk.getLocalHeight(MathHelper.modToInt(x, Chunk.CHUNKSIZE), MathHelper.modToInt(z, Chunk.CHUNKSIZE));
+
+			return temph;
 		} else {
 			return 0;
 		}

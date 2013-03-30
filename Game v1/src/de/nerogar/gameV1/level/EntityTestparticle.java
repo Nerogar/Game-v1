@@ -8,7 +8,7 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityTestparticle extends EntityParticle {
 
-	private float liveTime;
+	public float liveTime;
 
 	public EntityTestparticle(Game game, ObjectMatrix matrix) {
 		super(game, matrix, 1);
@@ -25,7 +25,7 @@ public class EntityTestparticle extends EntityParticle {
 
 	@Override
 	public void update(float time) {
-		addForce(new Vector3d(0, 15, 0));
+		//addForce(new Vector3d(0, 15, 0));
 		liveTime -= time;
 		opacity = liveTime;
 		if (liveTime <= 0) markToRemove = true;
