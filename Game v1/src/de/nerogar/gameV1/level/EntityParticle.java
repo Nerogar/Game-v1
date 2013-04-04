@@ -22,17 +22,17 @@ public abstract class EntityParticle extends EntityPhysic {
 
 	public void updatePosition(float time) {
 
+		velocity.add(Vector3d.multiply(Vector3d.add(Vector3d.multiply(force, inverseMass), Vector3d.multiply(standardAcceleration, time)), 1));
+		
 		matrix.position.add(Vector3d.multiply(velocity, time));
-
-		velocity.add(Vector3d.multiply(Vector3d.add(Vector3d.multiply(force, inverseMass), standardAcceleration), time));
 
 		force.set(0, 0, 0);
 
 		if (matrix.getPosition().getY() < game.world.land.getHeight(matrix.getPosition().getXf(), matrix.getPosition().getZf())) {
 			matrix.getPosition().setY(game.world.land.getHeight(matrix.getPosition().getXf(), matrix.getPosition().getZf()));
 			velocity.setY(0);
-			velocity.multiplyX(.9);
-			velocity.multiplyZ(.9);
+			velocity.multiplyX(.0);
+			velocity.multiplyZ(.0);
 		}
 	}
 }
