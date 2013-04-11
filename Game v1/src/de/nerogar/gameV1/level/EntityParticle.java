@@ -32,7 +32,7 @@ public abstract class EntityParticle extends EntityPhysic {
 		double height = game.world.land.getHeight(matrix.getPosition().getXf(), matrix.getPosition().getZf());
 		if (matrix.getPosition().getY() < height) {
 			matrix.getPosition().setY(height);
-			if (velocity.getValue() <= friction * time) {
+			if (velocity.clone().setY(0).getValue() < friction * time) {
 				velocity.multiply(0);
 			} else {
 				Vector3d antiVelocity = velocity.clone().setY(0).invert().normalize().multiply(friction * time);
