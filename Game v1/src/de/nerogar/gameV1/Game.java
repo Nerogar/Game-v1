@@ -57,7 +57,7 @@ public class Game implements Runnable {
 				stressTimes[3] = System.nanoTime();
 				if (Timer.instance.shellExecute("gc")) {
 					System.gc();
-					System.out.println("gc");
+					System.out.println("Garbage Collector");
 				}
 
 				updateStressTimes();

@@ -8,7 +8,8 @@ public class GElementButton extends GElement {
 	public boolean aktiveMessage;
 	public String text, bgImage, overlayImage;
 	public int alignment;
-	private boolean useImage;
+	public boolean useImage;
+	// war private, hat aber eine Warning geworfen
 	private TextureBank textureBank = TextureBank.instance;
 
 	public GElementButton(int id, float xPos, float yPos, float width, float height, String text, int alignment, String bgImage, boolean useImage, String overlayImage) {

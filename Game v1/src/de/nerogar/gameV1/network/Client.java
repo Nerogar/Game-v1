@@ -14,7 +14,8 @@ public class Client {
 	public static final int CLIENT = 0;
 	public static final int SERVER_CLIENT = 1;
 	public int clientType = CLIENT;
-	private PacketConnectionInfo connectionInfo;
+	public PacketConnectionInfo connectionInfo;
+	// war private, hat aber eine Warning geworfen
 	public boolean connectionInfoReceived = false;
 
 	public String closeMessage = null;

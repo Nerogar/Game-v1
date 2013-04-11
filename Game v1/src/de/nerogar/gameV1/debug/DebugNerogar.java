@@ -11,8 +11,9 @@ public class DebugNerogar {
 	private Game game;
 	private EntityTestparticle[] testParticles;
 	private boolean spawned = false;
-	private double time = 0;
-
+	public double time = 0;
+	// war private, gar aber eine Warning geworfen
+	
 	public DebugNerogar(Game game) {
 		this.game = game;
 
@@ -43,13 +44,13 @@ public class DebugNerogar {
 
 			spawned = true;
 		} else if (spawned) {
-			float force = 1000;
+			float force = 7;
 			int iteration = (int) (Timer.instance.getFramecount() % testParticles.length);
 
 			testParticles[iteration].matrix.position = new Vector3d(0, 5, 0);
 			float x = (float) (Math.random() * force) - force/2;
 			float z = (float) (Math.random() * force) - force/2;
-			float y = (float) (Math.random() * 300);
+			float y = (float) (Math.random() * 12);
 			testParticles[iteration].addForce(new Vector3d(x, y, z));
 
 		}

@@ -42,19 +42,22 @@ public class Vector3d {
 		return false;
 	}
 	
-	public void setX(double x) {
+	public Vector3d setX(double x) {
 		this.x = x;
 		setValueDirty(true);
+		return this;
 	}
 	
-	public void setY(double y) {
+	public Vector3d setY(double y) {
 		this.y = y;
 		setValueDirty(true);
+		return this;
 	}
 	
-	public void setZ(double z) {
+	public Vector3d setZ(double z) {
 		this.z = z;
 		setValueDirty(true);
+		return this;
 	}
 	
 	public Vector3d add(Vector3d v2) {
@@ -212,11 +215,14 @@ public class Vector3d {
 	}
 	
 	public Vector3d normalize() {
-		if(isValueDirty)recalculateValue();
-		this.x /= this.value;
-		this.y /= this.value;
-		this.z /= this.value;
-		setValueDirty(true);
+		if (this.getValue() == 0) {
+			this.setY(-1);
+			// Trivialvektoren entfernen
+		}
+		this.x /= this.getValue();
+		this.y /= this.getValue();
+		this.z /= this.getValue();
+		this.value = 1;
 		return this;
 	}
 	

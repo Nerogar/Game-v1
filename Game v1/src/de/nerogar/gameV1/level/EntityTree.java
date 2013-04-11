@@ -75,7 +75,6 @@ public class EntityTree extends Entity {
 			if (sound != null) if (sound.isDeleted()) sound = null;
 			if (sound == null) {
 				if (Vector3d.subtract(matrix.position, game.world.camera.getCamPosition()).getSquaredValue() < 500) {
-					System.out.println("sound got null");
 					sound = SoundManager.instance.create("tree_crack.wav", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 5, 1);
 					if (sound != null) sound.play();
 				}

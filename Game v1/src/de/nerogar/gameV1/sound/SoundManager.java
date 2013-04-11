@@ -76,7 +76,6 @@ public class SoundManager {
 		for (int i = 0; i < sourceSpots.length; i++) {
 			if (sourceSpots[i] != null) {
 				if (sourceSpots[i].isStopped() && sourceSpots[i].destroyWhenDone) {
-					System.out.println("removing a source");
 					sourceSpots[i].markDeleted();
 					sourceSpots[i].destroy();
 					sourceSpots[i] = null;
