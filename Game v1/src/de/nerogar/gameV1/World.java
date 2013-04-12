@@ -12,6 +12,7 @@ import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
+import de.nerogar.gameV1.internalServer.InternalServer;
 
 public class World {
 	public EntityList entityList;
@@ -27,6 +28,7 @@ public class World {
 	public Path path;
 	public PathNode pathEnd;
 	public PathNode pathStart;
+	private InternalServer internalServer;
 
 	public World(Game game) {
 		this.game = game;
@@ -62,6 +64,8 @@ public class World {
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
 		RenderHelper.renderLoadingScreen("Starte Welt...");
+		internalServer = new InternalServer(); //temp
+		internalServer.start();                //temp
 		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
 		/*
 				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
@@ -78,6 +82,7 @@ public class World {
 	}
 
 	public void closeWorld() {
+		internalServer.stopServer(); //temp
 		RenderHelper.renderLoadingScreen("Speichere Welt...");
 		isLoaded = false;
 		land.unloadAll();
@@ -86,6 +91,7 @@ public class World {
 		worldData.save();
 		worldData = null;
 		land.asyncLevelLoader.kill();
+
 		System.gc();
 	}
 
@@ -209,7 +215,7 @@ public class World {
 			pathStart.draw(0.5f, 0.5f, 1.0f);
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}
-		
+
 		player.renderInWorld(this);
 		glPopMatrix();
 	}
@@ -217,7 +223,7 @@ public class World {
 	public void spawnEntity(Entity entity) {
 		if (isLoaded) entityList.addEntity(entity, this);
 	}
-	
+
 	public void despawnEntity(Entity entity) {
 		if (isLoaded) entityList.entities.remove(entity);
 	}
