@@ -25,7 +25,13 @@ public class Camera {
 	private boolean dragRotate = false;
 	private boolean dragMoving = false;
 
-	private Timer timer = Timer.instance;
+	private World world;
+	private Timer timer;
+
+	public Camera(World world) {
+		this.world = world;
+		timer = this.world.game.timer;
+	}
 
 	public void init() {
 		scrollX = 0;
@@ -139,21 +145,21 @@ public class Camera {
 		scrollX = (float) (scrollXLoc - Math.sin((rotation / 360) * 3.1415927 * 2) * scrollBack);
 		scrollZ = (float) (scrollZLoc + Math.cos((rotation / 360) * 3.1415927 * 2) * scrollBack);
 	}
-	
-	public Vector2d getCamCenter(){
+
+	public Vector2d getCamCenter() {
 		return new Vector2d(scrollXLoc, scrollZLoc);
 	}
-	
-	public Vector3d getCamPosition(){
+
+	public Vector3d getCamPosition() {
 		return new Vector3d(scrollX, scrollY, scrollZ);
 	}
-	
-	public void setCenter(Vector2d pos){
+
+	public void setCenter(Vector2d pos) {
 		scrollXLoc = pos.getXf();
 		scrollZLoc = pos.getZf();
 	}
-	
-	public void setRotation(float rot, float rotDown){
+
+	public void setRotation(float rot, float rotDown) {
 		this.rotation = rot;
 		this.rotationDown = rotDown;
 	}

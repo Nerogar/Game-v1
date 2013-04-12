@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.WorldData;
 
 public class SaveProvider {
@@ -56,6 +57,12 @@ public class SaveProvider {
 
 	public void loadWorld(Game game, int index) {
 		game.world.initiateWorld(saves[index].getName());
+		//game.internalServer = new InternalServer(game);
+		//game.internalServer.initiateWorld(saves[index].getName());
+	}
+
+	public void loadWorld(Game game, String name, long seed) {
+		game.world.initiateWorld(name, seed);
 	}
 
 	public void renameWorld(int index, String newName) {

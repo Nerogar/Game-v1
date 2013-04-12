@@ -1,5 +1,6 @@
 package de.nerogar.gameV1.internalServer;
 
+import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
 
 public class InternalServer extends Thread {
@@ -12,9 +13,20 @@ public class InternalServer extends Thread {
 	//game
 	public World world;
 
-	public InternalServer() {
+	public InternalServer(Game game) {
 		setName("IntenalServerThread");
 		System.out.println("Initiated Server");
+		world = new World(game);
+	}
+
+	public void initiateWorld(String levelName, long seed) {
+		world.initiateWorld(levelName, seed);
+		start();
+	}
+	
+	public void initiateWorld(String levelName) {
+		world.initiateWorld(levelName);
+		start();
 	}
 
 	@Override
@@ -28,6 +40,7 @@ public class InternalServer extends Thread {
 	}
 
 	private void mainloop() {
+		world.update();
 		//for (long i = 0; i < 100000000L; i++);
 	}
 

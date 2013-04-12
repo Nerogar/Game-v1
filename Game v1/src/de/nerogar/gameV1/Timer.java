@@ -11,7 +11,7 @@ public class Timer {
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private long framecount;
 	//private ArrayList<String> eventNames = new ArrayList<String>();
-	public static Timer instance = new Timer();
+	//public static Timer instance = new Timer();
 
 	public Timer() {
 

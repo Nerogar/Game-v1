@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
@@ -71,7 +70,7 @@ public class EntityList {
 		removeNullEntities();
 		updateInProgress = true;
 		for (Entity e : entities) {
-			e.update(Timer.instance.delta / 1000F);
+			e.update(game.timer.delta / 1000F);
 		}
 		updateInProgress = false;
 		addNewEntities();

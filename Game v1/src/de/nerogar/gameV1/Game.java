@@ -12,6 +12,7 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.debug.DebugFelk;
 import de.nerogar.gameV1.debug.DebugNerogar;
 import de.nerogar.gameV1.gui.*;
+import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.Tile;
 
@@ -19,6 +20,8 @@ public class Game implements Runnable {
 	public boolean running = true;
 	public static final String version = "test 0.1";
 
+	public Timer timer;
+	public InternalServer internalServer;
 	public World world;
 	public Player player;
 	public GuiList guiList = new GuiList();
@@ -34,10 +37,10 @@ public class Game implements Runnable {
 
 	public void run() {
 		try {
-
+			timer = new Timer();
+			
 			init();
-
-			Timer.instance.registerEvent("gc", 10);
+			timer.registerEvent("gc", 10);
 
 			InputHandler.loadGamepad();
 			InputHandler.registerGamepadButton("start", "7", 0.25f);
@@ -55,7 +58,7 @@ public class Game implements Runnable {
 				Display.update();
 				Display.sync(GameOptions.instance.getIntOption("fps"));
 				stressTimes[3] = System.nanoTime();
-				if (Timer.instance.shellExecute("gc")) {
+				if (timer.shellExecute("gc")) {
 					System.gc();
 					System.out.println("Garbage Collector");
 				}
@@ -111,7 +114,7 @@ public class Game implements Runnable {
 		debugNerogar.run();
 
 		//update game logics
-		Timer.instance.update();
+		timer.update();
 		guiList.update();
 		if (!guiList.pauseGame()) {
 			world.update();
@@ -136,7 +139,7 @@ public class Game implements Runnable {
 		guiList.addGui(new GuiMain(this));
 		Entity.initEntityList(this);
 		Tile.initTileList();
-		Timer.instance.init();
+		timer.init();
 
 		try {
 			AL.create();

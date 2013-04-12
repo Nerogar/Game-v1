@@ -1,7 +1,6 @@
 package de.nerogar.gameV1.debug;
 
 import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -24,7 +23,7 @@ public class DebugNerogar {
 	}
 
 	public void run() {
-		time += Timer.instance.delta;
+		time += game.timer.delta;
 
 		if (game.world.isLoaded && !spawned) {
 			testParticles = new EntityTestparticle[5000];
@@ -45,7 +44,7 @@ public class DebugNerogar {
 			spawned = true;
 		} else if (spawned) {
 			float force = 7;
-			int iteration = (int) (Timer.instance.getFramecount() % testParticles.length);
+			int iteration = (int) (game.timer.getFramecount() % testParticles.length);
 
 			testParticles[iteration].matrix.position = new Vector3d(0, 5, 0);
 			float x = (float) (Math.random() * force) - force/2;

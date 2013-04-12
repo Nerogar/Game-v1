@@ -1,7 +1,6 @@
 package de.nerogar.gameV1.gui;
 
 import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.Vector2d;
 
 public class GuiDebug extends Gui {
@@ -57,7 +56,7 @@ public class GuiDebug extends Gui {
 		//testLabel.text = "test";
 		delayCount++;
 		if (delayCount > 10) {
-			fpsLabel.text = "FPS: " + String.valueOf(Timer.instance.mfFps);
+			fpsLabel.text = "FPS: " + String.valueOf(game.timer.mfFps);
 			delayCount = 0;
 		}
 		labels[1].text = "Entities: " + game.world.entityList.entities.size() + ", Vergleiche: " + game.world.collisionComparer.comparations;

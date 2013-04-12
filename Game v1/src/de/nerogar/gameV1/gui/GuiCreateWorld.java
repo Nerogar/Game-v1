@@ -4,10 +4,12 @@ import java.util.Random;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.SaveProvider;
 
 public class GuiCreateWorld extends Gui {
 	private GElementButton createButton, backButton;
 	private GElementTextField worldNameTextField, seedTextField;
+	SaveProvider saveProvider;
 
 	public GuiCreateWorld(Game game) {
 		super(game);
@@ -25,6 +27,7 @@ public class GuiCreateWorld extends Gui {
 
 	@Override
 	public void init() {
+		saveProvider = new SaveProvider();
 		setTitel("Create World");
 
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.4f, 0.1f, "name:", FontRenderer.LEFT));
@@ -63,10 +66,10 @@ public class GuiCreateWorld extends Gui {
 
 			if (!name.equals("")) {
 				if (!seed.equals("")) {
-					game.world.initiateWorld(worldNameTextField.getText(), Long.parseLong(seedTextField.getText()));
+					saveProvider.loadWorld(game, worldNameTextField.getText(), Long.parseLong(seedTextField.getText()));
 				} else {
 					Random rd = new Random();
-					game.world.initiateWorld(worldNameTextField.getText(), rd.nextLong());
+					saveProvider.loadWorld(game, worldNameTextField.getText(), rd.nextLong());
 				}
 				game.guiList.removeGui(getName());
 			}

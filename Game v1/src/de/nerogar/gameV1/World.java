@@ -15,20 +15,20 @@ import de.nerogar.gameV1.gui.GuiPauseMenu;
 import de.nerogar.gameV1.internalServer.InternalServer;
 
 public class World {
+	public Game game;
 	public EntityList entityList;
 	public Land land;
 	public WorldData worldData;
 	public boolean isLoaded = false;
-	public Camera camera = new Camera();
-	public Position loadPosition = camera.getCamCenter().toPosition();
+	public Camera camera;
+	public Position loadPosition;
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
-	public Game game;
+
 	public CollisionComparer collisionComparer;
 	public Pathfinder pathfinder;
 	public Path path;
 	public PathNode pathEnd;
 	public PathNode pathStart;
-	private InternalServer internalServer;
 
 	public World(Game game) {
 		this.game = game;
@@ -36,6 +36,7 @@ public class World {
 		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
 		entityList.setCollisionComparer(collisionComparer);
+		camera = new Camera(this);
 		pathfinder = new Pathfinder(land);
 	}
 
@@ -59,13 +60,12 @@ public class World {
 
 		camera.init();
 		//land.asyncLevelLoader.start();
+		loadPosition = camera.getCamCenter().toPosition();
 		land.loadAllAroundXZ(loadPosition);
 		isLoaded = true;
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
 		RenderHelper.renderLoadingScreen("Starte Welt...");
-		internalServer = new InternalServer(); //temp
-		internalServer.start();                //temp
 		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
 		/*
 				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
@@ -82,7 +82,6 @@ public class World {
 	}
 
 	public void closeWorld() {
-		internalServer.stopServer(); //temp
 		RenderHelper.renderLoadingScreen("Speichere Welt...");
 		isLoaded = false;
 		land.unloadAll();
