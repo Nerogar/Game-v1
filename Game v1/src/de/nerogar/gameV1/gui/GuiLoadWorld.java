@@ -5,10 +5,12 @@ import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.SaveProvider;
 
 public class GuiLoadWorld extends Gui {
-	private GElementButton deleteButton;
 	private GElementButton loadButton;
 	private GElementButton renameButton;
+	private GElementButton deleteButton;
+	private GElementButton createWorldButton;
 	private GElementButton backButton;
+
 	private GElementListBox saveList;
 	private AlertGetMessage newWorldNameAlert;
 	private AlertYesNo deleteWorldAlert;
@@ -35,16 +37,18 @@ public class GuiLoadWorld extends Gui {
 		saveProvider.updateSaves();
 		String[] saveNames = saveProvider.getSavesAsStrings();
 
-		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "load world", FontRenderer.CENTERED));
+		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED));
 
-		loadButton = new GElementButton(genNewID(), 0.05f, 0.35f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		loadButton = new GElementButton(genNewID(), 0.05f, 0.3f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		loadButton.enabled = false;
 
-		renameButton = new GElementButton(genNewID(), 0.05f, 0.5f, 0.3f, 0.1f, "rename world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		renameButton = new GElementButton(genNewID(), 0.05f, 0.4f, 0.3f, 0.1f, "rename world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		renameButton.enabled = false;
 
-		deleteButton = new GElementButton(genNewID(), 0.05f, 0.65f, 0.3f, 0.1f, "delete world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		deleteButton = new GElementButton(genNewID(), 0.05f, 0.5f, 0.3f, 0.1f, "delete world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		deleteButton.enabled = false;
+
+		createWorldButton = new GElementButton(genNewID(), 0.05f, 0.65f, 0.3f, 0.1f, "create new world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
 		backButton = new GElementButton(genNewID(), 0.05f, 0.8f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
@@ -52,9 +56,11 @@ public class GuiLoadWorld extends Gui {
 		saveList.showedItems = 10;
 
 		addGElement(saveList);
-		addGElement(deleteButton);
+
 		addGElement(loadButton);
 		addGElement(renameButton);
+		addGElement(deleteButton);
+		addGElement(createWorldButton);
 		addGElement(backButton);
 
 		newWorldNameAlert = new AlertGetMessage(game, "Enter new worldname.", true);
@@ -98,6 +104,9 @@ public class GuiLoadWorld extends Gui {
 			game.guiList.alert(newWorldNameAlert);
 		} else if (id == deleteButton.id) {
 			game.guiList.alert(deleteWorldAlert);
+		} else if (id == createWorldButton.id) {
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiCreateWorld(game));
 		} else if (id == backButton.id) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMain(game));

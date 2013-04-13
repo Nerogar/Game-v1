@@ -4,8 +4,8 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
 
 public class GuiMain extends Gui {
-	private GElementButton newGameButton;
-	private GElementButton loadGameButton;
+	private GElementButton singleplayerButton;
+	private GElementButton multiplayerButton;
 	private GElementButton videosettingsButton;
 	private GElementButton audioButtonPlay, audioButtonStop;
 	private GElementButton exitButton;
@@ -41,8 +41,8 @@ public class GuiMain extends Gui {
 
 		//addGElement(new GElementTextLabel(genNewID(), 0.0f, -0.5f, 1.0f, 2.0f, "G", FontRenderer.CENTERED));
 
-		newGameButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "new game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		loadGameButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "load game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		singleplayerButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		multiplayerButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "Multiplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.4f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
@@ -60,8 +60,8 @@ public class GuiMain extends Gui {
 		addGElement(clientButton);
 		addGElement(serverButton);
 
-		addGElement(newGameButton);
-		addGElement(loadGameButton);
+		addGElement(singleplayerButton);
+		addGElement(multiplayerButton);
 		addGElement(videosettingsButton);
 		addGElement(audioButtonPlay);
 		addGElement(audioButtonStop);
@@ -93,12 +93,13 @@ public class GuiMain extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == newGameButton.id && mouseButton == 0) {
-			game.guiList.removeGui(getName());
-			game.guiList.addGui(new GuiCreateWorld(game));
-		} else if (id == loadGameButton.id) {
+		if (id == singleplayerButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiLoadWorld(game));
+		} else if (id == multiplayerButton.id) {
+			//game.guiList.removeGui(getName());
+			//game.guiList.addGui(new GuiMultiplayer(game));
+			game.guiList.alert(new Alert(game, "not implemented"));
 		} else if (id == videosettingsButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));

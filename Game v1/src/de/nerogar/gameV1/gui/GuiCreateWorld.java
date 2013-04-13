@@ -75,7 +75,7 @@ public class GuiCreateWorld extends Gui {
 			}
 		} else if (id == backButton.id) {
 			game.guiList.removeGui(getName());
-			game.guiList.addGui(new GuiMain(game));
+			game.guiList.addGui(new GuiLoadWorld(game));
 		}
 	}
 }
