@@ -27,7 +27,6 @@ public class Land {
 	public World world;
 	public LevelGenerator levelGenerator;
 	private Vector3d mousePosition;
-	public AsyncLevelLoader asyncLevelLoader = new AsyncLevelLoader();
 
 	//private Entity buildableEntity = null;
 	//private boolean buildable = false;

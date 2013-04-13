@@ -12,7 +12,6 @@ import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
-import de.nerogar.gameV1.internalServer.InternalServer;
 
 public class World {
 	public Game game;
@@ -23,20 +22,21 @@ public class World {
 	public Camera camera;
 	public Position loadPosition;
 	private int maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
-
 	public CollisionComparer collisionComparer;
+	public boolean serverWorld;
+
 	public Pathfinder pathfinder;
 	public Path path;
 	public PathNode pathEnd;
 	public PathNode pathStart;
 
-	public World(Game game) {
+	public World(Game game, boolean serverWorld) {
 		this.game = game;
 		entityList = new EntityList(game, this);
 		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
 		entityList.setCollisionComparer(collisionComparer);
-		camera = new Camera(this);
+		if (!serverWorld) camera = new Camera(this);
 		pathfinder = new Pathfinder(land);
 	}
 
@@ -47,25 +47,27 @@ public class World {
 	}
 
 	public void initiateWorld(String levelName) {
-		RenderHelper.renderLoadingScreen("Lade Welt...");
+		if (!serverWorld) RenderHelper.renderLoadingScreen("Lade Welt...");
 		if (worldData == null) {
 			worldData = new WorldData(levelName);
 			worldData.load();
 		}
 
-		//land = new Land(game, this);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
 		land.levelGenerator = new LevelGenerator(land);
 
-		camera.init();
-		//land.asyncLevelLoader.start();
-		loadPosition = camera.getCamCenter().toPosition();
+		if (!serverWorld) {
+			camera.init();
+			loadPosition = camera.getCamCenter().toPosition();
+		} else {
+			loadPosition = new Position();
+		}
+
 		land.loadAllAroundXZ(loadPosition);
 		isLoaded = true;
 
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
-		RenderHelper.renderLoadingScreen("Starte Welt...");
 		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
 		/*
 				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
@@ -89,7 +91,6 @@ public class World {
 		collisionComparer.cleanup();
 		worldData.save();
 		worldData = null;
-		land.asyncLevelLoader.kill();
 
 		System.gc();
 	}

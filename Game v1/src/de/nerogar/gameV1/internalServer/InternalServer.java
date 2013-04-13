@@ -2,6 +2,7 @@ package de.nerogar.gameV1.internalServer;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.network.Server;
 
 public class InternalServer extends Thread {
 	//server
@@ -9,6 +10,8 @@ public class InternalServer extends Thread {
 	private final double TICK_TIME = (double) 1000 / TPS;
 	private long lastUpdate;
 	private boolean running = true;
+	
+	private Server server;
 
 	//game
 	public World world;
@@ -16,14 +19,16 @@ public class InternalServer extends Thread {
 	public InternalServer(Game game) {
 		setName("IntenalServerThread");
 		System.out.println("Initiated Server");
-		world = new World(game);
+		world = new World(game, true);
+		server = new Server();
+		server.start();
 	}
 
 	public void initiateWorld(String levelName, long seed) {
 		world.initiateWorld(levelName, seed);
 		start();
 	}
-	
+
 	public void initiateWorld(String levelName) {
 		world.initiateWorld(levelName);
 		start();
@@ -63,5 +68,6 @@ public class InternalServer extends Thread {
 
 	public void stopServer() {
 		running = false;
+		server.stopServer();
 	}
 }

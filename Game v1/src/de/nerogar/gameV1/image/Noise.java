@@ -156,7 +156,7 @@ public class Noise {
 
 		ret = (ret + 1f) / 2f;
 
-		if (ret < 0.0f || ret > 1.0f) System.out.println(ret);
+		if (ret < 0.0f || ret > 1.0f) System.out.println("error in NoiseMapGeneration:" + ret);
 
 		return ret;
 

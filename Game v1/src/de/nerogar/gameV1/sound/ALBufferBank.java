@@ -64,7 +64,7 @@ public class ALBufferBank {
 		FileInputStream fileStream = new FileInputStream(file);
 		OggData ogg = new OggDecoder().getData(fileStream);
 		int format = (ogg.channels == 2) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
-		System.out.println(format == AL_FORMAT_MONO16);
+		//System.out.println(format == AL_FORMAT_MONO16);
 		ALHelper.setBuffer(bufferID, format, ogg.data, ogg.rate);
 		fileStream.close();
 	}

@@ -5,6 +5,11 @@ public class Position {
 	public int x;
 	public int z;
 
+	public Position() {
+		x = 0;
+		z = 0;
+	}
+
 	public Position(int x, int z) {
 		this.x = x;
 		this.z = z;

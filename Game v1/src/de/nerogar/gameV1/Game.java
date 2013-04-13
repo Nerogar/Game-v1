@@ -131,7 +131,7 @@ public class Game implements Runnable {
 	private void init() {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
 
-		world = new World(this);
+		world = new World(this, false);
 		player = new Player(this);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(this));

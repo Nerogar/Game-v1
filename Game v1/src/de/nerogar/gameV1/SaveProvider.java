@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.WorldData;
 
 public class SaveProvider {
