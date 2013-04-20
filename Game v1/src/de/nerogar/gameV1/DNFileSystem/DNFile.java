@@ -316,14 +316,14 @@ public class DNFile {
 	public int[] getIntArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.INTEGER && node.value instanceof Integer[]) {
 				int[] tempIntAarray = new int[((Integer[]) node.value).length];
 				for (int i = 0; i < tempIntAarray.length; i++) {
 					tempIntAarray[i] = ((Integer[]) node.value)[i];
 				}
 				return tempIntAarray;
-			}
+			} else if (node.typ == DNHelper.INTEGER && node.value instanceof Integer) { return new int[] { (int) node.value }; }
 		}
 
 		return null;
@@ -342,14 +342,14 @@ public class DNFile {
 	public float[] getFloatArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.FLOAT && node.value instanceof Float[]) {
 				float[] tempFloatAarray = new float[((Float[]) node.value).length];
 				for (int i = 0; i < tempFloatAarray.length; i++) {
 					tempFloatAarray[i] = ((Float[]) node.value)[i];
 				}
 				return tempFloatAarray;
-			}
+			} else if (node.typ == DNHelper.FLOAT && node.value instanceof Float) { return new float[] { (float) node.value }; }
 		}
 
 		return null;
@@ -368,14 +368,14 @@ public class DNFile {
 	public double[] getDoubleArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.DOUBLE && node.value instanceof Double[]) {
 				double[] tempDoubleAarray = new double[((Double[]) node.value).length];
 				for (int i = 0; i < tempDoubleAarray.length; i++) {
 					tempDoubleAarray[i] = ((Double[]) node.value)[i];
 				}
 				return tempDoubleAarray;
-			}
+			} else if (node.typ == DNHelper.DOUBLE && node.value instanceof Double) { return new double[] { (double) node.value }; }
 		}
 
 		return null;
@@ -394,14 +394,14 @@ public class DNFile {
 	public long[] getLongArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.LONG && node.value instanceof Long[]) {
 				long[] tempLongAarray = new long[((Long[]) node.value).length];
 				for (int i = 0; i < tempLongAarray.length; i++) {
 					tempLongAarray[i] = ((Long[]) node.value)[i];
 				}
 				return tempLongAarray;
-			}
+			} else if (node.typ == DNHelper.LONG && node.value instanceof Long) { return new long[] { (long) node.value }; }
 		}
 
 		return null;
@@ -420,14 +420,14 @@ public class DNFile {
 	public byte[] getByteArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.BYTE && node.value instanceof Byte[]) {
 				byte[] tempByteAarray = new byte[((Byte[]) node.value).length];
 				for (int i = 0; i < tempByteAarray.length; i++) {
 					tempByteAarray[i] = ((Byte[]) node.value)[i];
 				}
 				return tempByteAarray;
-			}
+			} else if (node.typ == DNHelper.BYTE && node.value instanceof Byte) { return new byte[] { (byte) node.value }; }
 		}
 
 		return null;
@@ -446,14 +446,14 @@ public class DNFile {
 	public char[] getCharArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.CHAR && node.value instanceof Character[]) {
 				char[] tempCharacterAarray = new char[((Character[]) node.value).length];
 				for (int i = 0; i < tempCharacterAarray.length; i++) {
 					tempCharacterAarray[i] = ((Character[]) node.value)[i];
 				}
 				return tempCharacterAarray;
-			}
+			} else if (node.typ == DNHelper.CHAR && node.value instanceof Character) { return new char[] { (char) node.value }; }
 		}
 
 		return null;
@@ -472,14 +472,14 @@ public class DNFile {
 	public boolean[] getBooleanArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.BOOLEAN && node.value instanceof Boolean[]) {
 				boolean[] tempBooleanAarray = new boolean[((Boolean[]) node.value).length];
 				for (int i = 0; i < tempBooleanAarray.length; i++) {
 					tempBooleanAarray[i] = ((Boolean[]) node.value)[i];
 				}
 				return tempBooleanAarray;
-			}
+			} else if (node.typ == DNHelper.BOOLEAN && node.value instanceof Boolean) { return new boolean[] { (boolean) node.value }; }
 		}
 
 		return null;
@@ -498,8 +498,9 @@ public class DNFile {
 	public String[] getStringArray(String name) {
 		DNNode node = nodePath.getNodePath(name);
 		if (node == null) return null;
-		if (node.length > 1) {
+		if (node.length >= 1) {
 			if (node.typ == DNHelper.STRING && node.value instanceof String[]) return (String[]) node.value;
+			else if (node.typ == DNHelper.STRING && node.value instanceof String) { return new String[] { (String) node.value }; }
 		}
 
 		return null;
