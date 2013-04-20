@@ -57,7 +57,7 @@ public class GElementListBox extends GElement {
 		this.max = (int) (text.length - showedItems);
 		if (max < 0) max = 0;
 
-		if (leftClicked && isHoveredInArea(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height)) isDragging = true;
+		if (leftClicked && sliderWidth > 0 && isHoveredInArea(xPos + width - sliderWidth * xScale, yPos, sliderWidth * xScale, height)) isDragging = true;
 		if (leftReleased) isDragging = false;
 
 		if (isDragging) {

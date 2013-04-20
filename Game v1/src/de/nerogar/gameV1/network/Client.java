@@ -34,11 +34,11 @@ public class Client {
 		try {
 			socket = new Socket(adress, port);
 			connected = true;
-			init();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		init();
 	}
 
 	public void init() {

@@ -16,7 +16,7 @@ import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.Tile;
 
-public class Game implements Runnable {
+public class Game{
 	public boolean running = true;
 	public static final String version = "test 0.1";
 
@@ -38,9 +38,9 @@ public class Game implements Runnable {
 	public void run() {
 		try {
 			timer = new Timer();
-			
+
 			init();
-			timer.registerEvent("gc", 10);
+			//timer.registerEvent("gc", 10);
 
 			InputHandler.loadGamepad();
 			InputHandler.registerGamepadButton("start", "7", 0.25f);
@@ -59,8 +59,11 @@ public class Game implements Runnable {
 				Display.sync(GameOptions.instance.getIntOption("fps"));
 				stressTimes[3] = System.nanoTime();
 				if (timer.shellExecute("gc")) {
+					long time1 = System.nanoTime();
 					System.gc();
-					System.out.println("Garbage Collector");
+					long time2 = System.nanoTime();
+					double gcTime = (time2 - time1) / 1000000D;
+					System.out.println("Garbage Collector: " + gcTime + "ms");
 				}
 
 				updateStressTimes();

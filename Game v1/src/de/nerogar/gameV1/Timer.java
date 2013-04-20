@@ -10,6 +10,7 @@ public class Timer {
 	public int mfFps;
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private long framecount;
+
 	//private ArrayList<String> eventNames = new ArrayList<String>();
 	//public static Timer instance = new Timer();
 
@@ -64,7 +65,8 @@ public class Timer {
 
 	public boolean shellExecute(String name) {
 		int index = indexOfEvent(name);
-		return events.get(index).shellExecute();
+		if (index != -1) { return events.get(index).shellExecute(); }
+		return false;
 	}
 
 	public long getFramecount() {

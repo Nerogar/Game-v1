@@ -30,7 +30,7 @@ public class DebugFelk {
 		//SoundManager.instance.preLoadSounds();
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forest.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
-		if (sound != null) sound.play();
+		//if (sound != null) sound.play();
 		//AL10.alDopplerVelocity(320f);
 	}
 
@@ -40,13 +40,12 @@ public class DebugFelk {
 		SoundManager.setListenerLazy(game.world.camera);
 		SoundManager.instance.update();
 
-
-		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) selectedBuildingID=0;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) selectedBuildingID=1;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) selectedBuildingID=2;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) selectedBuildingID=3;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) selectedBuildingID=4;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_5)) selectedBuildingID=5;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) selectedBuildingID = 0;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) selectedBuildingID = 1;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) selectedBuildingID = 2;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) selectedBuildingID = 3;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) selectedBuildingID = 4;
+		if (InputHandler.isKeyPressed(Keyboard.KEY_5)) selectedBuildingID = 5;
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = game.world.entityList.entities;
@@ -54,7 +53,7 @@ public class DebugFelk {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof EntityPhysic) {
 					EntityPhysic entity = (EntityPhysic) entities.get(i);
-					entity.addForce(new Vector3d(0, 500, 0));
+					entity.addForce(new Vector3d(0, 5, 0));
 				}
 			}
 		}

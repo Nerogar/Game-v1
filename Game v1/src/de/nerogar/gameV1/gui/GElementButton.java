@@ -9,7 +9,6 @@ public class GElementButton extends GElement {
 	public String text, bgImage, overlayImage;
 	public int alignment;
 	public boolean useImage;
-	// war private, hat aber eine Warning geworfen
 	private TextureBank textureBank = TextureBank.instance;
 
 	public GElementButton(int id, float xPos, float yPos, float width, float height, String text, int alignment, String bgImage, boolean useImage, String overlayImage) {
@@ -63,7 +62,25 @@ public class GElementButton extends GElement {
 
 		GL11.glEnd();
 
-		FontRenderer.renderFont(text, (int) xPos, (int) (yPos + height / 4f), width, height / 2f, alignment);
+		if (!useImage) {
+			FontRenderer.renderFont(text, (int) xPos, (int) (yPos + height / 4f), width, height / 2f, alignment);
+		} else {
+			textureBank.bindTexture(overlayImage);
+			GL11.glBegin(GL11.GL_QUADS);
+
+			GL11.glTexCoord2f(1, 1);
+			GL11.glVertex3f(xPos + width, yPos + height, -1f);
+			GL11.glTexCoord2f(1, 0);
+			GL11.glVertex3f(xPos + width, yPos, -1f);
+			GL11.glTexCoord2f(0, 0);
+			GL11.glVertex3f(xPos, yPos, -1f);
+			GL11.glTexCoord2f(0, 1);
+			GL11.glVertex3f(xPos, yPos + height, -1f);
+
+			GL11.glEnd();
+
+		}
+
 		//FontRenderer.renderFont(text, (int) xPos, (int) yPos,height, width);
 	}
 }

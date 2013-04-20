@@ -43,6 +43,7 @@ public class GuiMain extends Gui {
 
 		singleplayerButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 		multiplayerButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "Multiplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		addGElement(new GElementTextLabel(genNewID(), 0.7f, 0.3f, 0.1f, 0.1f, "(wip!)", FontRenderer.LEFT));
 		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.4f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
 		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
@@ -97,9 +98,8 @@ public class GuiMain extends Gui {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiLoadWorld(game));
 		} else if (id == multiplayerButton.id) {
-			//game.guiList.removeGui(getName());
-			//game.guiList.addGui(new GuiMultiplayer(game));
-			game.guiList.alert(new Alert(game, "not implemented"));
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiMultiplayer(game));
 		} else if (id == videosettingsButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));

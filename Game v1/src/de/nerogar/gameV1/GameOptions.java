@@ -10,6 +10,7 @@ import java.util.Properties;
 public class GameOptions {
 
 	public final float GRAVITY = 9.81F;
+	public final int standardPort = 4200;
 
 	private String filename = "options.txt";
 	private Properties options = new Properties();
@@ -105,6 +106,7 @@ public class GameOptions {
 	}
 
 	private void generateOptionsFile() {
+		//videosettings
 		options.put("width", "800");
 		options.put("height", "600");
 		options.put("fullscreen", "false");
@@ -114,6 +116,11 @@ public class GameOptions {
 		options.put("vSync", "false");
 		options.put("loaddistance", "10");
 		options.put("renderdistance", "5");
+
+		//debugsettings
 		options.put("showAABBs", "false");
+
+		//prifile
+		options.put("playerName", "Player");
 	}
 }

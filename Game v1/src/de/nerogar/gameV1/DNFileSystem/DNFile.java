@@ -20,7 +20,7 @@ public class DNFile {
 		return file.exists();
 	}
 
-	public void load() {
+	public boolean load() {
 		nodePath = new DNNodePath(null);
 		try {
 			File file = new File(filename);
@@ -32,9 +32,10 @@ public class DNFile {
 			readFile(in, nodePath, -1);
 
 			f.close();
-
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
