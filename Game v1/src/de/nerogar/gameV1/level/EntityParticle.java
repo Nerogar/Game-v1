@@ -38,7 +38,7 @@ public abstract class EntityParticle extends EntityPhysic {
 				Vector3d antiVelocity = velocity.clone().setY(0).invert().normalize().multiply(friction * time);
 				//if (antiVelocity.getX() != 0) System.out.println(antiVelocity);
 				velocity.add(antiVelocity);
-				velocity.setY(0);
+				//velocity.setY(0);
 				//velocity.multiplyX(.9);
 				//velocity.multiplyZ(.9);
 			}
