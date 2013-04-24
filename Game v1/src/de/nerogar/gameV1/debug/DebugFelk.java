@@ -6,9 +6,14 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
+import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
+import de.nerogar.gameV1.matrix.Matrix;
+import de.nerogar.gameV1.matrix.MatrixHelper;
+import de.nerogar.gameV1.matrix.MatrixMultiplicationException;
+import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.sound.ALBufferBank;
 import de.nerogar.gameV1.sound.ALSource;
 import de.nerogar.gameV1.sound.SoundManager;
@@ -16,10 +21,7 @@ import de.nerogar.gameV1.sound.SoundManager;
 public class DebugFelk {
 
 	private Game game;
-	//public Testsound bgMusic;
-	//public Testsound bgMusic2;
 	public ALSource sound;
-	public int selectedBuildingID = 0;
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -40,13 +42,6 @@ public class DebugFelk {
 		SoundManager.setListenerLazy(game.world.camera);
 		SoundManager.instance.update();
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_0)) selectedBuildingID = 0;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_1)) selectedBuildingID = 1;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_2)) selectedBuildingID = 2;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_3)) selectedBuildingID = 3;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_4)) selectedBuildingID = 4;
-		if (InputHandler.isKeyPressed(Keyboard.KEY_5)) selectedBuildingID = 5;
-
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = game.world.entityList.entities;
 			System.out.println(entities.size() + " entities gefunden.");
@@ -58,15 +53,27 @@ public class DebugFelk {
 			}
 		}
 
-		/*if (InputHandler.isKeyDown(Keyboard.KEY_LEFT)) {
-			sound.setPosition(sound.getPosition().add(new Vector3d(-1,0,0)));
-			sound.setVelocity(new Vector3d(-60,0,0));
+		if (InputHandler.isKeyDown(Keyboard.KEY_0)) {
+			Matrix m = new Matrix(3, 3);
+			m.set(0, 2, 1);
+			m.set(1, 1, 1);
+			m.set(2, 0, 1);
+			Matrix v = new Vector3d(2, 3, 4).toMatrix();
+			Vector3d v2 = null;
+			try {
+				v2 = Matrix.multiply(m, v).toVector3d();
+			} catch (MatrixMultiplicationException e) {
+				e.printStackTrace();
+			}
+			System.out.println(v2.toString());
 		}
 
-		if (InputHandler.isKeyDown(Keyboard.KEY_RIGHT)) {
-			sound.setPosition(sound.getPosition().add(new Vector3d(+1,0,0)));	
-			sound.setVelocity(new Vector3d(60,0,0));
-		}*/
+		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
+			Vector3d a = new Vector3d(10, 10, 10);
+			//Vector3d b = MatrixHelper.rotateR3(a, new Vector3d(0, 1, 0), (float) MathHelper.DegToRad(90));
+			Vector3d b = MatrixHelper.rotateAtR3(a, new Line(new Vector3d(8, 8, 8), new Vector3d(1, 0, 1)), (float) MathHelper.DegToRad(180));
+			System.out.println(b);
+		}
 
 	}
 

@@ -54,27 +54,21 @@ public class GuiBuildingTest extends Gui {
 		if (id == buttonNone.id) {
 			idChanged = true;
 			selectedID = -1;
-			game.debugFelk.selectedBuildingID = -1;
 		} else if (id == buttonBlue.id) {
 			idChanged = true;
 			selectedID = 0;
-			game.debugFelk.selectedBuildingID = 0;
 		} else if (id == buttonGreen.id) {
 			idChanged = true;
 			selectedID = 1;
-			game.debugFelk.selectedBuildingID = 1;
 		} else if (id == buttonOrange.id) {
 			idChanged = true;
 			selectedID = 2;
-			game.debugFelk.selectedBuildingID = 2;
 		} else if (id == buttonPink.id) {
 			idChanged = true;
 			selectedID = 3;
-			game.debugFelk.selectedBuildingID = 3;
 		} else if (id == buttonRed.id) {
 			idChanged = true;
 			selectedID = 4;
-			game.debugFelk.selectedBuildingID = 4;
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package de.nerogar.gameV1;
 
+import de.nerogar.gameV1.matrix.Matrix;
+
 public class Vector3d {
 
 	private double x = 0;
@@ -258,6 +260,14 @@ public class Vector3d {
 	
 	public String toString() {
 		return "("+Double.toString(this.getX())+","+Double.toString(this.getY())+","+Double.toString(this.getZ())+")";
+	}
+	
+	public Matrix toMatrix() {
+		Matrix m = new Matrix(3, 1);
+		m.set(0, 0, getX());
+		m.set(1, 0, getY());
+		m.set(2, 0, getZ());
+		return m;
 	}
 
 }
