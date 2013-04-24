@@ -6,60 +6,66 @@ public final class MathHelper {
 	private static double[] cos;
 	private static double[] tan;
 
-	private static final int LOOKUPLENGTH = 100;
+	private static final int LOOKUPLENGTH = 1000;
 
 	private static final int SINLENGTH = LOOKUPLENGTH;
 	private static final int COSLENGTH = LOOKUPLENGTH;
 	private static final int TANLENGTH = LOOKUPLENGTH;
 
-	private static final double PI = 3.1415927F;
+	private static final double PI = 3.1415926535898d;
+	private static final double TAU = 2*PI;
+	private static final double degToRad = (double) TAU / 360;
+	private static final double radToDeg = (double) 360 / TAU;
 
 	static {
 
-		sin = new double[(int) (SINLENGTH * PI) + 1];
+		sin = new double[(int) (SINLENGTH * TAU) + 1];
 		for (int i = 0; i < sin.length; i++) {
 			sin[i] = Math.sin((double) i / SINLENGTH);
 		}
 
-		cos = new double[(int) (COSLENGTH * PI) + 1];
+		cos = new double[(int) (COSLENGTH * TAU) + 1];
 		for (int i = 0; i < cos.length; i++) {
 			cos[i] = Math.cos((double) i / COSLENGTH);
 		}
 
-		tan = new double[(int) (TANLENGTH * PI) + 1];
+		tan = new double[(int) (TANLENGTH * TAU) + 1];
 		for (int i = 0; i < tan.length; i++) {
 			tan[i] = Math.tan((double) i / TANLENGTH);
 		}
 
 	}
 
+	// x in Rad
 	public static double sin(float x) {
 
 		double x2 = x;
-		x2 = x2 % PI;
-		if (x2 < 0) x2 += PI;
+		x2 = x2 % TAU;
+		if (x2 < 0) x2 += TAU;
 		x2 = x2 * SINLENGTH;
 
 		return sin[(int) x2];
 
 	}
 
+	// x in Rad
 	public static double cos(float x) {
 
 		double x2 = x;
-		x2 = x2 % PI;
-		if (x2 < 0) x2 += PI;
+		x2 = x2 % TAU;
+		if (x2 < 0) x2 += TAU;
 		x2 = x2 * COSLENGTH;
 
 		return cos[(int) x2];
 
 	}
 
+	// x in Rad
 	public static double tan(float x) {
 
 		double x2 = x;
-		x2 = x2 % PI;
-		if (x2 < 0) x2 += PI;
+		x2 = x2 % TAU;
+		if (x2 < 0) x2 += TAU;
 		x2 = x2 * TANLENGTH;
 
 		return tan[(int) x2];
@@ -155,5 +161,13 @@ public final class MathHelper {
 			if (d[i] < dH) dH = d[i];
 		}
 		return dH;
+	}
+
+	public static double DegToRad(double deg) {
+		return degToRad * deg;
+	}
+
+	public static double RadToDeg(double rad) {
+		return radToDeg * rad;
 	}
 }
