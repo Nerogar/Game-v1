@@ -10,7 +10,7 @@ import java.util.Properties;
 public class GameOptions {
 
 	public final float GRAVITY = 9.81F;
-	public final int standardPort = 4200;
+	public final int STANDARDPORT = 4200;
 
 	private String filename = "options.txt";
 	private Properties options = new Properties();
@@ -120,7 +120,7 @@ public class GameOptions {
 		//debugsettings
 		options.put("showAABBs", "false");
 
-		//prifile
+		//profile
 		options.put("playerName", "Player");
 	}
 }

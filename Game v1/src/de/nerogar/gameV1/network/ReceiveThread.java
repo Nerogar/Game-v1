@@ -2,6 +2,7 @@ package de.nerogar.gameV1.network;
 
 import java.io.DataInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ReceiveThread extends Thread {
@@ -27,16 +28,19 @@ public class ReceiveThread extends Thread {
 			while (!connectionClosed) {
 				buffer = new byte[in.readInt()];
 				int packetID = in.readInt();
-				in.read(buffer);
-
+				int receivedBytes = in.read(buffer);
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
+				System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
+				receivedPacket.unpack();
+
 				//hardcoded PacketID for connectionData (0)
-				if (client.clientType == Client.CLIENT && !client.connectionInfoReceived && packetID == 0) {
+				if (!client.connectionInfoReceived && packetID == 0) {
 					client.setConnectionInfo((PacketConnectionInfo) receivedPacket);
 				} else {
-					receivedPacket.unpack();
-					data.add(receivedPacket);
+					synchronized (data) {
+						data.add(receivedPacket);
+					}
 				}
 			}
 
@@ -46,12 +50,21 @@ public class ReceiveThread extends Thread {
 		}
 	}
 
-	public Packet getData() {
-		if (data.size() > 0) {
-			Packet retPacket = data.get(0);
-			data.remove(0);
-			return retPacket;
+	public ArrayList<Packet> getData(int channel) {
+		synchronized (data) {
+			if (data.size() > 0) {
+				ArrayList<Packet> retList = new ArrayList<Packet>();
+				for (int i = 0; i < data.size(); i++) {
+					if (data.get(i).channel == channel) {
+						retList.add(data.get(i));
+						data.remove(i);
+						i--;
+					}
+				}
+				return retList;
+			}
 		}
+
 		return null;
 	}
 

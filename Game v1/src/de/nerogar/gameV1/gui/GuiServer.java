@@ -1,5 +1,7 @@
 package de.nerogar.gameV1.gui;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.network.*;
@@ -47,10 +49,15 @@ public class GuiServer extends Gui {
 				client = server.getClients().get(i);
 			}
 		}
+
 		if (client != null && client.connected) {
-			Packet packet = client.getData();
-			if (packet != null && packet instanceof PacketTestString) {
-				clientArea.addTextLine(((PacketTestString) packet).testString);
+			ArrayList<Packet> packets = client.getData(Packet.DEFAULT_CHANNEL);
+			if (packets != null) {
+				for (int i = 0; i < packets.size(); i++) {
+					if (packets.get(i) instanceof PacketTestString) {
+						clientArea.addTextLine(((PacketTestString) packets.get(i)).testString);
+					}
+				}
 			} else {
 				recievedText.text = client.getAdress() + " connected";
 			}

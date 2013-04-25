@@ -10,7 +10,14 @@ public abstract class Packet {
 	public DNFile data;
 	public byte[] packedData;
 	public int packetID;
+	public int channel = DEFAULT_CHANNEL;
+
+	public static final int DEFAULT_CHANNEL = 0;
+	public static final int LOBBY_CHANNEL = 1;
+	public static final int WORLD_CHANNEL = 2;
+
 	private static int biggestID = 0; //0 is reserved for PacketConnectionInfo
+
 	protected static ArrayList<Class<? extends Packet>> packets = new ArrayList<Class<? extends Packet>>();
 	protected static HashMap<Class<? extends Packet>, Integer> packetIdMap = new HashMap<Class<? extends Packet>, Integer>();
 
@@ -49,6 +56,7 @@ public abstract class Packet {
 		registerPacket(PacketConnectionInfo.class);//has to be at position 0
 
 		registerPacket(PacketTestString.class);
+		registerPacket(PacketMultiplayerLobbyInfo.class);
 
 	}
 }

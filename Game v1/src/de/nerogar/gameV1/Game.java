@@ -15,6 +15,7 @@ import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.Tile;
+import de.nerogar.gameV1.network.Client;
 
 public class Game{
 	public boolean running = true;
@@ -22,6 +23,7 @@ public class Game{
 
 	public Timer timer;
 	public InternalServer internalServer;
+	public Client client;
 	public World world;
 	public Player player;
 	public GuiList guiList = new GuiList();

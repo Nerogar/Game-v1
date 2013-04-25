@@ -12,8 +12,7 @@ public final class MathHelper {
 	private static final int COSLENGTH = LOOKUPLENGTH;
 	private static final int TANLENGTH = LOOKUPLENGTH;
 
-	private static final double PI = 3.1415926535898d;
-	private static final double TAU = 2*PI;
+	private static final double TAU = 2 * Math.PI;
 	private static final double degToRad = (double) TAU / 360;
 	private static final double radToDeg = (double) 360 / TAU;
 

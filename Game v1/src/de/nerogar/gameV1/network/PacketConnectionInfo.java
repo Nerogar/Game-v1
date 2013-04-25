@@ -1,5 +1,7 @@
 package de.nerogar.gameV1.network;
 
+import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 
 public class PacketConnectionInfo extends Packet {
@@ -9,6 +11,9 @@ public class PacketConnectionInfo extends Packet {
 	@Override
 	public void pack() {
 		data = new DNFile("");
+		version = Game.version;
+		username = GameOptions.instance.getOption("playerName");
+		
 		data.addNode("version", version);
 		data.addNode("username", username);
 

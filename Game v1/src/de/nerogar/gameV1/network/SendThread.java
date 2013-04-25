@@ -28,18 +28,18 @@ public class SendThread extends Thread {
 				out = new DataOutputStream(socket.getOutputStream());
 
 				while (running) {
-					startWaiting();
+					if (data.size() == 0) startWaiting();
 
 					while (data.size() > 0) {
 						Packet packet = data.get(0);
 						data.remove(0);
 						packet.pack();
-						
+
 						byte[] buffer = packet.packedData;
 						out.writeInt(buffer.length);
 						out.writeInt(packet.packetID);
 						out.write(buffer);
-
+						System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
 					}
 				}
 

@@ -4,6 +4,7 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.ServerList;
+import de.nerogar.gameV1.network.Client;
 
 public class GuiMultiplayerJoin extends Gui {
 	private GElementButton directConnectButton, backButton;
@@ -13,6 +14,7 @@ public class GuiMultiplayerJoin extends Gui {
 	private GElementListBox serverList;
 
 	private AlertGetMessage newServerAdressAlert;
+	private Client client;
 
 	public GuiMultiplayerJoin(Game game) {
 		super(game);
@@ -48,6 +50,7 @@ public class GuiMultiplayerJoin extends Gui {
 		adressText = new GElementTextField(leftX, 0.35f, 0.2f, 0.1f, "", "Buttons/textField.png");
 		addGElement(new GElementTextLabel(genNewID(), leftX + 0.2f, 0.25f, 0.2f, 0.1f, "port:", FontRenderer.LEFT));
 		portText = new GElementTextField(leftX + 0.2f, 0.35f, 0.15f, 0.1f, "4200", "Buttons/textField.png");
+		portText.numOnly = true;
 
 		directConnectButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "connect", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
@@ -76,7 +79,7 @@ public class GuiMultiplayerJoin extends Gui {
 			if (newServerAdress != null) {
 				String[] newServerAdressParts = newServerAdress.split(":");
 				String newServerIP = newServerAdressParts[0];
-				int newServerPort = GameOptions.instance.standardPort;
+				int newServerPort = GameOptions.instance.STANDARDPORT;
 				if (newServerAdressParts.length > 1) {
 					try {
 						newServerPort = Integer.parseInt(newServerAdressParts[1]);
@@ -109,7 +112,11 @@ public class GuiMultiplayerJoin extends Gui {
 				ServerList.instance.removeServer(serverList.clickedIndex);
 				serverList.text = ServerList.instance.getAsStringArray();
 			}
+		} else if (id == directConnectButton.id) {
+			client = new Client("localhost", Integer.parseInt(portText.getText()));
 
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiMultiplayerLobby(game, null, client));
 		}
 	}
 }

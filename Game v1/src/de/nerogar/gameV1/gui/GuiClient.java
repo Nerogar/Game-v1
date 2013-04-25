@@ -66,10 +66,10 @@ public class GuiClient extends Gui {
 				testPacket.name = "sendTest";
 				testPacket.testString = sendText.getText();
 				
-				long time1 = System.nanoTime();
+				//long time1 = System.nanoTime();
 				client.sendPacket(testPacket);
-				long time2 = System.nanoTime();
-				System.out.println("Send: " + (time2 - time1) / 1000000D + " ms");
+				//long time2 = System.nanoTime();
+				//System.out.println("Send: " + (time2 - time1) / 1000000D + " ms");
 			}
 		} else if (id == startClientButton.id) {
 			if (client != null) {

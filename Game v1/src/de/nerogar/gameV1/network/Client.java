@@ -2,6 +2,7 @@ package de.nerogar.gameV1.network;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 import de.nerogar.gameV1.Game;
 
@@ -15,26 +16,23 @@ public class Client {
 	public static final int SERVER_CLIENT = 1;
 	public int clientType = CLIENT;
 	public PacketConnectionInfo connectionInfo;
-	// war private, hat aber eine Warning geworfen
 	public boolean connectionInfoReceived = false;
+	public boolean connectionInfoSent = false;
 
 	public String closeMessage = null;
 
 	public Client(Socket socket) {
 		this.socket = socket;
 		connected = true;
-		init();
-	}
-
-	public void setServerClient() {
 		clientType = SERVER_CLIENT;
+		init();
 	}
 
 	public Client(String adress, int port) {
 		try {
 			socket = new Socket(adress, port);
 			connected = true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -56,6 +54,9 @@ public class Client {
 		if (!connectionInfo.version.equals(Game.version)) {
 			stopClient();
 			closeMessage = "incorrect version number";
+		} else if (!connectionInfoSent) {
+			connectionInfoSent = true;
+			sendPacket(new PacketConnectionInfo());
 		}
 	}
 
@@ -63,8 +64,8 @@ public class Client {
 		sender.sendPacket(packet);
 	}
 
-	public Packet getData() {
-		return receiver.getData();
+	public ArrayList<Packet> getData(int channel) {
+		return receiver.getData(channel);
 	}
 
 	public String getAdress() {

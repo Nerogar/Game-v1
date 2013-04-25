@@ -45,7 +45,7 @@ public class InternalServer extends Thread {
 	}
 
 	private void mainloop() {
-		world.update();
+		//world.update();
 		//for (long i = 0; i < 100000000L; i++);
 	}
 
