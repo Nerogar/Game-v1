@@ -11,7 +11,7 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.matrix.Matrix;
-import de.nerogar.gameV1.matrix.MatrixHelper;
+import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.matrix.MatrixMultiplicationException;
 import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.sound.ALBufferBank;
@@ -71,7 +71,7 @@ public class DebugFelk {
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
 			Vector3d a = new Vector3d(10, 10, 10);
 			//Vector3d b = MatrixHelper.rotateR3(a, new Vector3d(0, 1, 0), (float) MathHelper.DegToRad(90));
-			Vector3d b = MatrixHelper.rotateAtR3(a, new Line(new Vector3d(8, 8, 8), new Vector3d(1, 0, 1)), (float) MathHelper.DegToRad(180));
+			Vector3d b = MatrixHelperR3.rotateAt(a, new Line(new Vector3d(8, 8, 8), new Vector3d(1, 0, 1)), (float) MathHelper.DegToRad(180));
 			System.out.println(b);
 		}
 
