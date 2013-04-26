@@ -4,25 +4,11 @@ import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.physics.Line;
 
-public class MatrixHelper {
-
-	public static Vector3d rotateAtR3(Vector3d v, Line rotLine, float alpha) {
-		return rotateR3(v.subtract(rotLine.getStart()), rotLine.getDirection(), alpha).add(rotLine.getStart());
-	}
-	
-	public static Vector3d rotateR3(Vector3d v, Vector3d vRot, float alpha) {
-		Vector3d vNew = null;
-		try {
-			vNew = Matrix.multiply(getRotationMatrixR3(vRot, alpha), v.toMatrix()).toVector3d();
-		} catch (MatrixMultiplicationException e) {
-			e.printStackTrace();
-		}
-		return vNew;
-	}
+public class MatrixHelperR3 {
 	
 	// gegen den Uhrzeigersinn, wenn v nach "oben" zeigt
 	// (im Uhrzeigersinn, wenn Blickrichtung = v)
-	public static Matrix getRotationMatrixR3(Vector3d v, float alpha) {
+	public static Matrix getRotationMatrix(Vector3d v, float alpha) {
 		Matrix m = new Matrix(3, 3);
 		
 		m.set(0, 0, MathHelper.cos(alpha) + v.getX() * v.getX() * (1 - MathHelper.cos(alpha)));
@@ -38,6 +24,42 @@ public class MatrixHelper {
 		m.set(2, 2, MathHelper.cos(alpha) + v.getZ() * v.getZ() * (1 - MathHelper.cos(alpha)));
 		
 		return m;
+	}
+	
+	public static Matrix vectorToEMatrix(Vector3d v) {
+		Matrix m = new Matrix(3, 3);
+		m.set(0, 0, v.getX());
+		m.set(1, 1, v.getY());
+		m.set(2, 2, v.getZ());
+		return m;
+	}
+	
+	public static Matrix getScalingMatrix(Vector3d scaling) {
+		return vectorToEMatrix(scaling);
+	}
+	
+	public static Vector3d rotateAt(Vector3d v, Line rotLine, float alpha) {
+		return rotate(v.subtract(rotLine.getStart()), rotLine.getDirection(), alpha).add(rotLine.getStart());
+	}
+	
+	public static Vector3d rotate(Vector3d v, Vector3d vRot, float alpha) {
+		Vector3d vNew = null;
+		try {
+			vNew = Matrix.multiply(getRotationMatrix(vRot, alpha), v.toMatrix()).toVector3d();
+		} catch (MatrixMultiplicationException e) {
+			e.printStackTrace();
+		}
+		return vNew;
+	}
+	
+	public static Vector3d scale(Vector3d v, Vector3d scale) {
+		Matrix m = getScalingMatrix(scale);
+		try {
+			m = Matrix.multiply(v.toMatrix(), m);
+		} catch (MatrixMultiplicationException e) {
+			e.printStackTrace();
+		}
+		return m.toVector3d();
 	}
 	
 }
