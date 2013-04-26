@@ -6,6 +6,10 @@ public class PacketMultiplayerLobbyInfo extends Packet {
 	public String[] playerNames;
 	public boolean[] playerReadyStates;
 
+	public PacketMultiplayerLobbyInfo() {
+		channel = LOBBY_CHANNEL;
+	}
+
 	@Override
 	public void pack() {
 		data = new DNFile("");

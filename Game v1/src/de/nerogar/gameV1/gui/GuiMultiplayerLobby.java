@@ -18,6 +18,7 @@ public class GuiMultiplayerLobby extends Gui {
 		super(game);
 		this.server = server;
 		this.client = client;
+		aktivateStartGameButton();
 	}
 
 	@Override
@@ -50,8 +51,11 @@ public class GuiMultiplayerLobby extends Gui {
 		addGElement(playersList);
 		addGElement(kickButton);
 		addGElement(readyButton);
-		addGElement(startButton);
 		addGElement(backButton);
+	}
+
+	public void aktivateStartGameButton() {
+		if (server != null) addGElement(startButton);
 	}
 
 	@Override
@@ -59,21 +63,60 @@ public class GuiMultiplayerLobby extends Gui {
 		//update player List as server
 		if (server != null) {
 			ArrayList<Client> clients = server.getClients();
-			String[] clientNames = new String[clients.size()];
-			for (int i = 0; i < clientNames.length; i++) {
+			//String[] clientNames = new String[clients.size()];
+			PacketMultiplayerLobbyInfo packetLobbyInfo = new PacketMultiplayerLobbyInfo();
+
+			packetLobbyInfo.playerNames = new String[clients.size()];
+			packetLobbyInfo.playerReadyStates = new boolean[clients.size()];
+
+			for (int i = 0; i < clients.size(); i++) {
 				if (clients.get(i).connectionInfo != null) {
-					clientNames[i] = clients.get(i).connectionInfo.username;
+					//clientNames[i] = clients.get(i).connectionInfo.username;
+					packetLobbyInfo.playerNames[i] = clients.get(i).connectionInfo.username;
+					packetLobbyInfo.playerReadyStates[i] = true;
 				}
 			}
-			playersList.text = clientNames;
+			//playersList.text = clientNames;
+			server.broadcastData(packetLobbyInfo);
 		}
 
+		//update packets
+		ArrayList<Packet> receivedPackets = client.getData(Packet.LOBBY_CHANNEL);
+		if (receivedPackets != null) {
+			processPackets(receivedPackets);
+		}
+
+		//process connection reset
+		if (!client.connected) {
+			disconnect();
+			game.guiList.alert(new Alert(game, client.closeMessage));
+		}
+
+		//update ready state button
 		if (readyState) {
 			readyButton.overlayImage = "Buttons/tick.png";
 		} else {
 			readyButton.overlayImage = "Buttons/cross.png";
 		}
+	}
 
+	public void processPackets(ArrayList<Packet> receivedPackets) {
+		for (Packet packet : receivedPackets) {
+			if (packet instanceof PacketMultiplayerLobbyInfo) {
+				PacketMultiplayerLobbyInfo lobbyInfo = (PacketMultiplayerLobbyInfo) packet;
+				String[] clientNames = lobbyInfo.playerNames;
+				playersList.text = clientNames;
+			}
+		}
+	}
+
+	public void disconnect() {
+		if (server != null) {
+			server.stopServer();
+		}
+		client.stopClient();
+		game.guiList.removeGui(getName());
+		game.guiList.addGui(new GuiMultiplayer(game));
 	}
 
 	@Override
@@ -85,12 +128,7 @@ public class GuiMultiplayerLobby extends Gui {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == backButton.id) {
-			if (server != null) {
-				server.stopServer();
-			}
-			client.stopClient();
-			game.guiList.removeGui(getName());
-			game.guiList.addGui(new GuiMultiplayerCreate(game));
+			disconnect();
 		} else if (id == readyButton.id) {
 			readyState = !readyState;
 		}

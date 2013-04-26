@@ -17,7 +17,7 @@ import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.Tile;
 import de.nerogar.gameV1.network.Client;
 
-public class Game{
+public class Game {
 	public boolean running = true;
 	public static final String version = "test 0.1";
 

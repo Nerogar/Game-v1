@@ -73,6 +73,7 @@ public class GuiMultiplayerJoin extends Gui {
 	@Override
 	public void updateGui() {
 		directConnectButton.enabled = !adressText.getText().equals("");
+		listConnectButton.enabled = serverList.clickedIndex != -1;
 
 		if (newServerAdressAlert.hasNewText) {
 			String newServerAdress = newServerAdressAlert.getText();
@@ -113,10 +114,18 @@ public class GuiMultiplayerJoin extends Gui {
 				serverList.text = ServerList.instance.getAsStringArray();
 			}
 		} else if (id == directConnectButton.id) {
-			client = new Client("localhost", Integer.parseInt(portText.getText()));
+			client = new Client(adressText.getText(), Integer.parseInt(portText.getText()));
 
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayerLobby(game, null, client));
+		} else if (id == listConnectButton.id) {
+			int index = serverList.clickedIndex;
+			if (index != -1) {
+				client = new Client(ServerList.instance.getAdress(index), ServerList.instance.getPort(index));
+
+				game.guiList.removeGui(getName());
+				game.guiList.addGui(new GuiMultiplayerLobby(game, null, client));
+			}
 		}
 	}
 }

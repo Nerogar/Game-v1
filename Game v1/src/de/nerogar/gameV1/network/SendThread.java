@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.network;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 
@@ -42,8 +43,7 @@ public class SendThread extends Thread {
 						System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
 					}
 				}
-
-			} catch (Exception e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

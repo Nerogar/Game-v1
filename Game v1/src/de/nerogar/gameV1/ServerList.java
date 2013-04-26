@@ -85,4 +85,12 @@ public class ServerList {
 		ports.remove(index);
 		save();
 	}
+
+	public String getAdress(int index) {
+		return adresses.get(index);
+	}
+
+	public int getPort(int index) {
+		return ports.get(index);
+	}
 }

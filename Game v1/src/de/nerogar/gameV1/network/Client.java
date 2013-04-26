@@ -15,14 +15,16 @@ public class Client {
 	public static final int CLIENT = 0;
 	public static final int SERVER_CLIENT = 1;
 	public int clientType = CLIENT;
+	private Server server;
 	public PacketConnectionInfo connectionInfo;
 	public boolean connectionInfoReceived = false;
 	public boolean connectionInfoSent = false;
 
-	public String closeMessage = null;
+	public String closeMessage = "";
 
-	public Client(Socket socket) {
+	public Client(Socket socket, Server server) {
 		this.socket = socket;
+		this.server = server;
 		connected = true;
 		clientType = SERVER_CLIENT;
 		init();
@@ -32,7 +34,6 @@ public class Client {
 		try {
 			socket = new Socket(adress, port);
 			connected = true;
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,6 +88,8 @@ public class Client {
 		}
 
 		sender.stopThread();
-
+		if (clientType == SERVER_CLIENT) {
+			server.removeClient(this);
+		}
 	}
 }

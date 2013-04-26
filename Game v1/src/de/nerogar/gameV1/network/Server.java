@@ -31,7 +31,7 @@ public class Server extends Thread {
 		try {
 			while (running) {
 				Socket newClientSocket = serverSocket.accept();
-				Client newClient = new Client(newClientSocket);
+				Client newClient = new Client(newClientSocket, this);
 				clients.add(newClient);
 
 				PacketConnectionInfo packetConnectionInfo = new PacketConnectionInfo();
@@ -50,9 +50,17 @@ public class Server extends Thread {
 		return clients;
 	}
 
+	public void broadcastData(Packet packet) {
+		for (int i = 0; i < clients.size(); i++) {
+			clients.get(i).sendPacket(packet);
+		}
+	}
+
 	public void stopServer() {
-		for (Client client : clients) {
-			client.stopClient();
+		synchronized (clients) {
+			while (clients.size() > 0) {
+				clients.get(0).stopClient();
+			}
 		}
 		running = false;
 
@@ -64,7 +72,8 @@ public class Server extends Thread {
 	}
 
 	public void removeClient(Client client) {
-		client.stopClient();
-		clients.remove(client);
+		synchronized (clients) {
+			clients.remove(client);
+		}
 	}
 }
