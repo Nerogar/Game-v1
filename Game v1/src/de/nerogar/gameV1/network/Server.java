@@ -51,8 +51,8 @@ public class Server extends Thread {
 	}
 
 	public void broadcastData(Packet packet) {
-		for (int i = 0; i < clients.size(); i++) {
-			clients.get(i).sendPacket(packet);
+		for (Client broadcastClient : clients) {
+			broadcastClient.sendPacket(packet);
 		}
 	}
 

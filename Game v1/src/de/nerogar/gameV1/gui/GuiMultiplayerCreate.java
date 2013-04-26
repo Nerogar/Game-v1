@@ -33,7 +33,7 @@ public class GuiMultiplayerCreate extends Gui {
 		addGElement(new GElementTextLabel(genNewID(), 0.1f, adressY, 0.4f, 0.1f, "start on port: ", FontRenderer.LEFT));
 		portText = new GElementTextField(0.5f, adressY, 0.15f, 0.1f, "4200", "Buttons/textField.png");
 		portText.numOnly = true;
-		
+
 		createButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "create", FontRenderer.CENTERED, "Buttons/button.png", false, "");
 
 		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
@@ -56,7 +56,7 @@ public class GuiMultiplayerCreate extends Gui {
 	}
 
 	@Override
-	public void clickButton(int id, int mouseButton)  {
+	public void clickButton(int id, int mouseButton) {
 		if (id == backButton.id) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayer(game));

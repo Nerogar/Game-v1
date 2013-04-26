@@ -22,15 +22,18 @@ public class ServerList {
 		if (file.load()) {
 			adresses = new ArrayList<String>();
 			String[] adressesA = file.getStringArray("adresses");
-			for (String s : adressesA) {
-				adresses.add(s);
+			if (adressesA != null) {
+				for (String s : adressesA) {
+					adresses.add(s);
+				}
+
+				ports = new ArrayList<Integer>();
+				int[] portsA = file.getIntArray("ports");
+				for (int i : portsA) {
+					ports.add(i);
+				}
 			}
 
-			ports = new ArrayList<Integer>();
-			int[] portsA = file.getIntArray("ports");
-			for (int i : portsA) {
-				ports.add(i);
-			}
 		}
 	}
 

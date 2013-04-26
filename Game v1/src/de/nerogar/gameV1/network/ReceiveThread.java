@@ -28,7 +28,12 @@ public class ReceiveThread extends Thread {
 			while (!connectionClosed) {
 				buffer = new byte[in.readInt()];
 				int packetID = in.readInt();
-				int receivedBytes = in.read(buffer);
+
+				int receivedBytes = 0;
+
+				while (receivedBytes < buffer.length) {
+					receivedBytes += in.read(buffer, receivedBytes, buffer.length - receivedBytes);
+				}
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
 				System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
