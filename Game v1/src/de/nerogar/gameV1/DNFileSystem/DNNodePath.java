@@ -71,12 +71,15 @@ public class DNNodePath {
 	public DNNodePath getNodepath(String name) {
 		String[] folders = name.split("\\.");
 		DNNodePath path = this;
+		if (name.equals("")) return this;
+		else {
+			for (int i = 0; i < folders.length - 1; i++) {
+				path = path.getPath(folders[i]);
+			}
 
-		for (int i = 0; i < folders.length - 1; i++) {
-			path = path.getPath(folders[i]);
+			return path.getPath(folders[folders.length - 1]);
 		}
 
-		return path.getPath(folders[folders.length - 1]);
 	}
 
 	public void addNodePath(String name, byte typ, int length, Object value) {

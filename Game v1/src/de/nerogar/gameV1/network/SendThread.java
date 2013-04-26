@@ -31,16 +31,22 @@ public class SendThread extends Thread {
 				while (running) {
 					if (data.size() == 0) startWaiting();
 
-					while (data.size() > 0) {
-						Packet packet = data.get(0);
-						data.remove(0);
-						packet.pack();
+					synchronized (data) {
+						while (data.size() > 0) {
+							Packet packet = data.get(0);
+							data.remove(0);
 
-						byte[] buffer = packet.packedData;
-						out.writeInt(buffer.length);
-						out.writeInt(packet.packetID);
-						out.write(buffer);
-						System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
+							if (!packet.packed) {
+								packet.pack();
+								packet.packed = true;
+							}
+
+							byte[] buffer = packet.packedData;
+							out.writeInt(buffer.length);
+							out.writeInt(packet.packetID);
+							out.write(buffer);
+							System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
+						}
 					}
 				}
 			} catch (IOException e) {
@@ -66,7 +72,9 @@ public class SendThread extends Thread {
 	}
 
 	public void sendPacket(Packet packet) {
-		data.add(packet);
+		synchronized (data) {
+			data.add(packet);
+		}
 		stopWaiting();
 	}
 

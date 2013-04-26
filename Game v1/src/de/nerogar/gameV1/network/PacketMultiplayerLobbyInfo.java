@@ -12,12 +12,14 @@ public class PacketMultiplayerLobbyInfo extends Packet {
 
 	@Override
 	public void pack() {
+
 		data = new DNFile("");
+		synchronized (data) {
+			data.addNode("playernames", playerNames);
+			data.addNode("playerreadyStates", playerReadyStates);
 
-		data.addNode("playernames", playerNames);
-		data.addNode("playerreadyStates", playerReadyStates);
-
-		packedData = data.toByteArray();
+			packedData = data.toByteArray();
+		}
 	}
 
 	@Override
@@ -27,5 +29,6 @@ public class PacketMultiplayerLobbyInfo extends Packet {
 
 		playerNames = data.getStringArray("playernames");
 		playerReadyStates = data.getBooleanArray("playerreadyStates");
+
 	}
 }

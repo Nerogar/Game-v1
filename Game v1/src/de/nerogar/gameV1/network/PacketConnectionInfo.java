@@ -13,7 +13,7 @@ public class PacketConnectionInfo extends Packet {
 		data = new DNFile("");
 		version = Game.version;
 		username = GameOptions.instance.getOption("playerName");
-		
+
 		data.addNode("version", version);
 		data.addNode("username", username);
 

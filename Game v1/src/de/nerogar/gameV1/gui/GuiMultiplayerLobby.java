@@ -105,7 +105,9 @@ public class GuiMultiplayerLobby extends Gui {
 			if (packet instanceof PacketMultiplayerLobbyInfo) {
 				PacketMultiplayerLobbyInfo lobbyInfo = (PacketMultiplayerLobbyInfo) packet;
 				String[] clientNames = lobbyInfo.playerNames;
-				playersList.text = clientNames;
+				if (clientNames != null) {
+					playersList.text = clientNames;
+				}
 			}
 		}
 	}

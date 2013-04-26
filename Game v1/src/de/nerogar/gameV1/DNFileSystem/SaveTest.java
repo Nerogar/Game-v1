@@ -17,19 +17,11 @@ public class SaveTest {
 	}
 
 	public void addIrgendwas() {
-		/*int[] intarray = { 1, 2, 3, 4, 5, 6 };
-		dnFile.addNode("test.1", 1l);
-		dnFile.addNode("test.a.2", intarray);
-		dnFile.addNode("3", '*');
-		dnFile.addNode("test.4", 4);
-		dnFile.addNode("test.5", "inhalt 1");
-		dnFile.addNode("abc.def.ghi.6", new String[] { "inhalt 1", "inhalt 2" });*/
+		dnFile = new DNFile("");
 
-		byte[] testarray = { 0, 1 };
+		dnFile.addNode("playernames", "Nerogar");
 
-		dnFile.addNode("abc", testarray);
-		dnFile.addNode("def", testarray);
-		dnFile.addNode("0abc", testarray);
+		System.out.println("playernames" + dnFile.getString("playernames"));
 
 		System.out.println("--add fertig");
 	}
@@ -45,7 +37,12 @@ public class SaveTest {
 	}
 
 	public void auslesen() {
-		System.out.println(dnFile.getByteArray("abc")[1]);
+		String[] test = dnFile.getStringArray("playernames");
+		for (String s : test) {
+			System.out.println(s);
+		}
+		System.out.println("size: " + dnFile.toByteArray().length);
+		System.out.println();
 		System.out.println("--lesen fertig");
 	}
 

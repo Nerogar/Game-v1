@@ -37,8 +37,12 @@ public class ReceiveThread extends Thread {
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
 				System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
-				receivedPacket.unpack();
-
+				try {
+					receivedPacket.unpack();
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("HIER IST DER FEHLER!!!!");
+				}
 				//hardcoded PacketID for connectionData (0)
 				if (!client.connectionInfoReceived && packetID == 0) {
 					client.setConnectionInfo((PacketConnectionInfo) receivedPacket);

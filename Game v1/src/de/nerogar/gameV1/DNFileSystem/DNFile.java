@@ -254,6 +254,9 @@ public class DNFile {
 		} else if (value instanceof String) {
 			nodePath.addNodePath(name, DNHelper.STRING, 1, value);
 		} else if (value instanceof String[]) {
+			for (int i = 0; i < ((String[]) value).length; i++) {
+				if (((String[]) value)[i] == null) ((String[]) value)[i] = "null";
+			}
 			nodePath.addNodePath(name, DNHelper.STRING, ((String[]) value).length, value);
 		}
 	}
@@ -511,8 +514,7 @@ public class DNFile {
 	}
 
 	public int getFoldersSize(String name) {
-		DNNodePath test = nodePath.getNodepath(name);
-		return test.getFoldersSize();
+		return nodePath.getNodepath(name).getFoldersSize();
 	}
 
 	public int getSize(String name) {
