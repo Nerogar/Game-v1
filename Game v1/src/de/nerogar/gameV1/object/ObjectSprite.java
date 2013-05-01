@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import de.nerogar.gameV1.Camera;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.image.TextureBank;
+import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class ObjectSprite extends Object3D {

@@ -2,7 +2,7 @@ package de.nerogar.gameV1.generator;
 
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.image.Noise;
+import de.nerogar.gameV1.graphics.Noise;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Land;
 import de.nerogar.gameV1.level.Tile;

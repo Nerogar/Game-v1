@@ -3,7 +3,7 @@ package de.nerogar.gameV1.gui;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import de.nerogar.gameV1.image.*;
+import de.nerogar.gameV1.graphics.*;
 
 public class GElementSlider extends GElement {
 	private float sliderWidth;

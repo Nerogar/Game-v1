@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.InputHandler;
-import de.nerogar.gameV1.image.*;
+import de.nerogar.gameV1.graphics.*;
 
 public class GElementTextField extends GElement {
 	public boolean numOnly = false, aktiveMessage, active;

@@ -2,7 +2,7 @@ package de.nerogar.gameV1.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import de.nerogar.gameV1.image.TextureBank;
+import de.nerogar.gameV1.graphics.TextureBank;
 
 public class FontRenderer {
 	public static final int LEFT = 1001;

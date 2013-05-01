@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.gui.FontRenderer;
-import de.nerogar.gameV1.image.TextureBank;
 
 public class RenderHelper {
 	public static final int VERT = 1001;

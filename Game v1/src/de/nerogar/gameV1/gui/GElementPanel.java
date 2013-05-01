@@ -2,7 +2,7 @@ package de.nerogar.gameV1.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import de.nerogar.gameV1.image.*;
+import de.nerogar.gameV1.graphics.*;
 
 public class GElementPanel extends GElement {
 	private String bgImage;
