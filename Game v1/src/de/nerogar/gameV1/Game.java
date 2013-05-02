@@ -67,7 +67,7 @@ public class Game {
 					double gcTime = (time2 - time1) / 1000000D;
 					System.out.println("Garbage Collector: " + gcTime + "ms");
 				}
-
+				RenderEngine.instance.checkErrors();
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}

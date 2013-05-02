@@ -36,8 +36,8 @@ public class Shader {
 	public void compile() {
 		if (compiled) {
 			glDeleteProgram(shaderHandle);
-			glDeleteShader(vertexShaderHandle);
-			glDeleteShader(fragmentShaderHandle);
+			//glDeleteShader(vertexShaderHandle);
+			//glDeleteShader(fragmentShaderHandle);
 		}
 
 		shaderHandle = glCreateProgram();

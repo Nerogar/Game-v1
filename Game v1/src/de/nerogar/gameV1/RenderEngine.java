@@ -218,4 +218,15 @@ public class RenderEngine {
 
 		GameOptions.instance.setOption("fullscreen", fullscreen);
 	}
+
+	public void checkErrors() {
+		boolean debug = GameOptions.instance.getBoolOption("debug");
+
+		int errorCode = glGetError();
+		if (errorCode != GL_NO_ERROR && debug) {
+			String errorString = GLU.gluErrorString(errorCode);
+			System.out.println("openGL error detected:");
+			System.out.println(errorString);
+		}
+	}
 }
