@@ -33,10 +33,10 @@ public class DebugFelk {
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forest.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
 
-		Bone rootBone = new Bone(null, new Vector3d(0, 10, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		Bone rootBone = new Bone(null, new Vector3d(10, 5, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
 		Bone[] bones = new Bone[2];
-		bones[0] = new Bone(rootBone, new Vector3d(1, -3, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
-		bones[1] = new Bone(rootBone, new Vector3d(0, -1, 2), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		bones[0] = new Bone(rootBone, new Vector3d(1, 3, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		bones[1] = new Bone(bones[0], new Vector3d(0, 1, 2), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
 		//bones[2] = new Bone(bones[1], new Vector3d(3, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
 
 		testSkelett = new Skeleton(rootBone, bones);
@@ -73,8 +73,20 @@ public class DebugFelk {
 			System.out.println(v2.toString());
 		}
 
-		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
+		if (InputHandler.isKeyDown(Keyboard.KEY_X)) {
+			testSkelett.bones[0].relRotation.add(new Vector3d(MathHelper.DegToRad(1), 0, 0));
+		}
+		
+		if (InputHandler.isKeyDown(Keyboard.KEY_Y)) {
+			testSkelett.bones[0].relRotation.add(new Vector3d(0, MathHelper.DegToRad(1), 0));
+		}
+		
+		if (InputHandler.isKeyDown(Keyboard.KEY_Z)) {
 			testSkelett.bones[0].relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
+		}
+		
+		if (InputHandler.isKeyDown(Keyboard.KEY_3)) {
+			System.out.println("0,0,0 translated through bone 0: "+testSkelett.bones[0].translate(new Vector3d(0,0,0)));
 		}
 
 		testSkelett.updateSkeleton();

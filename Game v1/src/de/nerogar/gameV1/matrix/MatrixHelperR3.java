@@ -39,7 +39,7 @@ public class MatrixHelperR3 {
 	}
 
 	public static Vector3d rotateAt(Vector3d v, Line rotLine, float alpha) {
-		return rotate(v.subtract(rotLine.getStart()), rotLine.getDirection(), alpha).add(rotLine.getStart());
+		return rotate(Vector3d.subtract(v, rotLine.getStart()), rotLine.getDirection(), alpha).add(rotLine.getStart());
 	}
 
 	public static Vector3d rotate(Vector3d v, Vector3d vRot, float alpha) {

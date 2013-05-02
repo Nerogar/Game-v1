@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.gui.FontRenderer;
+import de.nerogar.gameV1.physics.Line;
 
 public class RenderHelper {
 	public static final int VERT = 1001;
@@ -179,6 +180,10 @@ public class RenderHelper {
 		glVertex3f(d.getXf(), d.getYf(), d.getZf());
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
+	}
+	
+	public static void drawLine(Line line, int color) {
+		drawLine(line.getStart(), Vector3d.add(line.getStart(), line.getDirection()), color);
 	}
 	
 	public static void drawLine(Vector3d a, Vector3d b, int color) {

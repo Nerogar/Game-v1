@@ -18,9 +18,9 @@ public class Skeleton {
 	}
 	
 	public void updateSkeleton() {
-		rootBone.updateLocalAxes();
+		rootBone.updateBone();
 		for(Bone bone: bones) {
-			bone.updateLocalAxes();
+			bone.updateBone();
 		}
 	}
 	
