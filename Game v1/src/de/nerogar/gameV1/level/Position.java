@@ -15,6 +15,11 @@ public class Position {
 		this.z = z;
 	}
 
+	public Position(Position pos) {
+		this.x = pos.x;
+		this.z = pos.z;
+	}
+
 	public void add(Position newPosition) {
 		x += newPosition.x;
 		z += newPosition.z;
@@ -23,6 +28,29 @@ public class Position {
 	public void subtract(Position newPosition) {
 		x -= newPosition.x;
 		z -= newPosition.z;
+	}
+
+	public void multiply(int mult) {
+		x *= mult;
+		z *= mult;
+	}
+
+	public static Position add(Position pos1, Position pos2) {
+		Position retPos = new Position(pos1);
+		retPos.add(pos2);
+		return retPos;
+	}
+
+	public static Position subtract(Position pos1, Position pos2) {
+		Position retPos = new Position(pos1);
+		retPos.subtract(pos2);
+		return retPos;
+	}
+
+	public static Position multiply(Position pos1, int mult) {
+		Position retPos = new Position(pos1);
+		retPos.multiply(mult);
+		return retPos;
 	}
 
 	@Override

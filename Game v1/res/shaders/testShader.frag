@@ -2,6 +2,7 @@ varying vec4 verpos;
 uniform float time;
 uniform vec2 center;
 //uniform float width;
+uniform sampler2D texture1;
 
 void main(){
 	/*vec4 color;
@@ -30,5 +31,9 @@ void main(){
 	float colorA = color.a * waveMult * distMult;
 
 	gl_FragColor = vec4(colorR, colorG, colorB, colorA);*/
-	gl_FragColor = vec4(verpos.x/64, verpos.y/5, verpos.z/64, 1);
+
+	float heightMult = (verpos.y / 5) + 0.4;
+	vec4 distVec = verpos - vec4(center.x, 0, center.y, 0);
+	//float distMult = 1 - sqrt(distVec.x * distVec.x + distVec.z * distVec.z) / 100;
+	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult; //And that is all we need.
 }

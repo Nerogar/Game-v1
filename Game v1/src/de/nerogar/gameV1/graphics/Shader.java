@@ -7,7 +7,7 @@ import java.io.*;
 
 public class Shader {
 
-	private int shaderHandle;
+	public int shaderHandle;
 	public String name;
 	private String vertexShaderFile, vertexShader;
 	private String fragmentShaderFile, fragmentShader;

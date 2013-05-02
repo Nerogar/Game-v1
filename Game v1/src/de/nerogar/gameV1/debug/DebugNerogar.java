@@ -1,11 +1,14 @@
 package de.nerogar.gameV1.debug;
 
+import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.ObjectMatrix;
+import static org.lwjgl.opengl.GL20.*;
 
 public class DebugNerogar {
 
@@ -28,8 +31,7 @@ public class DebugNerogar {
 		testShader.setVertexShader("res/shaders/testShader.vert");
 		testShader.setFragmentShader("res/shaders/testShader.frag");
 		testShader.compile();
-		
-		
+
 		/*
 		 * noch kleine Probleme beim erstellen von Shadern
 		 * vSync geht nicht (shader compile ist falsch)
@@ -41,10 +43,15 @@ public class DebugNerogar {
 	public void run() {
 		//shader tests
 
-		Shader testShader = ShaderBank.instance.getShader("test");
-		testShader.reloadFiles();
-		testShader.compile();
-
+		//Shader testShader = ShaderBank.instance.getShader("test");
+		//testShader.reloadFiles();
+		//testShader.compile();
+		/*if (InputHandler.isKeyPressed(Keyboard.KEY_L)) {
+			Vector3d center = game.world.camera.getCamPosition();
+			int test = glGetUniformLocation(testShader.shaderHandle, "center");
+			System.out.println(test);
+			glUniform2f(test, center.getXf(), center.getZf());
+		}*/
 		//particle tests
 
 		time += game.timer.delta;
@@ -119,7 +126,7 @@ public class DebugNerogar {
 	}
 
 	public void additionalRender() {
-		
+
 	}
 
 }
