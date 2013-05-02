@@ -180,5 +180,16 @@ public class RenderHelper {
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 	}
+	
+	public static void drawLine(Vector3d a, Vector3d b, int color) {
+		glDisable(GL_TEXTURE_2D);
+		glLineWidth(2.5f);
+		glColor4f(getR(color), getG(color), getB(color), getA(color));
+		glBegin(GL_LINES);
+		glVertex3f(a.getXf(), a.getYf(), a.getZf());
+		glVertex3f(b.getXf(), b.getYf(), b.getZf());
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
+	}
 
 }

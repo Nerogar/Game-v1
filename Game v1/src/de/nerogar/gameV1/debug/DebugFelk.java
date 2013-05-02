@@ -8,12 +8,11 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.animation.Bone;
+import de.nerogar.gameV1.animation.Skeleton;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.matrix.Matrix;
-import de.nerogar.gameV1.matrix.MatrixHelperR3;
-import de.nerogar.gameV1.matrix.MatrixMultiplicationException;
-import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.sound.ALBufferBank;
 import de.nerogar.gameV1.sound.ALSource;
 import de.nerogar.gameV1.sound.SoundManager;
@@ -22,6 +21,7 @@ public class DebugFelk {
 
 	private Game game;
 	public ALSource sound;
+	public Skeleton testSkelett;
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -32,6 +32,15 @@ public class DebugFelk {
 		//SoundManager.instance.preLoadSounds();
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forest.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
+
+		Bone rootBone = new Bone(null, new Vector3d(0, 10, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		Bone[] bones = new Bone[2];
+		bones[0] = new Bone(rootBone, new Vector3d(1, -3, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		bones[1] = new Bone(rootBone, new Vector3d(0, -1, 2), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		//bones[2] = new Bone(bones[1], new Vector3d(3, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+
+		testSkelett = new Skeleton(rootBone, bones);
+
 		//if (sound != null) sound.play();
 		//AL10.alDopplerVelocity(320f);
 	}
@@ -60,20 +69,15 @@ public class DebugFelk {
 			m.set(2, 0, 1);
 			Matrix v = new Vector3d(2, 3, 4).toMatrix();
 			Vector3d v2 = null;
-			try {
-				v2 = Matrix.multiply(m, v).toVector3d();
-			} catch (MatrixMultiplicationException e) {
-				e.printStackTrace();
-			}
+			v2 = Matrix.multiply(m, v).toVector3d();
 			System.out.println(v2.toString());
 		}
 
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
-			Vector3d a = new Vector3d(10, 10, 10);
-			//Vector3d b = MatrixHelper.rotateR3(a, new Vector3d(0, 1, 0), (float) MathHelper.DegToRad(90));
-			Vector3d b = MatrixHelperR3.rotateAt(a, new Line(new Vector3d(8, 8, 8), new Vector3d(1, 0, 1)), (float) MathHelper.DegToRad(180));
-			System.out.println(b);
+			testSkelett.bones[0].relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
 		}
+
+		testSkelett.updateSkeleton();
 
 	}
 
@@ -82,6 +86,10 @@ public class DebugFelk {
 		ALBufferBank.instance.clear();
 		//bgMusic.destroy();
 		//bgMusic2.destroy();
+	}
+
+	public void additionalRender() {
+		testSkelett.drawSkeleton();
 	}
 
 }

@@ -29,8 +29,12 @@ public class Matrix {
 		data[row * cols + col] = val;
 	}
 
-	public static Matrix multiply(Matrix a, Matrix b) throws MatrixMultiplicationException {
-		if (a.getCols() != b.getRows()) throw new MatrixMultiplicationException("A.cols not equal to B.rows");
+	public static Matrix multiply(Matrix a, Matrix b) {
+		if (a.getCols() != b.getRows()) try {
+			throw new MatrixMultiplicationException("A.cols not equal to B.rows");
+		} catch (MatrixMultiplicationException e) {
+			e.printStackTrace();
+		}
 		//if (a.getCols() != b.getRows()) return null;
 		Matrix m = new Matrix(a.getRows(), b.getCols());
 		for (int i = 0; i < a.getRows(); i++) {
