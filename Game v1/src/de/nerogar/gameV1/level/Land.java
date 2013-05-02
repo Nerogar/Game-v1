@@ -12,6 +12,8 @@ import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.physics.Ray;
 
@@ -397,6 +399,10 @@ public class Land {
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
+		Shader testShader = ShaderBank.instance.getShader("test");
+
+		testShader.activate();
+
 		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
 			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
 				Chunk tempChunk = getChunk(new Position(i, j));
@@ -408,6 +414,9 @@ public class Land {
 				}
 			}
 		}
+
+		testShader.deactivate();
+
 		//updateBuildable();
 		/*
 		if (buildableEntity != null) {

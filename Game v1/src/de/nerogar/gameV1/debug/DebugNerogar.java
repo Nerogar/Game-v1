@@ -2,6 +2,8 @@ package de.nerogar.gameV1.debug;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.level.EntityTestparticle;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -11,18 +13,40 @@ public class DebugNerogar {
 	private EntityTestparticle[] testParticles;
 	private boolean spawned = false;
 	public double time = 0;
+
 	// war private, gar aber eine Warning geworfen
-	
+
 	public DebugNerogar(Game game) {
 		this.game = game;
 
 	}
 
 	public void startup() {
+		ShaderBank.instance.createShaderProgramm("test");
+		Shader testShader = ShaderBank.instance.getShader("test");
 
+		testShader.setVertexShader("res/shaders/testShader.vert");
+		testShader.setFragmentShader("res/shaders/testShader.frag");
+		testShader.compile();
+		
+		
+		/*
+		 * noch kleine Probleme beim erstellen von Shadern
+		 * vSync geht nicht (shader compile ist falsch)
+		 * schwarz gerendert ohne fragment shader
+		 * 
+		 */
 	}
 
 	public void run() {
+		//shader tests
+
+		Shader testShader = ShaderBank.instance.getShader("test");
+		testShader.reloadFiles();
+		testShader.compile();
+
+		//particle tests
+
 		time += game.timer.delta;
 
 		if (game.world.isLoaded && !spawned) {
@@ -47,8 +71,8 @@ public class DebugNerogar {
 			int iteration = (int) (game.timer.getFramecount() % testParticles.length);
 
 			testParticles[iteration].matrix.position = new Vector3d(0, 5, 0);
-			float x = (float) (Math.random() * force) - force/2;
-			float z = (float) (Math.random() * force) - force/2;
+			float x = (float) (Math.random() * force) - force / 2;
+			float z = (float) (Math.random() * force) - force / 2;
 			float y = (float) (Math.random() * 12);
 			testParticles[iteration].addForce(new Vector3d(x, y, z));
 
@@ -92,6 +116,10 @@ public class DebugNerogar {
 
 	public void end() {
 
+	}
+
+	public void additionalRender() {
+		
 	}
 
 }
