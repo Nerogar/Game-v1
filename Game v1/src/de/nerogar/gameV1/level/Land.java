@@ -12,7 +12,7 @@ import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.generator.LevelGenerator;
-import de.nerogar.gameV1.image.TextureBank;
+import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Land {

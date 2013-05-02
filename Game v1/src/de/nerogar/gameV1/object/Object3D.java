@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import de.nerogar.gameV1.RenderHelper;
-import de.nerogar.gameV1.image.TextureBank;
+import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class Object3D {

@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import de.nerogar.gameV1.graphics.TextureBank;
 import de.nerogar.gameV1.gui.FontRenderer;
-import de.nerogar.gameV1.image.TextureBank;
 
 public class RenderHelper {
 	public static final int VERT = 1001;
@@ -177,6 +177,17 @@ public class RenderHelper {
 		glVertex3f(b.getXf(), b.getYf(), b.getZf());
 		glVertex3f(c.getXf(), c.getYf(), c.getZf());
 		glVertex3f(d.getXf(), d.getYf(), d.getZf());
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
+	}
+	
+	public static void drawLine(Vector3d a, Vector3d b, int color) {
+		glDisable(GL_TEXTURE_2D);
+		glLineWidth(2.5f);
+		glColor4f(getR(color), getG(color), getB(color), getA(color));
+		glBegin(GL_LINES);
+		glVertex3f(a.getXf(), a.getYf(), a.getZf());
+		glVertex3f(b.getXf(), b.getYf(), b.getZf());
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 	}

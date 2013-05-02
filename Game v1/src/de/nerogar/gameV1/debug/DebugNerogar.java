@@ -94,4 +94,8 @@ public class DebugNerogar {
 
 	}
 
+	public void additionalRender() {
+		
+	}
+
 }

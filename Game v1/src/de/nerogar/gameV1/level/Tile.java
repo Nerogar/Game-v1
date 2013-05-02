@@ -1,7 +1,7 @@
 package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Vector2d;
-import de.nerogar.gameV1.image.SpriteSheet;
+import de.nerogar.gameV1.graphics.SpriteSheet;
 
 public abstract class Tile {
 	public static final TileDirt TILE_DIRT = new TileDirt();

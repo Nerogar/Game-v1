@@ -192,6 +192,8 @@ public class World {
 		//land.renderOverlay();
 		land.render(loadPosition, maxChunkRenderDistance);
 		entityList.render(loadPosition, maxChunkRenderDistance);
+		game.debugFelk.additionalRender();
+		game.debugNerogar.additionalRender();
 
 		game.world.collisionComparer.renderGrid();
 		//InputHandler.renderMouseRay();
