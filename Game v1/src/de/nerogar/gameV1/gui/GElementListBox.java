@@ -5,7 +5,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import de.nerogar.gameV1.RenderHelper;
-import de.nerogar.gameV1.image.*;
+import de.nerogar.gameV1.graphics.*;
 
 public class GElementListBox extends GElement {
 	public int max;

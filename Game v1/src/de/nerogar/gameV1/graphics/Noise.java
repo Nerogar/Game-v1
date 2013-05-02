@@ -1,4 +1,4 @@
-package de.nerogar.gameV1.image;
+package de.nerogar.gameV1.graphics;
 
 import java.util.Random;
 

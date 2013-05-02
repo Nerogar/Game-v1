@@ -1,4 +1,4 @@
-package de.nerogar.gameV1.image;
+package de.nerogar.gameV1.graphics;
 
 public class NoiseTable {
 	public int[] valuesX, valuesY;
