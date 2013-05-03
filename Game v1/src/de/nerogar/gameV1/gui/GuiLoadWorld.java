@@ -97,17 +97,17 @@ public class GuiLoadWorld extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == loadButton.id) {
+		if (id == loadButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			saveProvider.loadWorld(game, saveList.clickedIndex);
-		} else if (id == renameButton.id) {
+		} else if (id == renameButton.id && mouseButton == 0) {
 			game.guiList.alert(newWorldNameAlert);
-		} else if (id == deleteButton.id) {
+		} else if (id == deleteButton.id && mouseButton == 0) {
 			game.guiList.alert(deleteWorldAlert);
-		} else if (id == createWorldButton.id) {
+		} else if (id == createWorldButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiCreateWorld(game));
-		} else if (id == backButton.id) {
+		} else if (id == backButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMain(game));
 		}

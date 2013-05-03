@@ -129,9 +129,9 @@ public class GuiMultiplayerLobby extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == backButton.id) {
+		if (id == backButton.id && mouseButton == 0) {
 			disconnect();
-		} else if (id == readyButton.id) {
+		} else if (id == readyButton.id && mouseButton == 0) {
 			readyState = !readyState;
 		}
 	}

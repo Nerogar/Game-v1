@@ -57,10 +57,10 @@ public class GuiMultiplayerCreate extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == backButton.id) {
+		if (id == backButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayer(game));
-		} else if (id == createButton.id) {
+		} else if (id == createButton.id && mouseButton == 0) {
 			server = new Server();
 			client = new Client("localhost", server.port);
 

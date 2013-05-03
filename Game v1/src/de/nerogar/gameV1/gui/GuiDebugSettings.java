@@ -59,10 +59,10 @@ public class GuiDebugSettings extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == showAABBsButton.id) {
+		if (id == showAABBsButton.id && mouseButton == 0) {
 			GameOptions.instance.switchBoolOption("showAABBs");
 			showAABBsButton.text = String.valueOf(GameOptions.instance.getBoolOption("showAABBs"));
-		} else if (id == okButton.id) {
+		} else if (id == okButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));
 		}

@@ -97,7 +97,7 @@ public class GuiMain extends Gui {
 		if (id == singleplayerButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiLoadWorld(game));
-		} else if (id == multiplayerButton.id) {
+		} else if (id == multiplayerButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayer(game));
 		} else if (id == videosettingsButton.id && mouseButton == 0) {

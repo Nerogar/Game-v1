@@ -103,22 +103,22 @@ public class GuiMultiplayerJoin extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == backButton.id) {
+		if (id == backButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayer(game));
-		} else if (id == addServerButton.id) {
+		} else if (id == addServerButton.id && mouseButton == 0) {
 			game.guiList.alert(newServerAdressAlert);
-		} else if (id == removeServerButton.id) {
+		} else if (id == removeServerButton.id && mouseButton == 0) {
 			if (serverList.clickedIndex >= 0) {
 				ServerList.instance.removeServer(serverList.clickedIndex);
 				serverList.text = ServerList.instance.getAsStringArray();
 			}
-		} else if (id == directConnectButton.id) {
+		} else if (id == directConnectButton.id && mouseButton == 0) {
 			client = new Client(adressText.getText(), Integer.parseInt(portText.getText()));
 
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayerLobby(game, null, client));
-		} else if (id == listConnectButton.id) {
+		} else if (id == listConnectButton.id && mouseButton == 0) {
 			int index = serverList.clickedIndex;
 			if (index != -1) {
 				client = new Client(ServerList.instance.getAdress(index), ServerList.instance.getPort(index));

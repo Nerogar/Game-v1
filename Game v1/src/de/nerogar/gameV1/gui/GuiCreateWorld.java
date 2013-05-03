@@ -60,7 +60,7 @@ public class GuiCreateWorld extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == createButton.id) {
+		if (id == createButton.id && mouseButton == 0) {
 			String name = worldNameTextField.getText();
 			String seed = seedTextField.getText();
 
@@ -73,7 +73,7 @@ public class GuiCreateWorld extends Gui {
 				}
 				game.guiList.removeGui(getName());
 			}
-		} else if (id == backButton.id) {
+		} else if (id == backButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiLoadWorld(game));
 		}

@@ -57,13 +57,13 @@ public class GuiMultiplayer extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == backButton.id) {
+		if (id == backButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMain(game));
-		} else if (id == createGameButton.id) {
+		} else if (id == createGameButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayerCreate(game));
-		} else if (id == joinGameButton.id) {
+		} else if (id == joinGameButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayerJoin(game));
 		}

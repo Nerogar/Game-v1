@@ -43,15 +43,18 @@ public class DebugNerogar {
 	public void run() {
 		//shader tests
 
-		//Shader testShader = ShaderBank.instance.getShader("test");
+		Shader testShader = ShaderBank.instance.getShader("test");
 		//testShader.reloadFiles();
 		//testShader.compile();
-		/*if (InputHandler.isKeyPressed(Keyboard.KEY_L)) {
+
+		testShader.activate();
+
+		if (InputHandler.isKeyPressed(Keyboard.KEY_L)) {
 			Vector3d center = game.world.camera.getCamPosition();
-			int test = glGetUniformLocation(testShader.shaderHandle, "center");
-			System.out.println(test);
-			glUniform2f(test, center.getXf(), center.getZf());
-		}*/
+			glUniform2f(glGetUniformLocation(testShader.shaderHandle, "center"), center.getXf(), center.getZf());
+		}
+
+		testShader.deactivate();
 		//particle tests
 
 		time += game.timer.delta;

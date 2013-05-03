@@ -51,22 +51,22 @@ public class GuiBuildingTest extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == buttonNone.id) {
+		if (id == buttonNone.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = -1;
-		} else if (id == buttonBlue.id) {
+		} else if (id == buttonBlue.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = 0;
-		} else if (id == buttonGreen.id) {
+		} else if (id == buttonGreen.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = 1;
-		} else if (id == buttonOrange.id) {
+		} else if (id == buttonOrange.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = 2;
-		} else if (id == buttonPink.id) {
+		} else if (id == buttonPink.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = 3;
-		} else if (id == buttonRed.id) {
+		} else if (id == buttonRed.id && mouseButton == 0) {
 			idChanged = true;
 			selectedID = 4;
 		}

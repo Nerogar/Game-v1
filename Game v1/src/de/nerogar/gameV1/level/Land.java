@@ -402,15 +402,12 @@ public class Land {
 		Shader testShader = ShaderBank.instance.getShader("test");
 
 		testShader.activate();
-
+		
 		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
 			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
 				Chunk tempChunk = getChunk(new Position(i, j));
 				if (tempChunk != null) {
-					//glPushMatrix();
-					//glTranslatef(tempChunk.chunkPosition.x * Chunk.CHUNKSIZE, 0, tempChunk.chunkPosition.z * Chunk.CHUNKSIZE);//position anpassen
 					tempChunk.render();
-					//glPopMatrix();
 				}
 			}
 		}

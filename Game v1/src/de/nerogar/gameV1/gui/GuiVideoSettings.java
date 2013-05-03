@@ -110,13 +110,13 @@ public class GuiVideoSettings extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == vSyncButton.id) {
+		if (id == vSyncButton.id && mouseButton == 0) {
 			GameOptions.instance.switchBoolOption("vSync");
 			vSyncButton.text = String.valueOf(GameOptions.instance.getBoolOption("vSync"));
-		} else if (id == debugSettingsButton.id) {
+		} else if (id == debugSettingsButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiDebugSettings(game));
-		} else if (id == okButton.id) {
+		} else if (id == okButton.id && mouseButton == 0) {
 			if (resSlider.position != displayMode) {
 				renderEngine.setDisplayMode(resSlider.position);
 			}

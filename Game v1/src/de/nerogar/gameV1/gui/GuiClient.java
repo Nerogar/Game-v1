@@ -54,13 +54,13 @@ public class GuiClient extends Gui {
 
 	@Override
 	public void clickButton(int id, int mouseButton) {
-		if (id == backButton.id) {
+		if (id == backButton.id && mouseButton == 0) {
 			if (client != null) {
 				client.stopClient();
 			}
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMain(game));
-		} else if (id == sendDataButton.id) {
+		} else if (id == sendDataButton.id && mouseButton == 0) {
 			if (client != null) {
 				PacketTestString testPacket = new PacketTestString();
 				testPacket.name = "sendTest";
@@ -71,7 +71,7 @@ public class GuiClient extends Gui {
 				//long time2 = System.nanoTime();
 				//System.out.println("Send: " + (time2 - time1) / 1000000D + " ms");
 			}
-		} else if (id == startClientButton.id) {
+		} else if (id == startClientButton.id && mouseButton == 0) {
 			if (client != null) {
 				client.stopClient();
 			}
