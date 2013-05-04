@@ -37,8 +37,17 @@ public class MatrixHelperR3 {
 	public static Matrix getScalingMatrix(Vector3d scaling) {
 		return vectorToEMatrix(scaling);
 	}
+	
+	public static Vector3d applyRotation(Matrix matrix, Vector3d v) {
+		return Matrix.multiply(matrix, v.toMatrix()).toVector3d();
+	}
+	
+	public static Vector3d applyRotationAt(Matrix matrix, Vector3d v, Vector3d offset) {
+		return applyRotation(matrix, Vector3d.subtract(v, offset)).add(offset);
+	}
 
 	public static Vector3d rotateAt(Vector3d v, Line rotLine, float alpha) {
+		//System.out.println("rotating "+v.toString()+" at "+rotLine.toString()+" by "+alpha);
 		return rotate(Vector3d.subtract(v, rotLine.getStart()), rotLine.getDirection(), alpha).add(rotLine.getStart());
 	}
 

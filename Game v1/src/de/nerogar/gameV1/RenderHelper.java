@@ -182,17 +182,27 @@ public class RenderHelper {
 		glEnable(GL_TEXTURE_2D);
 	}
 	
-	public static void drawLine(Line line, int color) {
-		drawLine(line.getStart(), Vector3d.add(line.getStart(), line.getDirection()), color);
+	public static void drawLine(Line line, int color, float width) {
+		drawLine(line.getStart(), Vector3d.add(line.getStart(), line.getDirection()), color, width);
 	}
 	
-	public static void drawLine(Vector3d a, Vector3d b, int color) {
+	public static void drawLine(Vector3d a, Vector3d b, int color, float width) {
 		glDisable(GL_TEXTURE_2D);
-		glLineWidth(2.5f);
+		glLineWidth(width);
 		glColor4f(getR(color), getG(color), getB(color), getA(color));
 		glBegin(GL_LINES);
 		glVertex3f(a.getXf(), a.getYf(), a.getZf());
 		glVertex3f(b.getXf(), b.getYf(), b.getZf());
+		glEnd();
+		glEnable(GL_TEXTURE_2D);
+	}
+	
+	public static void drawPoint(Vector3d a, int color, float size) {
+		glDisable(GL_TEXTURE_2D);
+		glPointSize(size);
+		glColor4f(getR(color), getG(color), getB(color), getA(color));
+		glBegin(GL_POINTS);
+		glVertex3f(a.getXf(), a.getYf(), a.getZf());
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 	}

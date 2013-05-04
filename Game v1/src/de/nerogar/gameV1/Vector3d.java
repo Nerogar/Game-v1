@@ -179,11 +179,11 @@ public class Vector3d {
 		this.squaredValue = squaredValue;
 	}
 
-	public Vector3d crossProduct(Vector3d v1) {
+	public Vector3d crossProduct(Vector3d v) {
 		// Kreuzprodukt
-		double newX = getY()*v1.getZ() - getZ()*v1.getY();
-		double newY = getZ()*v1.getX() - getX()*v1.getZ();
-		double newZ = getX()*v1.getY() - getY()*v1.getX();
+		double newX = getY()*v.getZ() - getZ()*v.getY();
+		double newY = getZ()*v.getX() - getX()*v.getZ();
+		double newZ = getX()*v.getY() - getY()*v.getX();
 		setX(newX);
 		setY(newY);
 		setZ(newZ);

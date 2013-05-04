@@ -2,6 +2,7 @@ package de.nerogar.gameV1.animation;
 
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.matrix.Matrix;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.Line;
 
@@ -13,9 +14,14 @@ public class Bone {
 	public Vector3d relScaling;
 	public Vector3d relRotation;
 
-	private Line locXAxis;
-	private Line locYAxis;
-	private Line locZAxis;
+	private Line locXAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(1, 0, 0));
+	private Line locYAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(0, 1, 0));
+	private Line locZAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(0, 0, 1));
+
+	private boolean updated;
+	private Matrix rotationMatrixX = new Matrix(3, 3);
+	private Matrix rotationMatrixY = new Matrix(3, 3);
+	private Matrix rotationMatrixZ = new Matrix(3, 3);
 
 	public Bone(Bone parent, Vector3d pos, Vector3d sca, Vector3d rot) {
 		this.parent = parent;
@@ -25,7 +31,24 @@ public class Bone {
 	}
 
 	public void updateBone() {
+		if (parent != null) if (!parent.isUpdated()) parent.updateBone();
 		updateLocalAxes();
+		updateRotationMatrix();
+		setUpdated(true);
+	}
+
+	private void updateRotationMatrix() {
+		rotationMatrixX = MatrixHelperR3.getRotationMatrix((parent == null) ? locXAxis.getDirection() : parent.locXAxis.getDirection(), relRotation.getXf());
+		rotationMatrixY = MatrixHelperR3.getRotationMatrix((parent == null) ? locYAxis.getDirection() : parent.locYAxis.getDirection(), relRotation.getYf());
+		rotationMatrixZ = MatrixHelperR3.getRotationMatrix((parent == null) ? locZAxis.getDirection() : parent.locZAxis.getDirection(), relRotation.getZf());
+	}
+
+	public boolean isUpdated() {
+		return updated;
+	}
+
+	private void setUpdated(boolean b) {
+		updated = b;
 	}
 
 	public void updateLocalAxes() {
@@ -34,103 +57,43 @@ public class Bone {
 			locYAxis = new Line(relPosition.clone(), new Vector3d(0, 1, 0));
 			locZAxis = new Line(relPosition.clone(), new Vector3d(0, 0, 1));
 		} else {
-			//parent.updateLocalAxes();
-			Vector3d x1 = parent.locXAxis.getStart();
-			Vector3d x2 = Vector3d.add(x1, parent.locXAxis.getDirection());
-			Vector3d y1 = parent.locYAxis.getStart();
-			Vector3d y2 = Vector3d.add(y1, parent.locYAxis.getDirection());
-			Vector3d z1 = parent.locZAxis.getStart();
-			Vector3d z2 = Vector3d.add(z1, parent.locZAxis.getDirection());
-
-			x1.add(relPosition);
-			x2.add(relPosition);
-
-			y1.add(relPosition);
-			y2.add(relPosition);
-
-			z1.add(relPosition);
-			z2.add(relPosition);
-			
-			x1 = MatrixHelperR3.rotateAt(x1, parent.locXAxis, relRotation.getXf());
-			x2 = MatrixHelperR3.rotateAt(x2, parent.locXAxis, relRotation.getXf());
-			x1 = MatrixHelperR3.rotateAt(x1, parent.locYAxis, relRotation.getYf());
-			x2 = MatrixHelperR3.rotateAt(x2, parent.locYAxis, relRotation.getYf());
-			x1 = MatrixHelperR3.rotateAt(x1, parent.locZAxis, relRotation.getZf());
-			x2 = MatrixHelperR3.rotateAt(x2, parent.locZAxis, relRotation.getZf());
-
-			y1 = MatrixHelperR3.rotateAt(y1, parent.locXAxis, relRotation.getXf());
-			y2 = MatrixHelperR3.rotateAt(y2, parent.locXAxis, relRotation.getXf());
-			y1 = MatrixHelperR3.rotateAt(y1, parent.locYAxis, relRotation.getYf());
-			y2 = MatrixHelperR3.rotateAt(y2, parent.locYAxis, relRotation.getYf());
-			y1 = MatrixHelperR3.rotateAt(y1, parent.locZAxis, relRotation.getZf());
-			y2 = MatrixHelperR3.rotateAt(y2, parent.locZAxis, relRotation.getZf());
-
-			z1 = MatrixHelperR3.rotateAt(z1, parent.locXAxis, relRotation.getXf());
-			z2 = MatrixHelperR3.rotateAt(z2, parent.locXAxis, relRotation.getXf());
-			z1 = MatrixHelperR3.rotateAt(z1, parent.locYAxis, relRotation.getYf());
-			z2 = MatrixHelperR3.rotateAt(z2, parent.locYAxis, relRotation.getYf());
-			z1 = MatrixHelperR3.rotateAt(z1, parent.locZAxis, relRotation.getZf());
-			z2 = MatrixHelperR3.rotateAt(z2, parent.locZAxis, relRotation.getZf());
-
-			locXAxis = new Line(x1, Vector3d.subtract(x2, x1));
-			locYAxis = new Line(y1, Vector3d.subtract(y2, y1));
-			locZAxis = new Line(z1, Vector3d.subtract(z2, z1));
+			Vector3d o = translate(new Vector3d(0, 0, 0));
+			Vector3d x = translate(new Vector3d(1, 0, 0));
+			Vector3d y = translate(new Vector3d(0, 1, 0));
+			Vector3d z = translate(new Vector3d(0, 0, 1));
+			//Vector3d z = Vector3d.crossProduct(x, y);
+			//System.out.println(Vector3d.dotProduct(x, y)+" "+Vector3d.dotProduct(x, z)+" "+Vector3d.dotProduct(y, z));
+			locXAxis = new Line(o, Vector3d.subtract(x, o).normalize());
+			locYAxis = new Line(o, Vector3d.subtract(y, o).normalize());
+			locZAxis = new Line(o, Vector3d.subtract(z, o).normalize());
 		}
 	}
 
 	public Vector3d translate(Vector3d v) {
 		Vector3d vNew = v.clone();
-		if (parent != null) {
-			vNew = parent.translate(vNew);
-			/*vNew.add(relPosition);
-			vNew = MatrixHelperR3.rotateAt(vNew, locXAxis, relRotation.getXf());
-			vNew = MatrixHelperR3.rotateAt(vNew, locYAxis, relRotation.getYf());
-			vNew = MatrixHelperR3.rotateAt(vNew, locZAxis, relRotation.getZf());
-		} else {
-			vNew.add(relPosition);
-			vNew = MatrixHelperR3.rotateAt(vNew, locXAxis, relRotation.getXf());
-			vNew = MatrixHelperR3.rotateAt(vNew, locYAxis, relRotation.getYf());
-			vNew = MatrixHelperR3.rotateAt(vNew, locZAxis, relRotation.getZf());*/
-		}
-		vNew.add(relPosition);
-		vNew = MatrixHelperR3.rotateAt(vNew, locXAxis, relRotation.getXf());
-		vNew = MatrixHelperR3.rotateAt(vNew, locYAxis, relRotation.getYf());
-		vNew = MatrixHelperR3.rotateAt(vNew, locZAxis, relRotation.getZf());
+		if (parent != null) vNew = parent.translate(vNew);
+		vNew.add(Vector3d.multiply(locXAxis.getDirection(), relPosition.getX() * relScaling.getX()));
+		vNew.add(Vector3d.multiply(locYAxis.getDirection(), relPosition.getY() * relScaling.getY()));
+		vNew.add(Vector3d.multiply(locZAxis.getDirection(), relPosition.getZ() * relScaling.getZ()));
+		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixX, vNew, (parent == null) ? locXAxis.getStart() : parent.locXAxis.getStart());
+		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixY, vNew, (parent == null) ? locYAxis.getStart() : parent.locYAxis.getStart());
+		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixZ, vNew, (parent == null) ? locZAxis.getStart() : parent.locZAxis.getStart());
 		return vNew;
 	}
 
-	/*public void translateAbsolute(Vector3d pos, Vector3d sca, Vector3d rot) {
-
-		position = relPosition;
-		scaling = relScaling;
-		rotation = relRotation;
-
-		position.add(pos);
-		scaling.add(sca);
-		rotation.add(rot);
-
-		Matrix scaleM = sca.toMatrix();
-		position = Matrix.multiply(scaleM, position.toMatrix()).toVector3d();
-		scaling = Matrix.multiply(scaleM, scaling.toMatrix()).toVector3d();
-		rotation = Matrix.multiply(scaleM, rotation.toMatrix()).toVector3d();
-
-		//locXAxis = MatrixHelperR3.rotate(new Vector3d(1,0,0), new Vector3d(), );
-		//locXAxis = MatrixHelperR3.rotateAt(new Vector3d(1,0,0), new Line(pos,new Vector3d(1,0,0)), rot.getX());
-
-		//position = MatrixHelperR3.rotateAt(position, rotLine, rot.getX());
-
-	}*/
-
 	public void renderBone() {
-		//if (parent != null) RenderHelper.drawLine(translate(new Vector3d(0, 0, 0)), translate(relPosition), 0xffffffff);
 		if (parent != null) {
-			RenderHelper.drawLine(parent.translate(parent.relPosition), parent.translate(relPosition), 0xffffffff);
+			RenderHelper.drawLine(translate(new Vector3d(0, 0, 0)), parent.translate(new Vector3d(0, 0, 0)), 0xffffffff, 5);
+		} else {
+			RenderHelper.drawPoint(relPosition, 0xbbdd44ff, 15);
 		}
-		RenderHelper.drawLine(locXAxis, 0xff0000ff);
-		RenderHelper.drawLine(locYAxis, 0x00ff00ff);
-		RenderHelper.drawLine(locZAxis, 0x0000ffff);
-		//RenderHelper.drawLine(new Vector3d(-10, 5, -10), new Vector3d(10, 15, 10), 0xffffffff);
-		//RenderHelper.drawTriangle(new Vector3d(-10, 5, -10), new Vector3d(10, 10, -10), new Vector3d(10, 15, 10), 0xffffffff);
+		RenderHelper.drawLine(locXAxis, 0xff0000ff, 1);
+		RenderHelper.drawLine(locYAxis, 0x00ff00ff, 1);
+		RenderHelper.drawLine(locZAxis, 0x0000ffff, 1);
+	}
+
+	public void markDirty() {
+		setUpdated(false);
 	}
 
 }

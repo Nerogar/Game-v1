@@ -11,16 +11,24 @@ public class Skeleton {
 	}
 	
 	public void drawSkeleton() {
-		//rootBone.renderBone();
+		rootBone.renderBone();
 		for(Bone bone: bones) {
 			bone.renderBone();
 		}
 	}
 	
 	public void updateSkeleton() {
+		markDirty();
 		rootBone.updateBone();
 		for(Bone bone: bones) {
-			bone.updateBone();
+			if (!bone.isUpdated()) bone.updateBone();
+		}
+	}
+
+	private void markDirty() {
+		rootBone.markDirty();
+		for(Bone bone: bones) {
+			bone.markDirty();
 		}
 	}
 	
