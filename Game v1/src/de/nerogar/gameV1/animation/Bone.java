@@ -57,24 +57,36 @@ public class Bone {
 			locYAxis = new Line(relPosition.clone(), new Vector3d(0, 1, 0));
 			locZAxis = new Line(relPosition.clone(), new Vector3d(0, 0, 1));
 		} else {
-			Vector3d o = translate(new Vector3d(0, 0, 0));
-			Vector3d x = translate(new Vector3d(1, 0, 0));
-			Vector3d y = translate(new Vector3d(0, 1, 0));
-			Vector3d z = translate(new Vector3d(0, 0, 1));
-			//Vector3d z = Vector3d.crossProduct(x, y);
-			//System.out.println(Vector3d.dotProduct(x, y)+" "+Vector3d.dotProduct(x, z)+" "+Vector3d.dotProduct(y, z));
-			locXAxis = new Line(o, Vector3d.subtract(x, o).normalize());
-			locYAxis = new Line(o, Vector3d.subtract(y, o).normalize());
-			locZAxis = new Line(o, Vector3d.subtract(z, o).normalize());
+			Vector3d o = translate(new Vector3d(0, 0, 0), true);
+			Vector3d x = translate(new Vector3d(1, 0, 0), true);
+			Vector3d y = translate(new Vector3d(0, 1, 0), true);
+			//Vector3d z = translate(new Vector3d(0, 0, 1));
+			Vector3d ox = Vector3d.subtract(x, o).normalize();
+			Vector3d oy = Vector3d.subtract(y, o).normalize();
+			Vector3d oz = Vector3d.crossProduct(ox, oy);
+			//Vector3d oz = Vector3d.subtract(z, o).normalize();
+			locXAxis = new Line(o, ox);
+			locYAxis = new Line(o, oy);
+			locZAxis = new Line(o, oz);
 		}
 	}
 
 	public Vector3d translate(Vector3d v) {
+		return translate(v, false);
+	}
+	
+	public Vector3d translate(Vector3d v, boolean axis) {
 		Vector3d vNew = v.clone();
 		if (parent != null) vNew = parent.translate(vNew);
-		vNew.add(Vector3d.multiply(locXAxis.getDirection(), relPosition.getX() * relScaling.getX()));
-		vNew.add(Vector3d.multiply(locYAxis.getDirection(), relPosition.getY() * relScaling.getY()));
-		vNew.add(Vector3d.multiply(locZAxis.getDirection(), relPosition.getZ() * relScaling.getZ()));
+		if (!axis) {
+			vNew.add(Vector3d.multiply(locXAxis.getDirection(), relPosition.getX() * relScaling.getX()));
+			vNew.add(Vector3d.multiply(locYAxis.getDirection(), relPosition.getY() * relScaling.getY()));
+			vNew.add(Vector3d.multiply(locZAxis.getDirection(), relPosition.getZ() * relScaling.getZ()));
+		} else {
+			vNew.addX(relPosition.getX() * relScaling.getX());
+			vNew.addY(relPosition.getY() * relScaling.getY());
+			vNew.addZ(relPosition.getZ() * relScaling.getZ());
+		}
 		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixX, vNew, (parent == null) ? locXAxis.getStart() : parent.locXAxis.getStart());
 		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixY, vNew, (parent == null) ? locYAxis.getStart() : parent.locYAxis.getStart());
 		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixZ, vNew, (parent == null) ? locZAxis.getStart() : parent.locZAxis.getStart());
@@ -83,7 +95,8 @@ public class Bone {
 
 	public void renderBone() {
 		if (parent != null) {
-			RenderHelper.drawLine(translate(new Vector3d(0, 0, 0)), parent.translate(new Vector3d(0, 0, 0)), 0xffffffff, 5);
+			//RenderHelper.drawLine(parent.translate(relPosition), parent.translate(new Vector3d(0, 0, 0)), 0xffffffff, 5);
+			RenderHelper.drawLine(locXAxis.getStart(), parent.locXAxis.getStart(), 0xffffffff, 5);
 		} else {
 			RenderHelper.drawPoint(relPosition, 0xbbdd44ff, 15);
 		}
@@ -94,6 +107,11 @@ public class Bone {
 
 	public void markDirty() {
 		setUpdated(false);
+	}
+
+	public void setKeyframe(Keyframe keyframe) {
+		relRotation.set(keyframe.rotation);
+		relScaling.set(keyframe.scaling);
 	}
 
 }

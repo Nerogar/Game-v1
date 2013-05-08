@@ -8,7 +8,10 @@ import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.animation.Animation;
 import de.nerogar.gameV1.animation.Bone;
+import de.nerogar.gameV1.animation.Keyframe;
+import de.nerogar.gameV1.animation.KeyframeSet;
 import de.nerogar.gameV1.animation.Skeleton;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
@@ -22,6 +25,7 @@ public class DebugFelk {
 	private Game game;
 	public ALSource sound;
 	public Skeleton testSkelett;
+	public Animation testAnimation = new Animation();
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -40,6 +44,13 @@ public class DebugFelk {
 		//bones[2] = new Bone(bones[1], new Vector3d(3, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
 
 		testSkelett = new Skeleton(rootBone, bones);
+
+		KeyframeSet kfSet = new KeyframeSet();
+		kfSet.addKeyframes(new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(1, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.5f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(1, .5, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(1, .5, 2), new Vector3d(1, 1, 1)));
+		testAnimation.keyframesMap.put(bones[1], kfSet);
+		testAnimation.length = 5000;
 
 		//if (sound != null) sound.play();
 		//AL10.alDopplerVelocity(320f);
@@ -73,31 +84,36 @@ public class DebugFelk {
 			System.out.println(v2.toString());
 		}
 
+		if (InputHandler.isKeyPressed(Keyboard.KEY_J)) {
+			testAnimation.play();
+		}
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_X)) {
 			testSkelett.rootBone.relRotation.add(new Vector3d(MathHelper.DegToRad(1), 0, 0));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_Y)) {
 			testSkelett.rootBone.relRotation.add(new Vector3d(0, MathHelper.DegToRad(1), 0));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_Z)) {
 			testSkelett.rootBone.relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
 			testSkelett.bones[1].relRotation.add(new Vector3d(MathHelper.DegToRad(1), 0, 0));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_2)) {
 			testSkelett.bones[1].relRotation.add(new Vector3d(0, MathHelper.DegToRad(1), 0));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_3)) {
 			testSkelett.bones[1].relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
 		}
 
-		testSkelett.updateSkeleton();
+		testAnimation.update();
+		testSkelett.update();
 
 	}
 

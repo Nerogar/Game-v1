@@ -259,7 +259,7 @@ public class Vector3d {
 	}
 	
 	public String toString() {
-		return "("+Double.toString(this.getX())+","+Double.toString(this.getY())+","+Double.toString(this.getZ())+")";
+		return "("+Math.round(this.getX()*100)/100f+","+Math.round(this.getY()*100)/100f+","+Math.round(this.getZ()*100)/100f+")";
 	}
 	
 	public Matrix toMatrix() {

@@ -17,7 +17,7 @@ public class Skeleton {
 		}
 	}
 	
-	public void updateSkeleton() {
+	public void update() {
 		markDirty();
 		rootBone.updateBone();
 		for(Bone bone: bones) {
