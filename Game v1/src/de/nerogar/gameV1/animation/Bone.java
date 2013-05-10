@@ -10,9 +10,10 @@ public class Bone {
 
 	public Bone parent;
 
-	public Vector3d relPosition;
-	public Vector3d relScaling;
-	public Vector3d relRotation;
+	public double length;
+	
+	public Vector3d defPosition, defScaling, defRotation;
+	public Vector3d relPosition, relScaling, relRotation;
 
 	private Line locXAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(1, 0, 0));
 	private Line locYAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(0, 1, 0));
@@ -23,11 +24,19 @@ public class Bone {
 	private Matrix rotationMatrixY = new Matrix(3, 3);
 	private Matrix rotationMatrixZ = new Matrix(3, 3);
 
-	public Bone(Bone parent, Vector3d pos, Vector3d sca, Vector3d rot) {
+	public Bone(Bone parent, double length, Vector3d pos, Vector3d sca, Vector3d rot) {
 		this.parent = parent;
-		this.relPosition = pos;
-		this.relScaling = sca;
-		this.relRotation = rot;
+		this.length = length;
+		this.defPosition = pos;
+		this.defScaling = sca;
+		this.defRotation = rot;
+		setToDefault();
+	}
+
+	private void setToDefault() {
+		relPosition = defPosition;
+		relScaling = defScaling;
+		relRotation = defRotation;
 	}
 
 	public void updateBone() {
@@ -53,13 +62,34 @@ public class Bone {
 
 	public void updateLocalAxes() {
 		if (parent == null) {
-			locXAxis = new Line(relPosition.clone(), new Vector3d(1, 0, 0));
-			locYAxis = new Line(relPosition.clone(), new Vector3d(0, 1, 0));
-			locZAxis = new Line(relPosition.clone(), new Vector3d(0, 0, 1));
+			Vector3d x = new Vector3d(1, 0, 0);
+			Vector3d y = new Vector3d(0, 1, 0);
+			Vector3d z = new Vector3d(0, 0, 1);
+
+			/*
+			Matrix rotX = MatrixHelperR3.getRotationMatrix(x, relRotation.getXf());
+			Matrix rotY = MatrixHelperR3.getRotationMatrix(y, relRotation.getYf());
+			Matrix rotZ = MatrixHelperR3.getRotationMatrix(z, relRotation.getZf());
+			
+			x = MatrixHelperR3.applyRotation(rotZ, x);
+			x = MatrixHelperR3.applyRotation(rotY, x);
+			
+			y = MatrixHelperR3.applyRotation(rotX, y);
+			y = MatrixHelperR3.applyRotation(rotZ, y);
+			y = MatrixHelperR3.applyRotation(rotY, y);
+			
+			z = MatrixHelperR3.applyRotation(rotX, z);
+			z = MatrixHelperR3.applyRotation(rotZ, z);
+			z = MatrixHelperR3.applyRotation(rotY, z);
+			*/
+
+			locXAxis = new Line(relPosition.clone(), x);
+			locYAxis = new Line(relPosition.clone(), y);
+			locZAxis = new Line(relPosition.clone(), z);
 		} else {
-			Vector3d o = translate(new Vector3d(0, 0, 0), true);
-			Vector3d x = translate(new Vector3d(1, 0, 0), true);
-			Vector3d y = translate(new Vector3d(0, 1, 0), true);
+			Vector3d o = translate(new Vector3d(length, 0, 0));
+			Vector3d x = translate(new Vector3d(length+1, 0, 0));
+			Vector3d y = translate(new Vector3d(length, 1, 0));
 			//Vector3d z = translate(new Vector3d(0, 0, 1));
 			Vector3d ox = Vector3d.subtract(x, o).normalize();
 			Vector3d oy = Vector3d.subtract(y, o).normalize();
@@ -72,24 +102,20 @@ public class Bone {
 	}
 
 	public Vector3d translate(Vector3d v) {
-		return translate(v, false);
-	}
-	
-	public Vector3d translate(Vector3d v, boolean axis) {
 		Vector3d vNew = v.clone();
 		if (parent != null) vNew = parent.translate(vNew);
-		if (!axis) {
-			vNew.add(Vector3d.multiply(locXAxis.getDirection(), relPosition.getX() * relScaling.getX()));
-			vNew.add(Vector3d.multiply(locYAxis.getDirection(), relPosition.getY() * relScaling.getY()));
-			vNew.add(Vector3d.multiply(locZAxis.getDirection(), relPosition.getZ() * relScaling.getZ()));
+		if (parent != null) {
+			vNew.add(Vector3d.multiply(parent.locXAxis.getDirection(), relPosition.getX() * relScaling.getX() + parent.length * parent.relScaling.getX()));
+			vNew.add(Vector3d.multiply(parent.locYAxis.getDirection(), relPosition.getY() * relScaling.getY()));
+			vNew.add(Vector3d.multiply(parent.locZAxis.getDirection(), relPosition.getZ() * relScaling.getZ()));
 		} else {
 			vNew.addX(relPosition.getX() * relScaling.getX());
 			vNew.addY(relPosition.getY() * relScaling.getY());
 			vNew.addZ(relPosition.getZ() * relScaling.getZ());
 		}
 		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixX, vNew, (parent == null) ? locXAxis.getStart() : parent.locXAxis.getStart());
-		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixY, vNew, (parent == null) ? locYAxis.getStart() : parent.locYAxis.getStart());
 		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixZ, vNew, (parent == null) ? locZAxis.getStart() : parent.locZAxis.getStart());
+		vNew = MatrixHelperR3.applyRotationAt(rotationMatrixY, vNew, (parent == null) ? locYAxis.getStart() : parent.locYAxis.getStart());
 		return vNew;
 	}
 

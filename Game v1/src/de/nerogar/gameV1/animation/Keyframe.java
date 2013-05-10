@@ -15,8 +15,8 @@ public class Keyframe {
 	public Keyframe(float offset, byte interpolation_type, Vector3d rotation, Vector3d scaling) {
 		this.offset = offset;
 		this.interpolation_type = interpolation_type;
-		this.rotation = rotation;
-		this.scaling = scaling;
+		this.rotation = rotation.clone();
+		this.scaling = scaling.clone();
 	}
 	
 	public Keyframe clone() {

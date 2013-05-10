@@ -24,21 +24,27 @@ public class KeyframeSet {
 	}
 
 	public Keyframe getInterpolatedKeyframe(double offset) {
-		Keyframe kf1 = new Keyframe(0, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1));
-		Keyframe kf2 = new Keyframe(1, Keyframe.INTERPOLATE_HOLD, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1));
-		int i;
-		for (i = 0; i < keyframes.size(); i++) {
+		Keyframe kf1 = null, kf2 = null;
+		if (keyframes.get(keyframes.size()-1).offset < 1f) {
+			keyframes.add(new Keyframe(1f, Keyframe.INTERPOLATE_HOLD, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
+		}
+		if (keyframes.get(0).offset > 0f) {
+			addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
+		}
+		//Keyframe kf1 = new Keyframe(0, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1));
+		//Keyframe kf2 = new Keyframe(1, Keyframe.INTERPOLATE_HOLD, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1));
+		for (int i = 0; i < keyframes.size(); i++) {
 			kf2 = keyframes.get(i).clone();
 			if (kf2.offset > offset)
 				break;
 			else if (i == keyframes.size() - 1) {
-				kf1 = kf2.clone();
-				kf2 = new Keyframe(0, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1));
-				kf2.offset = 1;
+				kf1 = keyframes.get(keyframes.size()-2);
+				kf2 = keyframes.get(keyframes.size()-1);
 				break;
 			}
 			kf1 = kf2.clone();
 		}
-		return Interpolator.interpolate(kf1, kf2, offset);
+		Keyframe interpolated = Interpolator.interpolate(kf1, kf2, offset);
+		return interpolated;
 	}
 }

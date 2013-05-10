@@ -19,8 +19,8 @@ public class Animation {
 		if (started < 0) return;
 		float now = System.nanoTime()/1000000f;
 		offset = (now-started)/length;
-		if (offset > 1) {
-			offset = 1;
+		if (offset > 1f) {
+			offset = 1f;
 			started = -1;
 		}
 		
