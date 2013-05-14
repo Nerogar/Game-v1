@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.internalServer;
 
 import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.Timer;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.network.Server;
 
@@ -9,19 +10,21 @@ public class InternalServer extends Thread {
 	private final int TPS = 10;
 	private final double TICK_TIME = (double) 1000 / TPS;
 	private long lastUpdate;
+	private Timer timer;
 	private boolean running = true;
-	
+
 	private Server server;
 
 	//game
 	public World world;
 
-	public InternalServer(Game game) {
+	public InternalServer(Game game, Server server) {
 		setName("IntenalServerThread");
 		System.out.println("Initiated Server");
 		world = new World(game, true);
-		server = new Server();
-		server.start();
+		timer = new Timer();
+		timer.init();
+		this.server = server;
 	}
 
 	public void initiateWorld(String levelName, long seed) {
@@ -40,13 +43,19 @@ public class InternalServer extends Thread {
 		lastUpdate = System.nanoTime();
 		while (running) {
 			mainloop();
+			timer.update();
 			sync();
 		}
+		cleanup();
 	}
 
 	private void mainloop() {
 		//world.update();
 		//for (long i = 0; i < 100000000L; i++);
+	}
+
+	public void cleanup() {
+		world.closeWorld();
 	}
 
 	private void sync() {

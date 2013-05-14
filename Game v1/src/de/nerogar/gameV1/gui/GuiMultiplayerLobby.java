@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.network.*;
 
 public class GuiMultiplayerLobby extends Gui {
@@ -80,7 +81,7 @@ public class GuiMultiplayerLobby extends Gui {
 				if (clients.get(i).connectionInfo != null) {
 					Client connectionClient = clients.get(i);
 					ArrayList<Packet> receivedPackets = connectionClient.getData(Packet.LOBBY_CHANNEL);
-					if(receivedPackets!=null){
+					if (receivedPackets != null) {
 						for (Packet packet : receivedPackets) {
 							processServerPackets(connectionClient, packet);
 						}
@@ -94,7 +95,7 @@ public class GuiMultiplayerLobby extends Gui {
 		//update packets
 		ArrayList<Packet> receivedPackets = client.getData(Packet.LOBBY_CHANNEL);
 		if (receivedPackets != null) {
-			processPackets(receivedPackets);
+			processClientPackets(receivedPackets);
 		}
 
 		//process connection reset
@@ -111,7 +112,7 @@ public class GuiMultiplayerLobby extends Gui {
 		}
 	}
 
-	public void processPackets(ArrayList<Packet> receivedPackets) {
+	public void processClientPackets(ArrayList<Packet> receivedPackets) {
 		for (Packet packet : receivedPackets) {
 			if (packet instanceof PacketMultiplayerLobbyInfo) {
 				PacketMultiplayerLobbyInfo lobbyInfo = (PacketMultiplayerLobbyInfo) packet;
@@ -119,6 +120,9 @@ public class GuiMultiplayerLobby extends Gui {
 				if (clientNames != null) {
 					playersList.text = clientNames;
 				}
+			} else if (packet instanceof PacketExitMultiplayerLobby) {
+				PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
+				game.guiList.removeGui(getName());
 			}
 		}
 	}
@@ -166,6 +170,11 @@ public class GuiMultiplayerLobby extends Gui {
 			disconnect();
 		} else if (id == readyButton.id && mouseButton == 0) {
 			readyState = !readyState;
+		} else if (id == startButton.id && mouseButton == 0) {
+			InternalServer internalServer = new InternalServer(game, server);
+			internalServer.initiateWorld("serverWorld", 0); //hardcoded world for now
+			PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
+			server.broadcastData(exitPacket);
 		}
 	}
 }

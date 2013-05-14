@@ -55,5 +55,6 @@ public abstract class Packet {
 		registerPacket(PacketTestString.class);
 		registerPacket(PacketMultiplayerLobbyInfo.class);
 		registerPacket(PacketMultiplayerLobbyClient.class);
+		registerPacket(PacketExitMultiplayerLobby.class);
 	}
 }

@@ -32,6 +32,7 @@ public class World {
 
 	public World(Game game, boolean serverWorld) {
 		this.game = game;
+		this.serverWorld = serverWorld;
 		entityList = new EntityList(game, this);
 		this.land = new Land(game, this);
 		this.collisionComparer = new CollisionComparer(game);
