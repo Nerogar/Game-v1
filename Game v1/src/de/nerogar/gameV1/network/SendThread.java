@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import de.nerogar.gameV1.GameOptions;
+
 public class SendThread extends Thread {
 
 	private LinkedList<Packet> data = new LinkedList<Packet>();
@@ -45,7 +47,7 @@ public class SendThread extends Thread {
 							out.writeInt(buffer.length);
 							out.writeInt(packet.packetID);
 							out.write(buffer);
-							System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
+							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.packetID + " (" + buffer.length + " bytes)");
 						}
 					}
 				}

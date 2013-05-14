@@ -216,7 +216,7 @@ public class RenderEngine {
 
 		setDisplayMode(displayMode);
 
-		GameOptions.instance.setOption("fullscreen", fullscreen);
+		GameOptions.instance.setBoolOption("fullscreen", fullscreen);
 	}
 
 	public void checkErrors() {

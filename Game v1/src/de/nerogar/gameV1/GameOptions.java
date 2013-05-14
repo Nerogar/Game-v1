@@ -30,10 +30,6 @@ public class GameOptions {
 		options.put(option, value);
 	}
 
-	public void setOption(String option, boolean value) {
-		options.put(option, String.valueOf(value));
-	}
-
 	public int getIntOption(String option) {
 		String s = options.getProperty(option);
 		int i = 0;
@@ -75,8 +71,13 @@ public class GameOptions {
 	}
 
 	public void switchBoolOption(String option) {
-		if (options.getProperty(option).equals("true")) options.put(option, "false");
-		else options.put(option, "true");
+		String value = options.getProperty(option);
+		if (value != null) {
+			if (value.equals("true")) options.put(option, "false");
+			else options.put(option, "true");
+		} else {
+			options.put(option, "false");
+		}
 	}
 
 	private void load() {
@@ -119,6 +120,7 @@ public class GameOptions {
 
 		//debugsettings
 		options.put("showAABBs", "false");
+		options.put("showNetworkTraffic", "false");
 
 		//profile
 		options.put("playerName", "Player");

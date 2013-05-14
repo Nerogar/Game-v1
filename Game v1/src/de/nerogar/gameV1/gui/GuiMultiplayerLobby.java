@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
@@ -10,6 +11,7 @@ public class GuiMultiplayerLobby extends Gui {
 	private GElementButton startButton, backButton;
 	private GElementButton readyButton, kickButton;
 	private GElementListBox playersList;
+	private HashMap<Client, Boolean> readyStates;
 	private boolean readyState = false;
 	private Server server;
 	private Client client;
@@ -18,6 +20,11 @@ public class GuiMultiplayerLobby extends Gui {
 		super(game);
 		this.server = server;
 		this.client = client;
+		readyStates = new HashMap<Client, Boolean>();
+		PacketMultiplayerLobbyClient lobbyInfoClient = new PacketMultiplayerLobbyClient();
+		lobbyInfoClient.readyState = false;
+		client.sendPacket(lobbyInfoClient);
+
 		aktivateStartGameButton();
 	}
 
@@ -71,13 +78,17 @@ public class GuiMultiplayerLobby extends Gui {
 
 			for (int i = 0; i < clients.size(); i++) {
 				if (clients.get(i).connectionInfo != null) {
-					//clientNames[i] = clients.get(i).connectionInfo.username;
-					packetLobbyInfo.playerNames[i] = clients.get(i).connectionInfo.username;
-					packetLobbyInfo.playerReadyStates[i] = true;
+					Client connectionClient = clients.get(i);
+					ArrayList<Packet> receivedPackets = connectionClient.getData(Packet.LOBBY_CHANNEL);
+					if(receivedPackets!=null){
+						for (Packet packet : receivedPackets) {
+							processServerPackets(connectionClient, packet);
+						}
+					}
 				}
 			}
 			//playersList.text = clientNames;
-			server.broadcastData(packetLobbyInfo);
+			//server.broadcastData(packetLobbyInfo);
 		}
 
 		//update packets
@@ -109,6 +120,28 @@ public class GuiMultiplayerLobby extends Gui {
 					playersList.text = clientNames;
 				}
 			}
+		}
+	}
+
+	public void processServerPackets(Client connectionClient, Packet packet) {
+		if (packet instanceof PacketMultiplayerLobbyClient) {
+			PacketMultiplayerLobbyClient lobbyInfoClient = (PacketMultiplayerLobbyClient) packet;
+			readyStates.put(client, lobbyInfoClient.readyState);
+
+			PacketMultiplayerLobbyInfo packetLobbyInfo = new PacketMultiplayerLobbyInfo();
+			ArrayList<Client> clients = server.getClients();
+			packetLobbyInfo.playerNames = new String[clients.size()];
+			packetLobbyInfo.playerReadyStates = new boolean[clients.size()];
+
+			for (int i = 0; i < clients.size(); i++) {
+				if (clients.get(i).connectionInfo != null) {
+					Client serverClient = clients.get(i);
+					packetLobbyInfo.playerNames[i] = serverClient.connectionInfo.username;
+					//packetLobbyInfo.playerReadyStates[i] = readyStates.get(serverClient);
+				}
+			}
+
+			server.broadcastData(packetLobbyInfo);
 		}
 	}
 

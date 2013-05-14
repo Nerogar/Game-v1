@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import de.nerogar.gameV1.GameOptions;
+
 public class ReceiveThread extends Thread {
 	private Socket socket;
 	private Client client;
@@ -35,14 +37,10 @@ public class ReceiveThread extends Thread {
 					receivedBytes += in.read(buffer, receivedBytes, buffer.length - receivedBytes);
 				}
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
-				System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
+				if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
-				try {
-					receivedPacket.unpack();
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println("HIER IST DER FEHLER!!!!");
-				}
+				receivedPacket.unpack();
+
 				//hardcoded PacketID for connectionData (0)
 				if (!client.connectionInfoReceived && packetID == 0) {
 					client.setConnectionInfo((PacketConnectionInfo) receivedPacket);

@@ -8,7 +8,7 @@ import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.RenderHelper;
 
 public class GuiDebugSettings extends Gui {
-	private GElementButton showAABBsButton, okButton;
+	private GElementButton showAABBsButton, showNetworkTrafficButton, okButton;
 
 	//private GElementOptionSlider ;
 	//private GElementSlider ;
@@ -31,14 +31,19 @@ public class GuiDebugSettings extends Gui {
 	public void init() {
 		setTitel("Debug Settings");
 
-		//AABBs
+		//showAABBs
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));
 		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showAABBs")), FontRenderer.LEFT, "Buttons/button.png", false, "");
+
+		//showNetworkTraffic
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.2f, 0.1f, "show Network traffic:", FontRenderer.LEFT));
+		showNetworkTrafficButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showNetworkTraffic")), FontRenderer.LEFT, "Buttons/button.png", false, "");
 
 		//ok button
 		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");
 
 		addGElement(showAABBsButton);
+		addGElement(showNetworkTrafficButton);
 		addGElement(okButton);
 	}
 
@@ -62,6 +67,9 @@ public class GuiDebugSettings extends Gui {
 		if (id == showAABBsButton.id && mouseButton == 0) {
 			GameOptions.instance.switchBoolOption("showAABBs");
 			showAABBsButton.text = String.valueOf(GameOptions.instance.getBoolOption("showAABBs"));
+		} else if (id == showNetworkTrafficButton.id && mouseButton == 0) {
+			GameOptions.instance.switchBoolOption("showNetworkTraffic");
+			showNetworkTrafficButton.text = String.valueOf(GameOptions.instance.getBoolOption("showNetworkTraffic"));
 		} else if (id == okButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));
