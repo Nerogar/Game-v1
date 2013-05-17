@@ -35,7 +35,7 @@ public class World {
 		this.serverWorld = serverWorld;
 		entityList = new EntityList(game, this);
 		this.land = new Land(game, this);
-		this.collisionComparer = new CollisionComparer(game);
+		this.collisionComparer = new CollisionComparer(this);
 		entityList.setCollisionComparer(collisionComparer);
 		if (!serverWorld) camera = new Camera(this);
 		pathfinder = new Pathfinder(land);
@@ -85,7 +85,7 @@ public class World {
 	}
 
 	public void closeWorld() {
-		RenderHelper.renderLoadingScreen("Speichere Welt...");
+		if (!serverWorld) RenderHelper.renderLoadingScreen("Speichere Welt...");
 		isLoaded = false;
 		land.unloadAll();
 		entityList.unloadAll();
@@ -99,14 +99,15 @@ public class World {
 	public void update() {
 		if (!isLoaded) return;
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_ESCAPE) || InputHandler.isGamepadButtonPressed("start")) {
-			game.guiList.addGui(new GuiPauseMenu(game));
+		if (!serverWorld) {
+			if (InputHandler.isKeyPressed(Keyboard.KEY_ESCAPE) || InputHandler.isGamepadButtonPressed("start")) {
+				game.guiList.addGui(new GuiPauseMenu(game));
+			}
+			camera.updatePostition();
+			InputHandler.updateMousePositions(game);
+			loadPosition = camera.getCamCenter().toPosition();
 		}
 
-		camera.updatePostition();
-		InputHandler.updateMousePositions(game);
-
-		loadPosition = camera.getCamCenter().toPosition();
 		land.loadChunksAroundXZ(loadPosition);
 
 		entityList.update(game);
@@ -196,7 +197,7 @@ public class World {
 		game.debugFelk.additionalRender();
 		game.debugNerogar.additionalRender();
 
-		game.world.collisionComparer.renderGrid();
+		collisionComparer.renderGrid();
 		//InputHandler.renderMouseRay();
 
 		if (path != null) {
@@ -219,7 +220,7 @@ public class World {
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}
 
-		player.renderInWorld(this);
+		if (player != null) player.renderInWorld(this);
 		glPopMatrix();
 	}
 

@@ -77,6 +77,7 @@ public class Game {
 			AL.destroy();
 
 			if (world.isLoaded) world.closeWorld();
+			if (internalServer != null) internalServer.stopServer();
 			renderEngine.cleanup();
 			GameOptions.instance.save();
 
@@ -101,9 +102,9 @@ public class Game {
 			//GameOptions.instance.setOption("debug", String.valueOf(!GameOptions.instance.getBoolOption("debug")));
 			GameOptions.instance.switchBoolOption("debug");
 			if (!GameOptions.instance.getBoolOption("debug")) {
-				guiList.removeGui(new GuiDebug(this));
+				guiList.removeGui(new GuiDebug(this, world));
 			} else {
-				guiList.addGui(new GuiDebug(this));
+				guiList.addGui(new GuiDebug(this, world));
 			}
 		}
 
@@ -123,7 +124,7 @@ public class Game {
 		guiList.update();
 		if (!guiList.pauseGame()) {
 			world.update();
-			player.update(world);
+			player.update();
 		}
 	}
 
@@ -137,9 +138,9 @@ public class Game {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
 
 		world = new World(this, false);
-		player = new Player(this);
+		player = new Player(this, world);
 		if (GameOptions.instance.getBoolOption("debug")) {
-			guiList.addGui(new GuiDebug(this));
+			guiList.addGui(new GuiDebug(this, world));
 		}
 		guiList.addGui(new GuiMain(this));
 		Entity.initEntityList(this);

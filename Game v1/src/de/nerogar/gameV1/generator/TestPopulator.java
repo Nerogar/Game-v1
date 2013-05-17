@@ -18,7 +18,7 @@ public class TestPopulator extends Populator {
 			if (chunk.getLocalTile((int) Math.floor(x), (int) Math.floor(z)) != Tile.TILE_WATER) {
 				float y = (float) chunk.heightMap[(int) x][(int) z];
 				float rotation = (float) (Math.random() * 360);
-				chunk.spawnEntityLocal(new EntityTree(chunk.world.game, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, 0, rotation), new Vector3d(1, 1, 1))));
+				chunk.spawnEntityLocal(new EntityTree(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, 0, rotation), new Vector3d(1, 1, 1))));
 			}
 
 		}
@@ -30,7 +30,7 @@ public class TestPopulator extends Populator {
 			if (chunk.getLocalTile((int) Math.floor(x), (int) Math.floor(z)) != Tile.TILE_WATER) {
 				float y = (float) chunk.heightMap[(int) x][(int) z];
 				float rotation = (float) (Math.random() * 360);
-				chunk.spawnEntityLocal(new EntityShrine(chunk.world.game, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, 0, rotation), new Vector3d(1, 1, 1))));
+				chunk.spawnEntityLocal(new EntityShrine(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, 0, rotation), new Vector3d(1, 1, 1))));
 			}
 		}
 

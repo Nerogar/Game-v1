@@ -10,8 +10,8 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityHouseRed extends EntityBuilding {
 
-	public EntityHouseRed(Game game, ObjectMatrix matrix) {
-		super(game, matrix);
+	public EntityHouseRed(Game game, World world, ObjectMatrix matrix) {
+		super(game, world, matrix);
 		size = new Position(2, 2);
 		centerPosition = new Position(1, 1);
 		resourceCost = new GameResources(200, 100, 100);

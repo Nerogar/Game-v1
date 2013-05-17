@@ -71,7 +71,7 @@ public class ObjectMatrix {
 		return scaling;
 	}
 
-	// WICHTIG: Skalierung und Rotationen wurden in folgenden Funktionen u.a. noch nicht eingebaut
+	//TODO WICHTIG: Skalierung und Rotationen wurden in folgenden Funktionen u.a. noch nicht eingebaut
 
 	public BoundingAABB getTransformedAABB(BoundingAABB bound) {
 
@@ -105,6 +105,6 @@ public class ObjectMatrix {
 
 	}
 
-	// getTransformedOBB fehlt
+	//TODO getTransformedOBB fehlt
 
 }

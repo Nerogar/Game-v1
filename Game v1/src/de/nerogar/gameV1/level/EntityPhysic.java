@@ -2,6 +2,7 @@ package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityPhysic extends Entity {
@@ -10,8 +11,8 @@ public abstract class EntityPhysic extends Entity {
 	public Vector3d velocity = new Vector3d(0, 0, 0);
 	public Vector3d force = new Vector3d(0, 0, 0);
 
-	public EntityPhysic(Game game, ObjectMatrix matrix, float mass) {
-		super(game, matrix);
+	public EntityPhysic(Game game, World world, ObjectMatrix matrix, float mass) {
+		super(game, world, matrix);
 		setMass(mass);
 	}
 
@@ -35,9 +36,9 @@ public abstract class EntityPhysic extends Entity {
 	public void addForce(Vector3d f) {
 		force.add(f);
 	}
-	
+
 	public void setForce(Vector3d f) {
 		force.set(f);
 	}
-	
+
 }

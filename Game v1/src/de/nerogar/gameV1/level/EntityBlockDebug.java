@@ -5,12 +5,13 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.physics.*;
 
 public abstract class EntityBlockDebug extends EntityBlock {
 
-	public EntityBlockDebug(Game game, ObjectMatrix matrix, float mass, float sca) {
-		super(game, matrix, mass, sca);
+	public EntityBlockDebug(Game game, World world, ObjectMatrix matrix, float mass, float sca) {
+		super(game, world, matrix, mass, sca);
 
 		// Zu Debug-Zwecken eine vorläufige, festkodierte AABB
 		boundingBox = new BoundingAABB(new Vector3d(-4, 0, -4), new Vector3d(4, 8, 4));

@@ -30,9 +30,9 @@ public abstract class Entity {
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
-	public Entity(Game game, ObjectMatrix matrix) {
+	public Entity(Game game, World world, ObjectMatrix matrix) {
 		this.game = game;
-		world = game.world;
+		this.world = world;
 		this.matrix = matrix;
 	}
 
@@ -122,17 +122,17 @@ public abstract class Entity {
 	public abstract String getNameTag();
 
 	public abstract void init(World world);
-	
+
 	// register der Entities, wird zum laden/speichern gebraucht
 	public static void registerEntity(Entity entity) {
 		entityList.put(entity.getNameTag(), (Class<? extends Entity>) entity.getClass());
 	}
 
-	public static Entity getEntity(Game game, String tagName) {
-		if(tagName == null)return null;
+	public static Entity getEntity(Game game, World world, String tagName) {
+		if (tagName == null) return null;
 		try {
-			Constructor<? extends Entity> contructor = entityList.get(tagName).getConstructor(new Class[] { Game.class, ObjectMatrix.class });
-			Entity entity = contructor.newInstance(game, new ObjectMatrix());
+			Constructor<? extends Entity> contructor = entityList.get(tagName).getConstructor(new Class[] { Game.class, World.class, ObjectMatrix.class });
+			Entity entity = contructor.newInstance(game, world, new ObjectMatrix());
 			return entity;
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
@@ -142,15 +142,15 @@ public abstract class Entity {
 
 	public static void initEntityList(Game game) {
 		ObjectMatrix objectMatrix = new ObjectMatrix();
-		registerEntity(new EntityTree(game, objectMatrix));
-		registerEntity(new EntityHouse(game, objectMatrix));
-		registerEntity(new EntityHouseBlue(game, objectMatrix));
-		registerEntity(new EntityHouseGreen(game, objectMatrix));
-		registerEntity(new EntityHouseOrange(game, objectMatrix));
-		registerEntity(new EntityHousePink(game, objectMatrix));
-		registerEntity(new EntityHouseRed(game, objectMatrix));
-		registerEntity(new EntityShrine(game, objectMatrix));
-		registerEntity(new EntityTestparticle(game, objectMatrix));
+		registerEntity(new EntityTree(game, null, objectMatrix));
+		registerEntity(new EntityHouse(game, null, objectMatrix));
+		registerEntity(new EntityHouseBlue(game, null, objectMatrix));
+		registerEntity(new EntityHouseGreen(game, null, objectMatrix));
+		registerEntity(new EntityHouseOrange(game, null, objectMatrix));
+		registerEntity(new EntityHousePink(game, null, objectMatrix));
+		registerEntity(new EntityHouseRed(game, null, objectMatrix));
+		registerEntity(new EntityShrine(game, null, objectMatrix));
+		registerEntity(new EntityTestparticle(game, null, objectMatrix));
 	}
 
 }

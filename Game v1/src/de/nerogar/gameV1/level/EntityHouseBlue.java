@@ -10,8 +10,8 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityHouseBlue extends EntityBuilding {
 
-	public EntityHouseBlue(Game game, ObjectMatrix matrix) {
-		super(game, matrix);
+	public EntityHouseBlue(Game game, World world, ObjectMatrix matrix) {
+		super(game, world, matrix);
 		size = new Position(2, 2);
 		centerPosition = new Position(1, 1);
 		resourceCost = new GameResources(200, 100, 100);
@@ -27,7 +27,7 @@ public class EntityHouseBlue extends EntityBuilding {
 	public void update(float time) {
 
 		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
-		world.spawnEntity(new EntityTestparticle(game, particleMatrix));
+		world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
 
 	}
 

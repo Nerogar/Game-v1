@@ -17,8 +17,8 @@ public class EntityTree extends Entity {
 	private ALSource sound = null;
 	private float elapsedTime;
 
-	public EntityTree(Game game, ObjectMatrix matrix) {
-		super(game, matrix);
+	public EntityTree(Game game, World world, ObjectMatrix matrix) {
+		super(game, world, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 4, 1));
 	}
 
@@ -74,7 +74,7 @@ public class EntityTree extends Entity {
 		if (rand == 0) {
 			if (sound != null) if (sound.isDeleted()) sound = null;
 			if (sound == null) {
-				if (Vector3d.subtract(matrix.position, game.world.camera.getCamPosition()).getSquaredValue() < 500) {
+				if (Vector3d.subtract(matrix.position, world.camera.getCamPosition()).getSquaredValue() < 500) {
 					sound = SoundManager.instance.create("tree_crack.wav", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 5, 1);
 					// Weil Justin genervt ist
 					//if (sound != null) sound.play();

@@ -50,12 +50,12 @@ public class InternalServer extends Thread {
 	}
 
 	private void mainloop() {
-		//world.update();
-		//for (long i = 0; i < 100000000L; i++);
+		world.update();
 	}
 
 	public void cleanup() {
 		world.closeWorld();
+		server.stopServer();
 	}
 
 	private void sync() {
@@ -77,6 +77,5 @@ public class InternalServer extends Thread {
 
 	public void stopServer() {
 		running = false;
-		server.stopServer();
 	}
 }

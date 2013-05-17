@@ -9,9 +9,9 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityHouse extends Entity {
 
-	public EntityHouse(Game game, ObjectMatrix matrix) {
+	public EntityHouse(Game game, World world, ObjectMatrix matrix) {
 		//super(game, matrix, data, "houses/cone");
-		super(game, matrix);
+		super(game, world, matrix);
 
 		boundingBox = new BoundingAABB(new Vector3d(-1, 0, -1), new Vector3d(1, 2, 1));
 	}

@@ -25,7 +25,7 @@ public class Land {
 	public String saveName;
 	public int maxChunkLoadDistance = GameOptions.instance.getIntOption("loaddistance");
 	public int chunkUpdatesPerFrame = 1;
-	private Game game;
+	public Game game;
 	public World world;
 	public LevelGenerator levelGenerator;
 	private Vector3d mousePosition;
@@ -40,7 +40,7 @@ public class Land {
 	}
 
 	public Chunk generateLand(Chunk chunk, Position chunkPosition) {
-		chunk = levelGenerator.generateLevel(new Chunk(chunkPosition, saveName, world), (int) chunkPosition.x, (int) chunkPosition.z);
+		chunk = levelGenerator.generateLevel(new Chunk(chunkPosition, saveName, world, world.serverWorld), (int) chunkPosition.x, (int) chunkPosition.z);
 
 		return chunk;
 	}
@@ -132,7 +132,7 @@ public class Land {
 	//TODO change Chunkloading to AsyncLevelLoader 
 	public void loadChunk(Position chunkPosition) {
 
-		Chunk chunk = new Chunk(chunkPosition, saveName, world);
+		Chunk chunk = new Chunk(chunkPosition, saveName, world, world.serverWorld);
 		if (!chunk.load()) {
 			chunk = generateLand(chunk, chunkPosition);
 			// System.out.println("generated Chunk: " + chunkPosition.x + " / "+ chunkPosition.y + "   (" + (chunks.size() + 1) + ")");
@@ -143,7 +143,7 @@ public class Land {
 		chunks.add(chunk);
 		rebuildChunkGrid();
 		updateWalkMapNodeNeighbors(chunk);
-		game.world.collisionComparer.newGrid();
+		world.collisionComparer.newGrid();
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
@@ -161,17 +161,17 @@ public class Land {
 	public void regenChunk(Position chunkPosition) {
 		if (getChunk(chunkPosition) != null) unloadChunk(chunkPosition);
 
-		Chunk chunk = new Chunk(chunkPosition, saveName, world);
+		Chunk chunk = new Chunk(chunkPosition, saveName, world, world.serverWorld);
 		chunk = generateLand(chunk, chunkPosition);
 		chunks.add(chunk);
 
 		updateWalkMapNodeNeighbors(chunk);
-		game.world.collisionComparer.newGrid();
+		world.collisionComparer.newGrid();
 	}
 
 	public void unloadAll() {
 		for (int i = chunks.size() - 1; i >= 0; i--) {
-			RenderHelper.renderLoadingScreen("Speichere Chunk " + i);
+			if (!world.serverWorld) RenderHelper.renderLoadingScreen("Speichere Chunk " + i);
 			unloadChunk(chunks.get(i).chunkPosition);
 		}
 	}
@@ -402,7 +402,7 @@ public class Land {
 		Shader testShader = ShaderBank.instance.getShader("test");
 
 		testShader.activate();
-		
+
 		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
 			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
 				Chunk tempChunk = getChunk(new Position(i, j));

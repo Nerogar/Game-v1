@@ -15,9 +15,9 @@ public abstract class EntityBuilding extends Entity {
 
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 
-	public EntityBuilding(Game game, ObjectMatrix matrix) {
+	public EntityBuilding(Game game, World world, ObjectMatrix matrix) {
 		//super(game, matrix, data, "houses/cone");
-		super(game, matrix);
+		super(game, world, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0));
 	}
 

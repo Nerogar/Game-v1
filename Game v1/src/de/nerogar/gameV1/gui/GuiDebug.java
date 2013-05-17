@@ -2,15 +2,18 @@ package de.nerogar.gameV1.gui;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector2d;
+import de.nerogar.gameV1.World;
 
 public class GuiDebug extends Gui {
 	private GElementTextLabel fpsLabel;
 	private GElementTextLabel[] labels;
 	private GElementButton resetCamButton;
 	private int delayCount = 0;
+	private World world;
 
-	public GuiDebug(Game game) {
+	public GuiDebug(Game game, World world) {
 		super(game);
+		this.world = world;
 	}
 
 	@Override
@@ -59,13 +62,13 @@ public class GuiDebug extends Gui {
 			fpsLabel.text = "FPS: " + String.valueOf(game.timer.mfFps);
 			delayCount = 0;
 		}
-		labels[1].text = "Entities: " + game.world.entityList.entities.size() + ", Vergleiche: " + game.world.collisionComparer.comparations;
+		labels[1].text = "Entities: " + world.entityList.entities.size() + ", Vergleiche: " + world.collisionComparer.comparations;
 
 		updateStressTimes();
 
-		labels[7].text = "X: " + game.world.camera.scrollX;
-		labels[8].text = "Y: " + game.world.camera.scrollY;
-		labels[9].text = "Z: " + game.world.camera.scrollZ;
+		labels[7].text = "X: " + world.camera.scrollX;
+		labels[8].text = "Y: " + world.camera.scrollY;
+		labels[9].text = "Z: " + world.camera.scrollZ;
 
 	}
 
@@ -88,9 +91,9 @@ public class GuiDebug extends Gui {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == resetCamButton.id && mouseButton == 0) {
-			game.world.camera.setCenter(new Vector2d(0, 0));
-			game.world.camera.setRotation(0, 0);
-			game.world.camera.updatePostition();
+			world.camera.setCenter(new Vector2d(0, 0));
+			world.camera.setRotation(0, 0);
+			world.camera.updatePostition();
 		}
 	}
 }

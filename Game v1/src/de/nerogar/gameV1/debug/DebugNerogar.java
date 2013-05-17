@@ -68,7 +68,7 @@ public class DebugNerogar {
 
 				ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(x, y, z));
 
-				testParticles[i] = new EntityTestparticle(game, particleMatrix);
+				testParticles[i] = new EntityTestparticle(game, game.world, particleMatrix);
 				//testParticles[i].standardAcceleration = new Vector3d(0, 0, 0);
 				testParticles[i].liveTime = 10000;
 				testParticles[i].matrix.scaling = new Vector3d(0.4, 0.4, 0.4);

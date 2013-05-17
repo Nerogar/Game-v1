@@ -8,12 +8,14 @@ import de.nerogar.gameV1.level.Position;
 
 public class Player {
 	private Game game;
+	private World world;
 	private EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
 	public GuiBuildingTest guiBuildingTest;
 
-	public Player(Game game) {
+	public Player(Game game, World world) {
 		this.game = game;
+		this.world = world;
 		guiBuildingTest = new GuiBuildingTest(game);
 		game.guiList.addGui(guiBuildingTest);
 	}
@@ -22,13 +24,13 @@ public class Player {
 		renderEntityOnCursor(world);
 	}
 
-	public void update(World world) {
-		updateBuilding(world);
+	public void update() {
+		updateBuilding();
 	}
 
-	private void updateBuilding(World world) {
+	private void updateBuilding() {
 		if (guiBuildingTest.idChanged) {
-			buildingOnCursor = (EntityBuilding) Entity.getEntity(game, BuildingBank.getBuildingName(guiBuildingTest.getBuildingId()));
+			buildingOnCursor = (EntityBuilding) Entity.getEntity(game, world, BuildingBank.getBuildingName(guiBuildingTest.getBuildingId()));
 			if (buildingOnCursor != null) {
 				buildingOnCursor.init(world);
 				buildingOnCursor.opacity = 0.7f;
@@ -53,7 +55,7 @@ public class Player {
 
 		if (InputHandler.isMouseButtonPressed(0) && isbuildingOnCursorBuildable) {
 			if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
-				EntityBuilding building = (EntityBuilding) Entity.getEntity(game, BuildingBank.getBuildingName(guiBuildingTest.getBuildingId()));
+				EntityBuilding building = (EntityBuilding) Entity.getEntity(game, world, BuildingBank.getBuildingName(guiBuildingTest.getBuildingId()));
 				building.init(world);
 				building.matrix.setPosition(buildingOnCursor.matrix.position);
 				world.spawnEntity(building);

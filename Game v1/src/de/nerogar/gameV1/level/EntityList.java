@@ -75,8 +75,8 @@ public class EntityList {
 		updateInProgress = false;
 		addNewEntities();
 
-		game.world.collisionComparer.updateGrid();
-		game.world.collisionComparer.compare();
+		world.collisionComparer.updateGrid();
+		world.collisionComparer.compare();
 	}
 
 	public void unloadAll() {

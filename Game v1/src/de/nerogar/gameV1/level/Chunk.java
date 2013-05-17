@@ -31,21 +31,28 @@ public class Chunk {
 	public FloatBuffer vertexData, colorData, textureData;
 	int vboVertexHandle, vboColorHandle, vboTextureHandle;
 	public World world;
+	private boolean serverChunk;
 
-	public Chunk(Position chunkPosition, String saveName, World world) {
+	public Chunk(Position chunkPosition, String saveName, World world, boolean serverChunk) {
+		this.serverChunk = serverChunk;
 		dirname += saveName + "/";
 		filename = dirname + "chunk_" + String.valueOf(chunkPosition.x) + "#" + String.valueOf(chunkPosition.z) + fileExtension;
 		this.chunkPosition = chunkPosition;
-		vertexData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
-		colorData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
-		textureData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 2);
+		if (!serverChunk) {
+			vertexData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
+			colorData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
+			textureData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 2);
+		}
+
 		this.world = world;
 	}
 
 	public void updateMaps() {
 		updateWalkableMap();
 		world.pathfinder.updateNodeMap(this);
-		updateVbo();
+		if (!serverChunk) {
+			updateVbo();
+		}
 	}
 
 	public void updateWalkableMap() {
@@ -227,7 +234,7 @@ public class Chunk {
 			}
 
 			for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
-				Entity entity = Entity.getEntity(world.game, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
+				Entity entity = Entity.getEntity(world.game, world, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
 				entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
 				//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
 				spawnEntity(entity);
@@ -266,9 +273,12 @@ public class Chunk {
 	}
 
 	public void cleanup() {
-		glDeleteBuffers(vboVertexHandle);
-		glDeleteBuffers(vboColorHandle);
-		glDeleteBuffers(vboTextureHandle);
+		if (!serverChunk) {
+			glDeleteBuffers(vboVertexHandle);
+			glDeleteBuffers(vboColorHandle);
+			glDeleteBuffers(vboTextureHandle);
+		}
+
 		heightMap = null;
 		walkableMap = null;
 		nodeMap = null;

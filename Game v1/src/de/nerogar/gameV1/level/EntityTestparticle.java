@@ -9,8 +9,8 @@ public class EntityTestparticle extends EntityParticle {
 
 	public float liveTime;
 
-	public EntityTestparticle(Game game, ObjectMatrix matrix) {
-		super(game, matrix, 1);
+	public EntityTestparticle(Game game, World world, ObjectMatrix matrix) {
+		super(game, world, matrix, 1);
 		saveEntity = false;
 		liveTime = (float) (Math.random() * 1);
 		opacity = liveTime;

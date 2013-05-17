@@ -9,11 +9,11 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityShrine extends Entity {
 
-	public EntityShrine(Game game, ObjectMatrix matrix) {
-		super(game, matrix);
+	public EntityShrine(Game game, World world, ObjectMatrix matrix) {
+		super(game, world, matrix);
 		boundingBox = new BoundingAABB(new Vector3d(-2, 0, -2), new Vector3d(2, 4, 2));
 	}
-	
+
 	@Override
 	public void init(World world) {
 		setObject("entities/shrine 1", "entities/shrine 1.png");
