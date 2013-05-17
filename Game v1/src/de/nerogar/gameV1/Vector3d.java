@@ -269,5 +269,9 @@ public class Vector3d {
 		m.set(2, 0, getZ());
 		return m;
 	}
+	
+	public void render() {
+		RenderHelper.drawPoint(this, 0xabcdefff, 5);
+	}
 
 }

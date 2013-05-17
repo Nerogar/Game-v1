@@ -6,12 +6,12 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.InputHandler;
-import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.animation.Animation;
 import de.nerogar.gameV1.animation.Bone;
 import de.nerogar.gameV1.animation.Keyframe;
 import de.nerogar.gameV1.animation.KeyframeSet;
+import de.nerogar.gameV1.animation.MeshVertex;
 import de.nerogar.gameV1.animation.Skeleton;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
@@ -26,6 +26,8 @@ public class DebugFelk {
 	public ALSource sound;
 	public Skeleton testSkelett;
 	public Animation testAnimation = new Animation();
+	public MeshVertex testVertex;
+	private Vector3d blaVector;
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -68,95 +70,99 @@ public class DebugFelk {
 		testSkelett = new Skeleton(rootBone, bones);
 
 		KeyframeSet kfSet0 = new KeyframeSet();
-		kfSet0.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, bones[0].defRotation, new Vector3d(1, 1, 1)),
+		kfSet0.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(-1.57, -1.57, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(-1.57, -1.57, 0), new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, bones[1].defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(bones[0], kfSet0);
 		
 		KeyframeSet kfSetThumbA = new KeyframeSet();
-		kfSetThumbA.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, thumbA.defRotation, new Vector3d(1, 1, 1)),
+		kfSetThumbA.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, thumbA.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(thumbA, kfSetThumbA);
 		KeyframeSet kfSetThumbB = new KeyframeSet();
-		kfSetThumbB.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, thumbB.defRotation, new Vector3d(1, 1, 1)),
+		kfSetThumbB.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, thumbB.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(thumbB, kfSetThumbB);
 		
 		KeyframeSet kfSetFinger1A = new KeyframeSet();
-		kfSetFinger1A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger1A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, finger1A.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger1A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.5f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, finger1A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger1A.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger1A, kfSetFinger1A);
 		KeyframeSet kfSetFinger1B = new KeyframeSet();
-		kfSetFinger1B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger1B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, finger1B.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger1B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.5f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, finger1B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger1B.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger1B, kfSetFinger1B);
 		
 		KeyframeSet kfSetFinger2A = new KeyframeSet();
-		kfSetFinger2A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger2A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, finger2A.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger2A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, finger2A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger2A.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger2A, kfSetFinger2A);
 		KeyframeSet kfSetFinger2B = new KeyframeSet();
-		kfSetFinger2B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger2B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, finger2B.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger2B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.2f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.6f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, finger2B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger2B.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger2B, kfSetFinger2B);
 		
 		KeyframeSet kfSetFinger3A = new KeyframeSet();
-		kfSetFinger3A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger3A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, finger3A.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger3A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, finger3A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger3A.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger3A, kfSetFinger3A);
 		KeyframeSet kfSetFinger3B = new KeyframeSet();
-		kfSetFinger3B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger3B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, finger3B.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger3B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.3f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.7f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, finger3B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger3B.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger3B, kfSetFinger3B);
 		
 		KeyframeSet kfSetFinger4A = new KeyframeSet();
-		kfSetFinger4A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger4A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, finger4A.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger4A.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.5f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, finger4A.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger4A.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger4A, kfSetFinger4A);
 		KeyframeSet kfSetFinger4B = new KeyframeSet();
-		kfSetFinger4B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, finger4B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, finger4B.defRotation, new Vector3d(1, 1, 1)),
+		kfSetFinger4B.addKeyframes(new Keyframe(0f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(0.4f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
 			new Keyframe(0.5f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
 			new Keyframe(0.8f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, -1.57), new Vector3d(1, 1, 1)),
-			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, finger4B.defRotation, new Vector3d(1, 1, 1)),
-			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, finger4B.defRotation, new Vector3d(1, 1, 1)));
+			new Keyframe(0.9f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)),
+			new Keyframe(1f, Keyframe.INTERPOLATE_LINEAR, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1)));
 		testAnimation.keyframesMap.put(finger4B, kfSetFinger4B);
 		
 		testAnimation.length = 3000;
 
+		
+		
+		testVertex = new MeshVertex(new Vector3d(7, 6, 0), new int[] {1,-1,-1,-1}, new float[] {1,0,0,0});
+		
 		//if (sound != null) sound.play();
 		//AL10.alDopplerVelocity(320f);
 	}
@@ -193,32 +199,9 @@ public class DebugFelk {
 			testAnimation.play();
 		}
 
-		if (InputHandler.isKeyDown(Keyboard.KEY_X)) {
-			testSkelett.rootBone.relRotation.add(new Vector3d(MathHelper.DegToRad(1), 0, 0));
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_Y)) {
-			testSkelett.rootBone.relRotation.add(new Vector3d(0, MathHelper.DegToRad(1), 0));
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_Z)) {
-			testSkelett.rootBone.relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
-			testSkelett.bones[1].relRotation.add(new Vector3d(MathHelper.DegToRad(1), 0, 0));
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_2)) {
-			testSkelett.bones[1].relRotation.add(new Vector3d(0, MathHelper.DegToRad(1), 0));
-		}
-
-		if (InputHandler.isKeyDown(Keyboard.KEY_3)) {
-			testSkelett.bones[1].relRotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
-		}
-
 		testAnimation.update();
 		testSkelett.update();
+		blaVector = testSkelett.translateMeshVertex(testVertex);
 
 	}
 
@@ -231,6 +214,7 @@ public class DebugFelk {
 
 	public void additionalRender() {
 		testSkelett.drawSkeleton();
+		blaVector.render();
 	}
 
 }

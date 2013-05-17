@@ -1,21 +1,17 @@
 package de.nerogar.gameV1.level;
 
-import java.util.Random;
-
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
-import de.nerogar.gameV1.sound.ALSource;
-import de.nerogar.gameV1.sound.SoundManager;
 
 public class EntityTree extends Entity {
 
 	//private int size = 3;
-	private ALSource sound = null;
-	private float elapsedTime;
+	//private ALSource sound = null;
+	//private float elapsedTime;
 
 	public EntityTree(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
@@ -64,7 +60,7 @@ public class EntityTree extends Entity {
 
 	@Override
 	public void update(float time) {
-		elapsedTime += time;
+		/*elapsedTime += time;
 		int rand = 1;
 		if (elapsedTime > 1) {
 			Random random = new Random();
@@ -80,7 +76,7 @@ public class EntityTree extends Entity {
 					//if (sound != null) sound.play();
 				}
 			}
-		}
+		}*/
 	}
 
 }
