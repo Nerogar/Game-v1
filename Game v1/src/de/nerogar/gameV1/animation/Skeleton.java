@@ -17,8 +17,9 @@ public class Skeleton {
 		for(int i = 0; i < 4; i++) {
 			if (meshVertex.boneIDs[i] != Bone.NO_BONE) {
 				Bone bone = bones[meshVertex.boneIDs[i]];
-				Vector3d localToBone = Vector3d.subtract(meshVertex.vector, bone.transPos);
-				v.add(bone.translate(localToBone).multiply(meshVertex.weights[i]));
+				Vector3d local = Vector3d.subtract(meshVertex.vector, bone.transPos);
+				Vector3d translated = bone.translate(local);
+				v.add(translated.multiply(meshVertex.weights[i]));
 			}
 		}
 		return v;
