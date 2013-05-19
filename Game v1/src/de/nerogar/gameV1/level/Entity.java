@@ -46,7 +46,7 @@ public abstract class Entity {
 	}
 
 	public void setSprite(float size, String textureName) {
-		object = new ObjectSprite(size, world.camera);
+		object = new ObjectSprite(size, world.player.camera);
 		texture = textureName;
 	}
 

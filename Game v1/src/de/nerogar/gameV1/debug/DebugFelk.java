@@ -146,8 +146,8 @@ public class DebugFelk {
 
 	public void run() {
 
-		sound.setPosition(game.world.camera.getCamPosition());
-		SoundManager.setListenerLazy(game.world.camera);
+		sound.setPosition(game.world.player.camera.getCamPosition());
+		SoundManager.setListenerLazy(game.world.player.camera);
 		SoundManager.instance.update();
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {

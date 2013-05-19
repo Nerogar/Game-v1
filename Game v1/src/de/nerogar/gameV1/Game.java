@@ -25,7 +25,6 @@ public class Game {
 	public InternalServer internalServer;
 	public Client client;
 	public World world;
-	public Player player;
 	public GuiList guiList = new GuiList();
 	public RenderEngine renderEngine = RenderEngine.instance;
 	private long[] stressTimes = new long[4];
@@ -67,7 +66,10 @@ public class Game {
 					double gcTime = (time2 - time1) / 1000000D;
 					System.out.println("Garbage Collector: " + gcTime + "ms");
 				}
-				RenderEngine.instance.checkErrors();
+				//long err1 = System.nanoTime();
+				//RenderEngine.instance.checkErrors();
+				//long err2 = System.nanoTime();
+				//System.out.println("err: " + ((err2 - err1) / 1000000f));
 				updateStressTimes();
 				//InputHandler.printGamepadButtons();
 			}
@@ -93,6 +95,9 @@ public class Game {
 		stressTimeRender = stressTimes[2] - stressTimes[1];
 		stressTimeUpdate = stressTimes[3] - stressTimes[2];
 		stressTimeTotal = System.nanoTime() - stressTimes[0];
+		/*System.out.println("main: " + (stressTimeMainloop/1000000f));
+		System.out.println("render: " + (stressTimeRender/1000000f));
+		System.out.println("sync: " + (stressTimeUpdate/1000000f));*/
 	}
 
 	private void mainloop() {
@@ -124,13 +129,12 @@ public class Game {
 		guiList.update();
 		if (!guiList.pauseGame()) {
 			world.update();
-			player.update();
 		}
 	}
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		world.render(player);
+		world.render();
 		guiList.render();
 	}
 
@@ -138,7 +142,6 @@ public class Game {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
 
 		world = new World(this, false);
-		player = new Player(this, world);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(this, world));
 		}

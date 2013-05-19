@@ -9,6 +9,7 @@ import de.nerogar.gameV1.level.Position;
 public class Player {
 	private Game game;
 	private World world;
+	public Camera camera;
 	private EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
 	public GuiBuildingTest guiBuildingTest;
@@ -18,6 +19,7 @@ public class Player {
 		this.world = world;
 		guiBuildingTest = new GuiBuildingTest(game);
 		game.guiList.addGui(guiBuildingTest);
+		camera = new Camera(world);
 	}
 
 	public void renderInWorld(World world) {

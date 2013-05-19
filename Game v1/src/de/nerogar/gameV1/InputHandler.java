@@ -49,7 +49,7 @@ public final class InputHandler {
 	}
 
 	public static void updateMousePositions(Game game) {
-		Camera camera = game.world.camera;
+		Camera camera = game.world.player.camera;
 
 		float height = (float) Display.getHeight();
 		float width = (float) Display.getWidth();

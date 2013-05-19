@@ -128,7 +128,13 @@ public class Land {
 		return tempChunk;
 	}
 
-	@Deprecated
+	public void addChunk(Chunk chunk) {
+		chunks.add(chunk);
+		rebuildChunkGrid();
+		updateWalkMapNodeNeighbors(chunk);
+		world.collisionComparer.newGrid();
+	}
+
 	//TODO change Chunkloading to AsyncLevelLoader 
 	public void loadChunk(Position chunkPosition) {
 
@@ -359,8 +365,8 @@ public class Land {
 	}
 
 	public void renderOverlay() {//test cones
-		int xShift = (int) world.camera.scrollX;
-		int zShift = (int) world.camera.scrollZ;
+		int xShift = (int) world.player.camera.scrollX;
+		int zShift = (int) world.player.camera.scrollZ;
 
 		for (int i = -100; i < 100; i++) {
 			for (int j = -100; j < 100; j++) {

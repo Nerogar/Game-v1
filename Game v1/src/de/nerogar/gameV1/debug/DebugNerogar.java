@@ -6,15 +6,13 @@ import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
-import de.nerogar.gameV1.level.EntityTestparticle;
-import de.nerogar.gameV1.physics.ObjectMatrix;
 import static org.lwjgl.opengl.GL20.*;
 
 public class DebugNerogar {
 
 	private Game game;
-	private EntityTestparticle[] testParticles;
-	private boolean spawned = false;
+	//private EntityTestparticle[] testParticles;
+	//private boolean spawned = false;
 	public double time = 0;
 
 	// war private, gar aber eine Warning geworfen
@@ -34,7 +32,6 @@ public class DebugNerogar {
 
 		/*
 		 * noch kleine Probleme beim erstellen von Shadern
-		 * vSync geht nicht (shader compile ist falsch)
 		 * schwarz gerendert ohne fragment shader
 		 * 
 		 */
@@ -50,14 +47,14 @@ public class DebugNerogar {
 		testShader.activate();
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_L)) {
-			Vector3d center = game.world.camera.getCamPosition();
+			Vector3d center = game.world.player.camera.getCamPosition();
 			glUniform2f(glGetUniformLocation(testShader.shaderHandle, "center"), center.getXf(), center.getZf());
 		}
 
 		testShader.deactivate();
 		//particle tests
 
-		time += game.timer.delta;
+		/*time += game.timer.delta;
 
 		if (game.world.isLoaded && !spawned) {
 			testParticles = new EntityTestparticle[5000];
@@ -86,7 +83,7 @@ public class DebugNerogar {
 			float y = (float) (Math.random() * 12);
 			testParticles[iteration].addForce(new Vector3d(x, y, z));
 
-		}
+		}*/
 
 		/*tornado setup
 		if (game.world.isLoaded && !spawned) {
