@@ -44,11 +44,11 @@ public class EntityTree extends Entity {
 	@Override
 	public void click(int key) {
 		if (key == 0) {
-			matrix.addPosition(new Vector3d(0, 1, 0));
+			matrix.getPosition().add(new Vector3d(0, 1, 0));
 			//ALSource sound2 = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 1, 1);
 			//if (sound2 != null) sound2.play();
 		} else if (key == 1) {
-			matrix.addPosition(new Vector3d(0, -1, 0));
+			matrix.getPosition().add(new Vector3d(0, -1, 0));
 		}
 
 	}

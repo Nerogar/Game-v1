@@ -159,6 +159,7 @@ public class RenderHelper {
 
 	public static void drawTriangle(Vector3d a, Vector3d b, Vector3d c, int color) {
 		//if (GameOptions.instance.getBoolOption("debug")) {
+		RenderHelper.enableAlpha();
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_TRIANGLES);
 		glColor4f(getR(color), getG(color), getB(color), getA(color));
@@ -167,6 +168,7 @@ public class RenderHelper {
 		glVertex3f(c.getXf(), c.getYf() + .1f, c.getZf());
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
+		RenderHelper.disableAlpha();
 		//}
 	}
 
