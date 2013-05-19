@@ -169,8 +169,8 @@ public class DebugFelk {
 			long time1 = System.nanoTime();
 			int iter = 10000;
 			for (int i = 0; i < iter; i++) {
-				//testSkelett.translateMeshVertex(testVertex);
-				testSkelett.update();
+				testSkelett.translateMeshVertex(testVertex);
+				//testSkelett.update();
 			}
 			long time = (System.nanoTime()-time1)/1000000;
 			System.out.println(iter+" iterations took "+time+" ms");
