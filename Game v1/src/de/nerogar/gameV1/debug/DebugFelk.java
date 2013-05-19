@@ -133,7 +133,7 @@ public class DebugFelk {
 
 		testAnimation.length = 15000;
 
-		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 11, -1, -1 }, new float[] { 1, 1, 0, 0 });
+		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
 
 		testVertex1 = new MeshVertex(new Vector3d(5, 5, 0), new int[] { 0, -1, -1, -1 }, new float[] { 1, 0, 0, 0 });
 		testVertexA = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
