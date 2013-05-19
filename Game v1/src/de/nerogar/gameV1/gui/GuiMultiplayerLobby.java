@@ -123,6 +123,8 @@ public class GuiMultiplayerLobby extends Gui {
 			} else if (packet instanceof PacketExitMultiplayerLobby) {
 				//PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
 				game.guiList.removeGui(getName());
+				game.world.initiateClientWorld();
+				game.world.client = client;
 			}
 		}
 	}

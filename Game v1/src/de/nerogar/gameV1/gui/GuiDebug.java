@@ -66,9 +66,9 @@ public class GuiDebug extends Gui {
 
 		updateStressTimes();
 
-		labels[7].text = "X: " + world.camera.scrollX;
-		labels[8].text = "Y: " + world.camera.scrollY;
-		labels[9].text = "Z: " + world.camera.scrollZ;
+		labels[7].text = "X: " + world.player.camera.scrollX;
+		labels[8].text = "Y: " + world.player.camera.scrollY;
+		labels[9].text = "Z: " + world.player.camera.scrollZ;
 
 	}
 
@@ -91,9 +91,9 @@ public class GuiDebug extends Gui {
 	@Override
 	public void clickButton(int id, int mouseButton) {
 		if (id == resetCamButton.id && mouseButton == 0) {
-			world.camera.setCenter(new Vector2d(0, 0));
-			world.camera.setRotation(0, 0);
-			world.camera.updatePostition();
+			world.player.camera.setCenter(new Vector2d(0, 0));
+			world.player.camera.setRotation(0, 0);
+			world.player.camera.updatePostition();
 		}
 	}
 }

@@ -23,11 +23,12 @@ public class Chunk {
 	public boolean[][] walkableMap = new boolean[CHUNKSIZE][CHUNKSIZE];
 	public PathNode[][] nodeMap;
 	public int[][] tileMap = new int[CHUNKSIZE][CHUNKSIZE];
+	public Position chunkPosition;
 
 	private final String fileExtension = ".chu";
 	private String filename;
 	private String dirname = "saves/";
-	public Position chunkPosition;
+
 	public FloatBuffer vertexData, colorData, textureData;
 	int vboVertexHandle, vboColorHandle, vboTextureHandle;
 	public World world;
@@ -225,28 +226,39 @@ public class Chunk {
 			DNFile chunkFile = new DNFile(filename);
 			chunkFile.load();
 
-			for (int i = 0; i < GENERATESIZE; i++) {
-				heightMap[i] = chunkFile.getFloatArray("heightmap." + i);
-			}
+			buildChunk(chunkFile);
 
-			for (int i = 0; i < CHUNKSIZE; i++) {
-				tileMap[i] = chunkFile.getIntArray("tilemap." + i);
-			}
-
-			for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
-				Entity entity = Entity.getEntity(world.game, world, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
-				entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
-				//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
-				spawnEntity(entity);
-			}
-
-			updateMaps();
 			return true;
 		}
 		return false;
 	}
 
+	public void buildChunk(DNFile chunkFile) {
+		for (int i = 0; i < GENERATESIZE; i++) {
+			heightMap[i] = chunkFile.getFloatArray("heightmap." + i);
+		}
+
+		for (int i = 0; i < CHUNKSIZE; i++) {
+			tileMap[i] = chunkFile.getIntArray("tilemap." + i);
+		}
+
+		for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
+			Entity entity = Entity.getEntity(world.game, world, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
+			entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
+			//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
+			spawnEntity(entity);
+		}
+
+		updateMaps();
+	}
+
 	public void save() {
+		DNFile chunkFile = getChunkFile();
+		world.collisionComparer.removeEntitiesInChunk(this);
+		chunkFile.save();
+	}
+
+	public DNFile getChunkFile() {
 		new File(dirname).mkdirs();
 		DNFile chunkFile = new DNFile(filename);
 		for (int i = 0; i < GENERATESIZE; i++) {
@@ -259,7 +271,6 @@ public class Chunk {
 
 		chunkFile.addFolder(Entity.NODEFOLDERSAVENAME);
 		ArrayList<Entity> entities = world.collisionComparer.getEntitiesInChunk(this);
-		world.collisionComparer.removeEntitiesInChunk(this);
 
 		int entityIndex = 0;
 		for (int i = 0; i < entities.size(); i++) {
@@ -269,7 +280,7 @@ public class Chunk {
 			}
 		}
 
-		chunkFile.save();
+		return chunkFile;
 	}
 
 	public void cleanup() {

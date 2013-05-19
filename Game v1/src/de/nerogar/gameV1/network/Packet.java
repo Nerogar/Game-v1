@@ -12,7 +12,7 @@ public abstract class Packet {
 	public int packetID;
 	public int channel = DEFAULT_CHANNEL;
 	public boolean packed = false;
-	
+
 	public static final int DEFAULT_CHANNEL = 0;
 	public static final int LOBBY_CHANNEL = 1;
 	public static final int WORLD_CHANNEL = 2;
@@ -56,5 +56,6 @@ public abstract class Packet {
 		registerPacket(PacketMultiplayerLobbyInfo.class);
 		registerPacket(PacketMultiplayerLobbyClient.class);
 		registerPacket(PacketExitMultiplayerLobby.class);
+		registerPacket(PacketChunkData.class);
 	}
 }

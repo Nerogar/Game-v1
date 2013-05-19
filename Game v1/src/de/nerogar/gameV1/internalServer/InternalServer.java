@@ -22,6 +22,7 @@ public class InternalServer extends Thread {
 		setName("IntenalServerThread");
 		System.out.println("Initiated Server");
 		world = new World(game, true);
+		world.server = server;
 		timer = new Timer();
 		timer.init();
 		this.server = server;
@@ -63,7 +64,7 @@ public class InternalServer extends Thread {
 			long currentTime = System.nanoTime();
 			double deltaTime = (currentTime - lastUpdate) / 1000000d;
 
-			System.out.println("Server delta: " + deltaTime);
+			//System.out.println("Server delta: " + deltaTime);
 			if (deltaTime < TICK_TIME) {
 				Thread.sleep((long) (TICK_TIME - deltaTime));
 			} else {
