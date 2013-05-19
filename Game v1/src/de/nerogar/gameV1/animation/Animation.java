@@ -27,7 +27,7 @@ public class Animation {
 		Iterator<Entry<Bone, KeyframeSet>> iterator = keyframesMap.entrySet().iterator();
 		while(iterator.hasNext()) {
 			Entry<Bone, KeyframeSet> entry = iterator.next();
-			entry.getKey().setKeyframe(entry.getValue().getInterpolatedKeyframe(offset));
+			entry.getKey().set(entry.getValue().getInterpolatedObjectMatrix(offset));
 		}
 		
 	}

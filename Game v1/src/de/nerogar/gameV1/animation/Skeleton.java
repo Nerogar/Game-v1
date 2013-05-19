@@ -18,7 +18,7 @@ public class Skeleton {
 			if (meshVertex.boneIDs[i] != Bone.NO_BONE) {
 				Bone bone = bones[meshVertex.boneIDs[i]];
 				Vector3d local = Vector3d.subtract(meshVertex.vector, bone.transPos);
-				Vector3d translated = bone.translate(local);
+				Vector3d translated = bone.transformate(local);
 				v.add(translated.multiply(meshVertex.weights[i]));
 			}
 		}
@@ -34,9 +34,9 @@ public class Skeleton {
 	
 	public void update() {
 		markDirty();
-		rootBone.updateBone();
+		rootBone.update();
 		for(Bone bone: bones) {
-			if (!bone.isUpdated()) bone.updateBone();
+			if (!bone.isUpdated()) bone.update();
 		}
 	}
 
