@@ -3,6 +3,7 @@ package de.nerogar.gameV1.animation;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.matrix.Matrix;
+import de.nerogar.gameV1.matrix.Matrix44;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -22,18 +23,18 @@ public class Bone {
 
 	private boolean updated;
 
-	private Matrix localTransformationMatrix = new Matrix(4, 4);
-	private Matrix localTransformationMatrixWithDefault = new Matrix(4, 4);
-	private Matrix globalTransformationMatrix = new Matrix(4, 4);
-	private Matrix globalTransformationMatrixWithDefault = new Matrix(4, 4);
+	private Matrix44 localTransformationMatrix = new Matrix44();
+	private Matrix44 localTransformationMatrixWithDefault = new Matrix44();
+	private Matrix44 globalTransformationMatrix = new Matrix44();
+	private Matrix44 globalTransformationMatrixWithDefault = new Matrix44();
 
-	public Matrix spaceTransfo;
+	public Matrix44 spaceTransfo;
 
 	public Bone(Bone parent, float length) {
 		this(parent, length, null);
 	}
 
-	public Bone(Bone parent, float length, Matrix space) {
+	public Bone(Bone parent, float length, Matrix44 space) {
 		this(parent, length, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), space);
 	}
 
@@ -41,7 +42,7 @@ public class Bone {
 		this(parent, length, pos, sca, rot, null);
 	}
 
-	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot, Matrix space) {
+	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot, Matrix44 space) {
 		this.parent = parent;
 		this.length = length;
 		this.defaults = new ObjectMatrix(pos, rot, sca);
@@ -61,13 +62,13 @@ public class Bone {
 			summed.scaling.multiply(defaults.scaling);
 		}
 
-		Matrix transformation = MatrixHelperR3.getTransformationMatrix(summed);
-		Matrix lengthTranslation = MatrixHelperR3.getTransposeMatrix(l, 0, 0);
+		Matrix44 transformation = MatrixHelperR3.getTransformationMatrix(summed);
+		Matrix44 lengthTranslation = MatrixHelperR3.getTransposeMatrix(l, 0, 0);
 
 		if (withDefault)
-			localTransformationMatrixWithDefault = Matrix.multiply(lengthTranslation, transformation);
+			localTransformationMatrixWithDefault = lengthTranslation.multiply(transformation);
 		else
-			localTransformationMatrix = Matrix.multiply(lengthTranslation, transformation);
+			localTransformationMatrix = lengthTranslation.multiply(transformation);
 	}
 
 	public void update() {
@@ -75,8 +76,8 @@ public class Bone {
 		if (parent != null) if (!parent.isUpdated()) parent.update();
 		updateLocalTransformationMatrix(false);
 		updateLocalTransformationMatrix(true);
-		globalTransformationMatrix = (parent == null) ? Matrix.multiply(spaceTransfo, localTransformationMatrix) : Matrix.multiply(parent.globalTransformationMatrix, localTransformationMatrix);
-		globalTransformationMatrixWithDefault = (parent == null) ? Matrix.multiply(spaceTransfo, localTransformationMatrixWithDefault) : Matrix.multiply(parent.globalTransformationMatrixWithDefault, localTransformationMatrixWithDefault);
+		globalTransformationMatrix = (parent == null) ? spaceTransfo.multiply(localTransformationMatrix) : parent.globalTransformationMatrix.multiply(localTransformationMatrix);
+		globalTransformationMatrixWithDefault = (parent == null) ? spaceTransfo.multiply(localTransformationMatrixWithDefault) : parent.globalTransformationMatrixWithDefault.multiply(localTransformationMatrixWithDefault);
 		setUpdated(true);
 	}
 
@@ -88,8 +89,8 @@ public class Bone {
 		updated = b;
 	}
 
-	public Matrix getGlobalTransformationMatrix() {
-		return Matrix.multiply(globalTransformationMatrix, MatrixHelperR3.getTransposeMatrix(-transPos.getXf(), -transPos.getYf(), -transPos.getZf()));
+	public Matrix44 getGlobalTransformationMatrix() {
+		return globalTransformationMatrix.multiply(MatrixHelperR3.getTransposeMatrix(-transPos.getXf(), -transPos.getYf(), -transPos.getZf()));
 	}
 
 	public Vector3d transformGlobal(Vector3d v) {
@@ -101,7 +102,7 @@ public class Bone {
 	}
 
 	public Vector3d transform(Vector3d v, boolean withDefault) {
-		return Matrix.multiply(withDefault ? globalTransformationMatrixWithDefault : globalTransformationMatrix, v.toMatrix4()).toVector3d();
+		return withDefault ? globalTransformationMatrixWithDefault.multiply(v.toMatrix41()).toVector3d() : globalTransformationMatrix.multiply(v.toMatrix41()).toVector3d();
 	}
 
 	public void renderBone() {

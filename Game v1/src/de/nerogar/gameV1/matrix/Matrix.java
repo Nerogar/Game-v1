@@ -1,14 +1,12 @@
 package de.nerogar.gameV1.matrix;
 
-import de.nerogar.gameV1.Vector3d;
+public abstract class Matrix {
 
-public class Matrix {
+	protected float[] data;
+	protected int rows = 0;
+	protected int cols = 0;
 
-	private float[] data;
-	private int rows = 0;
-	private int cols = 0;
-
-	public static final Matrix uniformMatrix4 = new Matrix(4, 4, new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+	//public static final Matrix uniformMatrix4 = new Matrix(4, 4, new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
 
 	public Matrix(int rows, int cols) {
 		this.rows = rows;
@@ -37,13 +35,39 @@ public class Matrix {
 		data[row * cols + col] = val;
 	}
 
-	public static Matrix multiply(Matrix a, Matrix b) {
+	/*public static Matrix multiply(Matrix a, Matrix b) {
 		if (a.getCols() != b.getRows()) try {
 			throw new MatrixMultiplicationException("A.cols not equal to B.rows");
 		} catch (MatrixMultiplicationException e) {
 			e.printStackTrace();
 		}
-		//if (a.getCols() != b.getRows()) return null;
+		if (a instanceof Matrix44 && b instanceof Matrix44) {
+			return new Matrix44(new float[]{(a.data[0]*b.data[0] + a.data[1]*b.data[4] + a.data[2]*b.data[8] + a.data[3]*b.data[12]),
+					(a.data[0]*b.data[1] + a.data[1]*b.data[5] + a.data[2]*b.data[9] + a.data[3]*b.data[13]),
+					(a.data[0]*b.data[2] + a.data[1]*b.data[6] + a.data[2]*b.data[10] + a.data[3]*b.data[14]),
+					(a.data[0]*b.data[3] + a.data[1]*b.data[7] + a.data[2]*b.data[11] + a.data[3]*b.data[15]),
+					
+					(a.data[4]*b.data[0] + a.data[5]*b.data[4] + a.data[6]*b.data[8] + a.data[7]*b.data[12]),
+					(a.data[4]*b.data[1] + a.data[5]*b.data[5] + a.data[6]*b.data[9] + a.data[7]*b.data[13]),
+					(a.data[4]*b.data[2] + a.data[5]*b.data[6] + a.data[6]*b.data[10] + a.data[7]*b.data[14]),
+					(a.data[4]*b.data[3] + a.data[5]*b.data[7] + a.data[6]*b.data[11] + a.data[7]*b.data[15]),
+					
+					(a.data[8]*b.data[0] + a.data[9]*b.data[4] + a.data[10]*b.data[8] + a.data[11]*b.data[12]),
+					(a.data[8]*b.data[1] + a.data[9]*b.data[5] + a.data[10]*b.data[9] + a.data[11]*b.data[13]),
+					(a.data[8]*b.data[2] + a.data[9]*b.data[6] + a.data[10]*b.data[10] + a.data[11]*b.data[14]),
+					(a.data[8]*b.data[3] + a.data[9]*b.data[7] + a.data[10]*b.data[11] + a.data[11]*b.data[15]),
+					
+					(a.data[12]*b.data[0] + a.data[13]*b.data[4] + a.data[14]*b.data[8] + a.data[15]*b.data[12]),
+					(a.data[12]*b.data[1] + a.data[13]*b.data[5] + a.data[14]*b.data[9] + a.data[15]*b.data[13]),
+					(a.data[12]*b.data[2] + a.data[13]*b.data[6] + a.data[14]*b.data[10] + a.data[15]*b.data[14]),
+					(a.data[12]*b.data[3] + a.data[13]*b.data[7] + a.data[14]*b.data[11] + a.data[15]*b.data[15])});
+		}
+		if (a instanceof Matrix44 && b instanceof Matrix41) {
+			return new Matrix41(new float[]{(a.data[0]*b.data[0] + a.data[1]*b.data[1] + a.data[2]*b.data[2] + a.data[3]*b.data[3]),
+					(a.data[4]*b.data[0] + a.data[5]*b.data[1] + a.data[6]*b.data[2] + a.data[7]*b.data[3]),
+					(a.data[8]*b.data[0] + a.data[9]*b.data[1] + a.data[10]*b.data[2] + a.data[11]*b.data[3]),
+					(a.data[12]*b.data[0] + a.data[13]*b.data[1] + a.data[14]*b.data[2] + a.data[15]*b.data[3])});
+		}
 		Matrix m = new Matrix(a.getRows(), b.getCols());
 		for (int i = 0; i < a.getRows(); i++) {
 			for (int j = 0; j < b.getCols(); j++) {
@@ -55,7 +79,8 @@ public class Matrix {
 			}
 		}
 		return m;
-	}
+		//return null;
+	}*/
 
 	public int getRows() {
 		return rows;
@@ -65,11 +90,6 @@ public class Matrix {
 		return cols;
 	}
 
-	public Vector3d toVector3d() {
-		if (getRows() < 3 || getCols() != 1) return null;
-		return new Vector3d(get(0, 0), get(1, 0), get(2, 0));
-	}
-	
 	public static Matrix multiply(Matrix m, float r) {
 		return m.clone().multiply(r);
 	}
@@ -80,9 +100,7 @@ public class Matrix {
 		return this;
 	}
 
-	public Matrix clone() {
-		return new Matrix(rows, cols, data);
-	}
+	public abstract Matrix clone();
 
 	@Override
 	public String toString() {

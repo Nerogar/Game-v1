@@ -1,6 +1,6 @@
 package de.nerogar.gameV1;
 
-import de.nerogar.gameV1.matrix.Matrix;
+import de.nerogar.gameV1.matrix.Matrix41;
 
 public class Vector3d {
 
@@ -262,16 +262,17 @@ public class Vector3d {
 		return "("+Math.round(this.getX()*100)/100f+","+Math.round(this.getY()*100)/100f+","+Math.round(this.getZ()*100)/100f+")";
 	}
 	
-	public Matrix toMatrix() {
+	// Nicht mehr verwenden. Zum Transformieren Matrix41 verwenden
+	/*public Matrix toMatrix() {
 		Matrix m = new Matrix(3, 1);
 		m.set(0, 0, getXf());
 		m.set(1, 0, getYf());
 		m.set(2, 0, getZf());
 		return m;
-	}
+	}*/
 	
-	public Matrix toMatrix4() {
-		Matrix m = new Matrix(4, 1);
+	public Matrix41 toMatrix41() {
+		Matrix41 m = new Matrix41();
 		m.set(0, 0, getXf());
 		m.set(1, 0, getYf());
 		m.set(2, 0, getZf());

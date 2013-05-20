@@ -2,15 +2,15 @@ package de.nerogar.gameV1.matrix;
 
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class MatrixHelperR3 {
 
 	// gegen den Uhrzeigersinn, wenn v nach "oben" zeigt
 	// (im Uhrzeigersinn, wenn Blickrichtung = v)
-	public static Matrix getRotationMatrixAtVector(Vector3d v, float alpha) {
-		Matrix m = new Matrix(3, 3);
+	// ALTE FUNKTION, NICHT MEHR VERWENDEN! Die anderen Rotationsfunktionen reichen.
+	/*public static Matrix getRotationMatrixAtVector(Vector3d v, float alpha) {
+		Matrix m = new Matrix44();
 
 		m.set(0, 0, MathHelper.cos(alpha) + v.getXf() * v.getXf() * (1 - MathHelper.cos(alpha)));
 		m.set(0, 1, v.getYf() * v.getXf() * (1 - MathHelper.cos(alpha)) - v.getZf() * MathHelper.sin(alpha));
@@ -25,25 +25,25 @@ public class MatrixHelperR3 {
 		m.set(2, 2, MathHelper.cos(alpha) + v.getZf() * v.getZf() * (1 - MathHelper.cos(alpha)));
 
 		return m;
-	}
+	}*/
 	
-	public static Matrix getTransformationMatrix(ObjectMatrix o) {
+	public static Matrix44 getTransformationMatrix(ObjectMatrix o) {
 		return getTransformationMatrix(o.scaling, o.rotation, o.position);
 	}
 	
-	public static Matrix getTransformationMatrix(Vector3d scale, Vector3d rot, Vector3d pos) {
+	public static Matrix44 getTransformationMatrix(Vector3d scale, Vector3d rot, Vector3d pos) {
 		return getTransformationMatrix(scale.getXf(), scale.getYf(), scale.getZf(), rot.getXf(), rot.getYf(), rot.getZf(), pos.getXf(), pos.getYf(), pos.getZf());
 	}
 	
-	public static Matrix getTransformationMatrix(float scaleX, float scaleY, float scaleZ, float rotX, float rotY, float rotZ, float posX, float posY, float posZ) {
-		Matrix scale = MatrixHelperR3.getScaleMatrix(scaleX, scaleY, scaleZ);
-		Matrix rotation = MatrixHelperR3.getRotationMatrix(rotX, rotY, rotZ);
-		Matrix translation = MatrixHelperR3.getTransposeMatrix(posX, posY, posZ);
-		return Matrix.multiply(translation, Matrix.multiply(rotation, scale));
+	public static Matrix44 getTransformationMatrix(float scaleX, float scaleY, float scaleZ, float rotX, float rotY, float rotZ, float posX, float posY, float posZ) {
+		Matrix44 scale = MatrixHelperR3.getScaleMatrix(scaleX, scaleY, scaleZ);
+		Matrix44 rotation = MatrixHelperR3.getRotationMatrix(rotX, rotY, rotZ);
+		Matrix44 translation = MatrixHelperR3.getTransposeMatrix(posX, posY, posZ);
+		return translation.multiply(rotation.multiply(scale));
 	}
 
-	public static Matrix getScaleMatrix(float sx, float sy, float sz) {
-		Matrix m = new Matrix(4, 4);
+	public static Matrix44 getScaleMatrix(float sx, float sy, float sz) {
+		Matrix44 m = new Matrix44();
 		m.set(0, 0, sx);
 		m.set(1, 1, sy);
 		m.set(2, 2, sz);
@@ -51,8 +51,8 @@ public class MatrixHelperR3 {
 		return m;
 	}
 
-	public static Matrix getTransposeMatrix(float tx, float ty, float tz) {
-		Matrix m = new Matrix(4, 4);
+	public static Matrix44 getTransposeMatrix(float tx, float ty, float tz) {
+		Matrix44 m = new Matrix44();
 		m.set(0, 0, 1);
 		m.set(1, 1, 1);
 		m.set(2, 2, 1);
@@ -64,12 +64,12 @@ public class MatrixHelperR3 {
 	}
 
 	// Euler XYZ = XZY here (because OpenGL has Y upwards)
-	public static Matrix getRotationMatrix(float rx, float ry, float rz) {
-		return Matrix.multiply(getRotationMatrixY(ry), Matrix.multiply(getRotationMatrixZ(rz), getRotationMatrixX(rx)));
+	public static Matrix44 getRotationMatrix(float rx, float ry, float rz) {
+		return getRotationMatrixY(ry).multiply(getRotationMatrixZ(rz).multiply(getRotationMatrixX(rx)));
 	}
 
-	public static Matrix getRotationMatrixX(float alpha) {
-		Matrix m = new Matrix(4, 4);
+	public static Matrix44 getRotationMatrixX(float alpha) {
+		Matrix44 m = new Matrix44();
 		m.set(0, 0, 1);
 		m.set(1, 1, MathHelper.cos(alpha));
 		m.set(1, 2, -MathHelper.sin(alpha));
@@ -79,8 +79,8 @@ public class MatrixHelperR3 {
 		return m;
 	}
 
-	public static Matrix getRotationMatrixY(float alpha) {
-		Matrix m = new Matrix(4, 4);
+	public static Matrix44 getRotationMatrixY(float alpha) {
+		Matrix44 m = new Matrix44();
 		m.set(0, 0, MathHelper.cos(alpha));
 		m.set(0, 2, MathHelper.sin(alpha));
 		m.set(1, 1, 1);
@@ -90,8 +90,8 @@ public class MatrixHelperR3 {
 		return m;
 	}
 
-	public static Matrix getRotationMatrixZ(float alpha) {
-		Matrix m = new Matrix(4, 4);
+	public static Matrix44 getRotationMatrixZ(float alpha) {
+		Matrix44 m = new Matrix44();
 		m.set(0, 0, MathHelper.cos(alpha));
 		m.set(0, 1, -MathHelper.sin(alpha));
 		m.set(1, 0, MathHelper.sin(alpha));
@@ -101,7 +101,7 @@ public class MatrixHelperR3 {
 		return m;
 	}
 
-	public static Vector3d applyRotation(Matrix matrix, Vector3d v) {
+	/*public static Vector3d applyRotation(Matrix matrix, Vector3d v) {
 		return Matrix.multiply(matrix, v.toMatrix()).toVector3d();
 	}
 
@@ -118,6 +118,6 @@ public class MatrixHelperR3 {
 		Vector3d vNew = null;
 		vNew = Matrix.multiply(getRotationMatrixAtVector(vRot, alpha), v.toMatrix()).toVector3d();
 		return vNew;
-	}
+	}*/
 
 }
