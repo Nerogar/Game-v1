@@ -8,6 +8,8 @@ public class Matrix {
 	private int rows = 0;
 	private int cols = 0;
 
+	public static final Matrix uniformMatrix4 = new Matrix(4, 4, new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+
 	public Matrix(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
@@ -67,6 +69,16 @@ public class Matrix {
 		if (getRows() < 3 || getCols() != 1) return null;
 		return new Vector3d(get(0, 0), get(1, 0), get(2, 0));
 	}
+	
+	public static Matrix multiply(Matrix m, float r) {
+		return m.clone().multiply(r);
+	}
+
+	public Matrix multiply(float r) {
+		for (int i = 0; i < data.length; i++)
+			data[i] *= r;
+		return this;
+	}
 
 	public Matrix clone() {
 		return new Matrix(rows, cols, data);
@@ -78,7 +90,7 @@ public class Matrix {
 		float[] dataRounded = data.clone();
 		int maxLength = 0;
 		for (int i = 0; i < dataRounded.length; i++) {
-			dataRounded[i] = Math.round(dataRounded[i]*1000)/1000f;
+			dataRounded[i] = Math.round(dataRounded[i] * 1000) / 1000f;
 			maxLength = Math.max(String.valueOf(dataRounded[i]).length(), maxLength);
 		}
 		for (int i = 0; i < rows; i++) {
@@ -93,14 +105,15 @@ public class Matrix {
 		str += "----- End of Matrix -----";
 		return str;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Matrix)) return false;
 		Matrix m = (Matrix) o;
 		if (m.rows != rows) return false;
 		if (m.cols != cols) return false;
-		for (int i = 0; i < data.length; i++) if (data[i] != m.data[i]) return false;
+		for (int i = 0; i < data.length; i++)
+			if (data[i] != m.data[i]) return false;
 		return true;
 	}
 

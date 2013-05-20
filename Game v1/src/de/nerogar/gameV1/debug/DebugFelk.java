@@ -130,7 +130,7 @@ public class DebugFelk {
 
 		testAnimation.length = 5000;
 
-		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, 11, -1 }, new float[] { 1, 1, 0.1f, 0 });
+		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, 11, 2 }, new float[] { 1, 1, 0.1f, 0.1f });
 
 		testVertex1 = new MeshVertex(new Vector3d(5, 5, 0), new int[] { 0, -1, -1, -1 }, new float[] { 1, 0, 0, 0 });
 		testVertexA = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
@@ -164,10 +164,12 @@ public class DebugFelk {
 		
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
 			long time1 = System.nanoTime();
-			int iter = 1000000;
+			int iter = 10000;
 			for (int i = 0; i < iter; i++) {
-				testSkelett.translateMeshVertex(testVertex);
-				//testSkelett.update();
+				//testSkelett.bones[14].transformGlobal(new Vector3d(Math.random(), Math.random(), Math.random()));
+				//testSkelett.translateMeshVertex(testVertex);
+				testSkelett.bones[14].markDirty();
+				testSkelett.bones[14].update();
 				//testAnimation.update();
 			}
 			long time = (System.nanoTime()-time1)/1000000;

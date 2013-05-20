@@ -26,13 +26,13 @@ public class Bone {
 	private Matrix localTransformationMatrixWithDefault = new Matrix(4, 4);
 	private Matrix globalTransformationMatrix = new Matrix(4, 4);
 	private Matrix globalTransformationMatrixWithDefault = new Matrix(4, 4);
-	
+
 	public Matrix spaceTransfo;
 
 	public Bone(Bone parent, float length) {
 		this(parent, length, null);
 	}
-	
+
 	public Bone(Bone parent, float length, Matrix space) {
 		this(parent, length, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), space);
 	}
@@ -40,7 +40,7 @@ public class Bone {
 	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot) {
 		this(parent, length, pos, sca, rot, null);
 	}
-	
+
 	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot, Matrix space) {
 		this.parent = parent;
 		this.length = length;
@@ -88,6 +88,14 @@ public class Bone {
 		updated = b;
 	}
 
+	public Matrix getGlobalTransformationMatrix() {
+		return Matrix.multiply(globalTransformationMatrix, MatrixHelperR3.getTransposeMatrix(-transPos.getXf(), -transPos.getYf(), -transPos.getZf()));
+	}
+
+	public Vector3d transformGlobal(Vector3d v) {
+		return transform(Vector3d.subtract(v, transPos));
+	}
+
 	public Vector3d transform(Vector3d v) {
 		return transform(v, false);
 	}
@@ -101,7 +109,7 @@ public class Bone {
 			//RenderHelper.drawLine(locXAxis.getStart(), parent.locXAxis.getStart(), 0xffffffff, 5);
 			RenderHelper.drawLine(transform(new Vector3d(length, 0, 0), true), transform(new Vector3d(0, 0, 0), true), 0xffffffff, 5);
 		} else {
-			RenderHelper.drawPoint(Vector3d.add(relative.position, defaults.position), 0xbbdd44ff, 15);
+			RenderHelper.drawPoint(transform(new Vector3d(0, 0, 0)), 0xbbdd44ff, 15);
 		}
 		Vector3d o = transform(new Vector3d(0, 0, 0), true);
 		Vector3d x = transform(new Vector3d(1, 0, 0), true);
