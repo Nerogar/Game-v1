@@ -47,6 +47,10 @@ public class ObjectMatrix {
 	public Vector3d getScaling() {
 		return scaling;
 	}
+	
+	public ObjectMatrix clone() {
+		return new ObjectMatrix(position.clone(), rotation.clone(), scaling.clone());
+	}
 
 	//TODO WICHTIG: Skalierung und Rotationen wurden in folgenden Funktionen u.a. noch nicht eingebaut
 

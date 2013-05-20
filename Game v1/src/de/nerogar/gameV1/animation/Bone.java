@@ -13,62 +13,71 @@ public class Bone {
 
 	public Bone parent;
 
-	public double length;
+	public float length;
 
 	public final ObjectMatrix defaults;
 	public ObjectMatrix relative;
 
-	//public final Vector3d defPosition, defScaling, defRotation;
-	//public Vector3d relPosition, relScaling, relRotation;
-
 	public final Vector3d transPos;
 
-	private Line locXAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(1, 0, 0));
-	private Line locYAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(0, 1, 0));
-	private Line locZAxis = new Line(new Vector3d(0, 0, 0), new Vector3d(0, 0, 1));
-
 	private boolean updated;
-	private Matrix rotationMatrixX = new Matrix(3, 3);
-	private Matrix rotationMatrixY = new Matrix(3, 3);
-	private Matrix rotationMatrixZ = new Matrix(3, 3);
-	private Matrix rotationMatrixXwithDefault = new Matrix(3, 3);
-	private Matrix rotationMatrixYwithDefault = new Matrix(3, 3);
-	private Matrix rotationMatrixZwithDefault = new Matrix(3, 3);
 
-	public Bone(Bone parent, double length) {
-		this(parent, length, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+	private Matrix localTransformationMatrix = new Matrix(4, 4);
+	private Matrix localTransformationMatrixWithDefault = new Matrix(4, 4);
+	private Matrix globalTransformationMatrix = new Matrix(4, 4);
+	private Matrix globalTransformationMatrixWithDefault = new Matrix(4, 4);
+	
+	public Matrix spaceTransfo;
+
+	public Bone(Bone parent, float length) {
+		this(parent, length, null);
+	}
+	
+	public Bone(Bone parent, float length, Matrix space) {
+		this(parent, length, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), space);
 	}
 
-	public Bone(Bone parent, double length, Vector3d pos, Vector3d sca, Vector3d rot) {
+	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot) {
+		this(parent, length, pos, sca, rot, null);
+	}
+	
+	public Bone(Bone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot, Matrix space) {
 		this.parent = parent;
 		this.length = length;
 		this.defaults = new ObjectMatrix(pos, rot, sca);
 		this.relative = new ObjectMatrix();
+		this.spaceTransfo = space;
 		update();
-		transPos = (parent == null) ? locXAxis.getStart().clone() : parent.locXAxis.getStart().clone();
+		transPos = transform(new Vector3d(0, 0, 0), true);
+	}
+
+	private void updateLocalTransformationMatrix(boolean withDefault) {
+		ObjectMatrix summed = relative.clone();
+		float l = (parent == null) ? 0 : parent.length;
+
+		if (withDefault) {
+			summed.position.add(defaults.position);
+			summed.rotation.add(defaults.rotation);
+			summed.scaling.multiply(defaults.scaling);
+		}
+
+		Matrix transformation = MatrixHelperR3.getTransformationMatrix(summed);
+		Matrix lengthTranslation = MatrixHelperR3.getTransposeMatrix(l, 0, 0);
+
+		if (withDefault)
+			localTransformationMatrixWithDefault = Matrix.multiply(lengthTranslation, transformation);
+		else
+			localTransformationMatrix = Matrix.multiply(lengthTranslation, transformation);
 	}
 
 	public void update() {
 		if (isUpdated()) return;
 		if (parent != null) if (!parent.isUpdated()) parent.update();
-		if (parent == null) {
-			updateLocalAxes();
-			updateRotationMatrices();
-		} else {
-			updateRotationMatrices();
-			updateLocalAxes();
-		}
+		updateLocalTransformationMatrix(false);
+		updateLocalTransformationMatrix(true);
+		globalTransformationMatrix = (parent == null) ? Matrix.multiply(spaceTransfo, localTransformationMatrix) : Matrix.multiply(parent.globalTransformationMatrix, localTransformationMatrix);
+		globalTransformationMatrixWithDefault = (parent == null) ? Matrix.multiply(spaceTransfo, localTransformationMatrixWithDefault) : Matrix.multiply(parent.globalTransformationMatrixWithDefault, localTransformationMatrixWithDefault);
 		setUpdated(true);
-	}
-
-	private void updateRotationMatrices() {
-		rotationMatrixX = MatrixHelperR3.getRotationMatrix((parent == null) ? locXAxis.getDirection() : parent.locXAxis.getDirection(), relative.rotation.getXf());
-		rotationMatrixY = MatrixHelperR3.getRotationMatrix((parent == null) ? locYAxis.getDirection() : parent.locYAxis.getDirection(), relative.rotation.getYf());
-		rotationMatrixZ = MatrixHelperR3.getRotationMatrix((parent == null) ? locZAxis.getDirection() : parent.locZAxis.getDirection(), relative.rotation.getZf());
-
-		rotationMatrixXwithDefault = MatrixHelperR3.getRotationMatrix((parent == null) ? locXAxis.getDirection() : parent.locXAxis.getDirection(), defaults.rotation.getXf() + relative.rotation.getXf());
-		rotationMatrixYwithDefault = MatrixHelperR3.getRotationMatrix((parent == null) ? locYAxis.getDirection() : parent.locYAxis.getDirection(), defaults.rotation.getYf() + relative.rotation.getYf());
-		rotationMatrixZwithDefault = MatrixHelperR3.getRotationMatrix((parent == null) ? locZAxis.getDirection() : parent.locZAxis.getDirection(), defaults.rotation.getZf() + relative.rotation.getZf());
 	}
 
 	public boolean isUpdated() {
@@ -79,64 +88,28 @@ public class Bone {
 		updated = b;
 	}
 
-	public void updateLocalAxes() {
-		if (parent == null) {
-			Vector3d x = new Vector3d(1, 0, 0);
-			Vector3d y = new Vector3d(0, 1, 0);
-			Vector3d z = new Vector3d(0, 0, 1);
-
-			Vector3d defPlusRel = Vector3d.add(defaults.position, relative.position);
-			locXAxis = new Line(defPlusRel, x);
-			locYAxis = new Line(defPlusRel, y);
-			locZAxis = new Line(defPlusRel, z);
-		} else {
-			Vector3d o = transformate(new Vector3d(length, 0, 0), true);
-			Vector3d x = transformate(new Vector3d(length + 1, 0, 0), true);
-			Vector3d y = transformate(new Vector3d(length, 1, 0), true);
-			//Vector3d z = translate(new Vector3d(0, 0, 1));
-			Vector3d ox = Vector3d.subtract(x, o).normalize();
-			Vector3d oy = Vector3d.subtract(y, o).normalize();
-			Vector3d oz = Vector3d.crossProduct(ox, oy);
-			//Vector3d oz = Vector3d.subtract(z, o).normalize();
-			locXAxis = new Line(o, ox);
-			locYAxis = new Line(o, oy);
-			locZAxis = new Line(o, oz);
-		}
+	public Vector3d transform(Vector3d v) {
+		return transform(v, false);
 	}
 
-	public Vector3d transformate(Vector3d v) {
-		return transformate(v, false);
-	}
-
-	public Vector3d transformate(Vector3d v, boolean withDefault) {
-		Vector3d vNew = v.clone();
-		Vector3d position = withDefault ? Vector3d.add(relative.position, defaults.position) : relative.position;
-		Vector3d scaling = withDefault ? Vector3d.multiply(relative.scaling, defaults.scaling) : relative.scaling;
-		Vector3d posMulSca = Vector3d.multiply(position, scaling);
-		if (parent != null) vNew = parent.transformate(vNew, true);
-		if (parent != null) {
-			vNew.add(Vector3d.multiply(parent.locXAxis.getDirection(), posMulSca.getX() + parent.length * (parent.relative.scaling.getX() * (withDefault ? parent.defaults.scaling.getX() : 1))));
-			vNew.add(Vector3d.multiply(parent.locYAxis.getDirection(), posMulSca.getY()));
-			vNew.add(Vector3d.multiply(parent.locZAxis.getDirection(), posMulSca.getZ()));
-		} else {
-			vNew.add(posMulSca);
-		}
-		vNew = MatrixHelperR3.applyRotationAt(withDefault ? rotationMatrixXwithDefault : rotationMatrixX, vNew, (parent == null) ? locXAxis.getStart() : parent.locXAxis.getStart());
-		vNew = MatrixHelperR3.applyRotationAt(withDefault ? rotationMatrixZwithDefault : rotationMatrixZ, vNew, (parent == null) ? locZAxis.getStart() : parent.locZAxis.getStart());
-		vNew = MatrixHelperR3.applyRotationAt(withDefault ? rotationMatrixYwithDefault : rotationMatrixY, vNew, (parent == null) ? locYAxis.getStart() : parent.locYAxis.getStart());
-		return vNew;
+	public Vector3d transform(Vector3d v, boolean withDefault) {
+		return Matrix.multiply(withDefault ? globalTransformationMatrixWithDefault : globalTransformationMatrix, v.toMatrix4()).toVector3d();
 	}
 
 	public void renderBone() {
 		if (parent != null) {
-			RenderHelper.drawLine(locXAxis.getStart(), parent.locXAxis.getStart(), 0xffffffff, 5);
-			//RenderHelper.drawLine(translate(new Vector3d(0, 0, 0)), parent.translate(new Vector3d(0, 0, 0)), 0xffffffff, 5);
+			//RenderHelper.drawLine(locXAxis.getStart(), parent.locXAxis.getStart(), 0xffffffff, 5);
+			RenderHelper.drawLine(transform(new Vector3d(length, 0, 0), true), transform(new Vector3d(0, 0, 0), true), 0xffffffff, 5);
 		} else {
 			RenderHelper.drawPoint(Vector3d.add(relative.position, defaults.position), 0xbbdd44ff, 15);
 		}
-		RenderHelper.drawLine(locXAxis, 0xff0000ff, 1);
-		RenderHelper.drawLine(locYAxis, 0x00ff00ff, 1);
-		RenderHelper.drawLine(locZAxis, 0x0000ffff, 1);
+		Vector3d o = transform(new Vector3d(0, 0, 0), true);
+		Vector3d x = transform(new Vector3d(1, 0, 0), true);
+		Vector3d y = transform(new Vector3d(0, 1, 0), true);
+		Vector3d z = transform(new Vector3d(0, 0, 1), true);
+		RenderHelper.drawLine(new Line(o, Vector3d.subtract(x, o)), 0xff0000ff, 1);
+		RenderHelper.drawLine(new Line(o, Vector3d.subtract(y, o)), 0x00ff00ff, 1);
+		RenderHelper.drawLine(new Line(o, Vector3d.subtract(z, o)), 0x0000ffff, 1);
 	}
 
 	public void markDirty() {

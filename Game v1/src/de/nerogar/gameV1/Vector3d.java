@@ -264,9 +264,18 @@ public class Vector3d {
 	
 	public Matrix toMatrix() {
 		Matrix m = new Matrix(3, 1);
-		m.set(0, 0, getX());
-		m.set(1, 0, getY());
-		m.set(2, 0, getZ());
+		m.set(0, 0, getXf());
+		m.set(1, 0, getYf());
+		m.set(2, 0, getZf());
+		return m;
+	}
+	
+	public Matrix toMatrix4() {
+		Matrix m = new Matrix(4, 1);
+		m.set(0, 0, getXf());
+		m.set(1, 0, getYf());
+		m.set(2, 0, getZf());
+		m.set(3, 0, 1);
 		return m;
 	}
 	

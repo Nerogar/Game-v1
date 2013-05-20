@@ -2,9 +2,9 @@ package de.nerogar.gameV1;
 
 public final class MathHelper {
 
-	private static double[] sin;
-	private static double[] cos;
-	private static double[] tan;
+	private static float[] sin;
+	private static float[] cos;
+	private static float[] tan;
 
 	private static final int LOOKUPLENGTH = 1000;
 
@@ -18,25 +18,25 @@ public final class MathHelper {
 
 	static {
 
-		sin = new double[(int) (SINLENGTH * TAU) + 1];
+		sin = new float[(int) (SINLENGTH * TAU) + 1];
 		for (int i = 0; i < sin.length; i++) {
-			sin[i] = Math.sin((double) i / SINLENGTH);
+			sin[i] = (float) Math.sin((float) i / SINLENGTH);
 		}
 
-		cos = new double[(int) (COSLENGTH * TAU) + 1];
+		cos = new float[(int) (COSLENGTH * TAU) + 1];
 		for (int i = 0; i < cos.length; i++) {
-			cos[i] = Math.cos((double) i / COSLENGTH);
+			cos[i] = (float) Math.cos((float) i / COSLENGTH);
 		}
 
-		tan = new double[(int) (TANLENGTH * TAU) + 1];
+		tan = new float[(int) (TANLENGTH * TAU) + 1];
 		for (int i = 0; i < tan.length; i++) {
-			tan[i] = Math.tan((double) i / TANLENGTH);
+			tan[i] = (float) Math.tan((float) i / TANLENGTH);
 		}
 
 	}
 
 	// x in Rad
-	public static double sin(float x) {
+	public static float sin(float x) {
 
 		double x2 = x;
 		x2 = x2 % TAU;
@@ -48,7 +48,7 @@ public final class MathHelper {
 	}
 
 	// x in Rad
-	public static double cos(float x) {
+	public static float cos(float x) {
 
 		double x2 = x;
 		x2 = x2 % TAU;
@@ -60,7 +60,7 @@ public final class MathHelper {
 	}
 
 	// x in Rad
-	public static double tan(float x) {
+	public static float tan(float x) {
 
 		double x2 = x;
 		x2 = x2 % TAU;
@@ -130,6 +130,14 @@ public final class MathHelper {
 
 	}
 
+	public static float getHightest(float... d) {
+		float dH = d[0];
+		for (int i = 0; i < d.length; i++) {
+			if (d[i] > dH) dH = d[i];
+		}
+		return dH;
+	}
+	
 	public static double getHightest(double... d) {
 		double dH = d[0];
 		for (int i = 0; i < d.length; i++) {
@@ -146,6 +154,14 @@ public final class MathHelper {
 		return dH;
 	}
 
+	public static float getLowest(float... d) {
+		float dH = d[0];
+		for (int i = 0; i < d.length; i++) {
+			if (d[i] < dH) dH = d[i];
+		}
+		return dH;
+	}
+	
 	public static double getLowest(double... d) {
 		double dH = d[0];
 		for (int i = 0; i < d.length; i++) {
@@ -169,4 +185,5 @@ public final class MathHelper {
 	public static double RadToDeg(double rad) {
 		return radToDeg * rad;
 	}
+
 }

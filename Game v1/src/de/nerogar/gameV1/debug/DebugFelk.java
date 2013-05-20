@@ -17,6 +17,7 @@ import de.nerogar.gameV1.animation.MeshVertex;
 import de.nerogar.gameV1.animation.Skeleton;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
+import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.ALBufferBank;
 import de.nerogar.gameV1.sound.ALSource;
@@ -41,32 +42,28 @@ public class DebugFelk {
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
 
-		Bone rootBone = new Bone(null, 0, new Vector3d(5, 5, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0));
+		Bone rootBone = new Bone(null, 0, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), MatrixHelperR3.getTransformationMatrix(1, 1, 1, 0, 0, 0, 5, 5, 0));
 
 		Bone arm1 = new Bone(rootBone, 3);
 		Bone arm2 = new Bone(arm1, 3);
 		Bone wrist = new Bone(arm2, 1);
-		Bone thumbsplit = new Bone(wrist, 0.6, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(1, -1.1, 0));
-		Bone fingersplit1 = new Bone(wrist, 0.8, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.45, 0));
-		Bone fingersplit2 = new Bone(wrist, 0.8, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.15, 0));
-		Bone fingersplit3 = new Bone(wrist, 0.8, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.15, 0));
-		Bone fingersplit4 = new Bone(wrist, 0.8, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.45, 0));
-		Bone thumbA = new Bone(thumbsplit, 0.6);
-		Bone thumbB = new Bone(thumbA, 0.6);
-		Bone finger1A = new Bone(fingersplit1, 0.8);
-		Bone finger1B = new Bone(finger1A, 0.8);
-		Bone finger2A = new Bone(fingersplit2, 0.8);
-		Bone finger2B = new Bone(finger2A, 0.8);
-		Bone finger3A = new Bone(fingersplit3, 0.8);
-		Bone finger3B = new Bone(finger3A, 0.8);
-		Bone finger4A = new Bone(fingersplit4, 0.8);
-		Bone finger4B = new Bone(finger4A, 0.8);
+		Bone thumbsplit = new Bone(wrist, 0.6f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(1, -1.1, 0));
+		Bone fingersplit1 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.45, 0));
+		Bone fingersplit2 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.15, 0));
+		Bone fingersplit3 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.15, 0));
+		Bone fingersplit4 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.45, 0));
+		Bone thumbA = new Bone(thumbsplit, 0.6f);
+		Bone thumbB = new Bone(thumbA, 0.6f);
+		Bone finger1A = new Bone(fingersplit1, 0.8f);
+		Bone finger1B = new Bone(finger1A, 0.8f);
+		Bone finger2A = new Bone(fingersplit2, 0.8f);
+		Bone finger2B = new Bone(finger2A, 0.8f);
+		Bone finger3A = new Bone(fingersplit3, 0.8f);
+		Bone finger3B = new Bone(finger3A, 0.8f);
+		Bone finger4A = new Bone(fingersplit4, 0.8f);
+		Bone finger4B = new Bone(finger4A, 0.8f);
 
 		Bone[] bones = new Bone[] { arm1, arm2, wrist, thumbsplit, fingersplit1, fingersplit2, fingersplit3, fingersplit4, thumbA, thumbB, finger1A, finger1B, finger2A, finger2B, finger3A, finger3B, finger4A, finger4B };
-
-		//bones[0] = new Bone(rootBone, 5, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, .2));
-		//bones[1] = new Bone(bones[0], 5, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -.4, 0));
-		//bones[2] = new Bone(bones[1], 5, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(.1, 0, 0));
 
 		testSkelett = new Skeleton(rootBone, bones);
 		testSkelett.update();
@@ -131,9 +128,9 @@ public class DebugFelk {
 		kfSetFinger4B.addOverallKeyframe(new ObjectMatrix(), 0.9f, Keyframe.INTERPOLATE_LINEAR);
 		testAnimation.keyframesMap.put(finger4B, kfSetFinger4B);
 
-		testAnimation.length = 15000;
+		testAnimation.length = 5000;
 
-		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
+		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, 11, -1 }, new float[] { 1, 1, 0.1f, 0 });
 
 		testVertex1 = new MeshVertex(new Vector3d(5, 5, 0), new int[] { 0, -1, -1, -1 }, new float[] { 1, 0, 0, 0 });
 		testVertexA = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
@@ -167,10 +164,11 @@ public class DebugFelk {
 		
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
 			long time1 = System.nanoTime();
-			int iter = 10000;
+			int iter = 1000000;
 			for (int i = 0; i < iter; i++) {
 				testSkelett.translateMeshVertex(testVertex);
 				//testSkelett.update();
+				//testAnimation.update();
 			}
 			long time = (System.nanoTime()-time1)/1000000;
 			System.out.println(iter+" iterations took "+time+" ms");
