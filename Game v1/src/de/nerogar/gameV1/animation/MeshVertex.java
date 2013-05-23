@@ -1,6 +1,7 @@
 package de.nerogar.gameV1.animation;
 
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.matrix.Matrix44;
 
 public class MeshVertex {
 
@@ -8,6 +9,7 @@ public class MeshVertex {
 	public int[] boneIDs = new int[4];
 	public float[] weights = new float[4];
 	private boolean corrupt = false;
+	public Matrix44 transformationMatrix;
 
 	public MeshVertex(Vector3d vector, int[] bones, float[] weights) {
 		this.vector = vector;

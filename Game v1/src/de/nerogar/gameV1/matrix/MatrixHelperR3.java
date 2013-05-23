@@ -38,7 +38,7 @@ public class MatrixHelperR3 {
 	public static Matrix44 getTransformationMatrix(float scaleX, float scaleY, float scaleZ, float rotX, float rotY, float rotZ, float posX, float posY, float posZ) {
 		Matrix44 scale = MatrixHelperR3.getScaleMatrix(scaleX, scaleY, scaleZ);
 		Matrix44 rotation = MatrixHelperR3.getRotationMatrix(rotX, rotY, rotZ);
-		Matrix44 translation = MatrixHelperR3.getTransposeMatrix(posX, posY, posZ);
+		Matrix44 translation = MatrixHelperR3.getTranslationMatrix(posX, posY, posZ);
 		return translation.multiply(rotation.multiply(scale));
 	}
 
@@ -51,7 +51,7 @@ public class MatrixHelperR3 {
 		return m;
 	}
 
-	public static Matrix44 getTransposeMatrix(float tx, float ty, float tz) {
+	public static Matrix44 getTranslationMatrix(float tx, float ty, float tz) {
 		Matrix44 m = new Matrix44();
 		m.set(0, 0, 1);
 		m.set(1, 1, 1);

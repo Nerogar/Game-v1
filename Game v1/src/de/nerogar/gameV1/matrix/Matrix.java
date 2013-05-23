@@ -2,7 +2,7 @@ package de.nerogar.gameV1.matrix;
 
 public abstract class Matrix {
 
-	protected float[] data;
+	public float[] data;
 	protected int rows = 0;
 	protected int cols = 0;
 

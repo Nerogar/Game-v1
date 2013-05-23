@@ -1,7 +1,12 @@
 package de.nerogar.gameV1.debug;
 
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.Game;
@@ -15,6 +20,8 @@ import de.nerogar.gameV1.animation.Keyframe;
 import de.nerogar.gameV1.animation.KeyframeSet;
 import de.nerogar.gameV1.animation.MeshVertex;
 import de.nerogar.gameV1.animation.Skeleton;
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
@@ -37,6 +44,13 @@ public class DebugFelk {
 	}
 
 	public void startup() {
+
+		ShaderBank.instance.createShaderProgramm("animation");
+		Shader animationShader = ShaderBank.instance.getShader("animation");
+
+		animationShader.setVertexShader("res/shaders/animationShader.vert");
+		animationShader.setFragmentShader("res/shaders/animationShader.frag");
+		animationShader.compile();
 
 		//SoundManager.instance.preLoadSounds();
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
@@ -130,7 +144,7 @@ public class DebugFelk {
 
 		testAnimation.length = 5000;
 
-		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0.1f, 0.1f });
+		testVertex = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, 2, 3 }, new float[] { 1, 1, 0.1f, 0.1f });
 
 		testVertex1 = new MeshVertex(new Vector3d(5, 5, 0), new int[] { 0, -1, -1, -1 }, new float[] { 1, 0, 0, 0 });
 		testVertexA = new MeshVertex(new Vector3d(8, 6, 0), new int[] { 0, 1, -1, -1 }, new float[] { 1, 1, 0, 0 });
@@ -161,19 +175,21 @@ public class DebugFelk {
 		if (InputHandler.isKeyDown(Keyboard.KEY_0)) {
 			testSkelett.bones[1].relative.rotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));
 		}
-		
+
 		if (InputHandler.isKeyDown(Keyboard.KEY_1)) {
 			long time1 = System.nanoTime();
-			int iter = 1000000;
+			int iter = 100000;
 			for (int i = 0; i < iter; i++) {
 				//testSkelett.bones[14].transformGlobal(new Vector3d(Math.random(), Math.random(), Math.random()));
-				testSkelett.translateMeshVertex(testVertex);
+				//testSkelett.translateMeshVertex(testVertex);
 				//testSkelett.bones[14].markDirty();
 				//testSkelett.bones[14].update();
+				testSkelett.updateTransformationMatrix(testVertex);
 				//testAnimation.update();
 			}
-			long time = (System.nanoTime()-time1)/1000000;
-			System.out.println(iter+" iterations took "+time+" ms");
+			long time = (System.nanoTime() - time1) / 1000000;
+			System.out.println(iter + " iterations took " + time + " ms");
+
 		}
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_J)) {
@@ -182,7 +198,8 @@ public class DebugFelk {
 
 		testAnimation.update();
 		testSkelett.update();
-		testVector = testSkelett.translateMeshVertex(testVertex);
+		//testVector = testSkelett.translateMeshVertex(testVertex);
+		testSkelett.updateTransformationMatrix(testVertex);
 
 	}
 
@@ -194,8 +211,13 @@ public class DebugFelk {
 	}
 
 	public void additionalRender() {
+		Shader animationShader = ShaderBank.instance.getShader("animation");
+		animationShader.activate();
+		glUniformMatrix4(glGetUniformLocation(animationShader.shaderHandle, "transformationMatrix"), true, testVertex.transformationMatrix.asFloatBuffer());
+		testVertex.vector.render();
+		animationShader.deactivate();
 		testSkelett.drawSkeleton();
-		testVector.render();
+		//testVector.render();
 		RenderHelper.drawTriangle(testSkelett.translateMeshVertex(testVertex1), testSkelett.translateMeshVertex(testVertexA), testSkelett.translateMeshVertex(testVertexB), 0xFE33BA99);
 		RenderHelper.drawTriangle(testSkelett.translateMeshVertex(testVertex1), testSkelett.translateMeshVertex(testVertexB), testSkelett.translateMeshVertex(testVertexA), 0xFE33BA99);
 		RenderHelper.drawTriangle(testSkelett.translateMeshVertex(testVertex2), testSkelett.translateMeshVertex(testVertexA), testSkelett.translateMeshVertex(testVertexB), 0xFE33BA99);
