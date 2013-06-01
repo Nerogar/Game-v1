@@ -28,4 +28,9 @@ public class PacketConnectionInfo extends Packet {
 		version = data.getString("version");
 		username = data.getString("username");
 	}
+
+	@Override
+	public String getName() {
+		return "ConnectionInfo";
+	}
 }

@@ -59,7 +59,7 @@ public class GuiPauseMenu extends Gui {
 		} else if (id == closeGameButton.id && mouseButton == 0) {
 			game.world.closeWorld();
 			game.guiList.removeGui(getName());
-			game.guiList.addGui(new GuiMain(game));
+			//game.guiList.addGui(new GuiMain(game));
 		} else if (id == videosettingsButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));

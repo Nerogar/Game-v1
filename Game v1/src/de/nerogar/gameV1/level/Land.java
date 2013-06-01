@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
@@ -158,9 +157,7 @@ public class Land {
 		max *= max;
 		int updates = loadChunksAroundXZ(blockPosition);
 		while (updates > 0) {
-			i += updates;
 			updates = loadChunksAroundXZ(blockPosition);
-			RenderHelper.renderLoadingScreen("Lade Chunk " + i + "/" + max);
 		}
 	}
 
@@ -175,10 +172,20 @@ public class Land {
 		world.collisionComparer.newGrid();
 	}
 
-	public void unloadAll() {
-		for (int i = chunks.size() - 1; i >= 0; i--) {
-			if (!world.serverWorld) RenderHelper.renderLoadingScreen("Speichere Chunk " + i);
-			unloadChunk(chunks.get(i).chunkPosition);
+	public void unloadAll(boolean save) {
+		if (save) {
+			for (int i = chunks.size() - 1; i >= 0; i--) {
+				unloadChunk(chunks.get(i).chunkPosition);
+				world.collisionComparer.newGrid();
+			}
+		} else {
+			for (int i = chunks.size() - 1; i >= 0; i--) {
+				Chunk tempChunk = chunks.get(i);
+				tempChunk.cleanup();
+				chunkGrid[tempChunk.chunkPosition.x - chunkGridMinX][tempChunk.chunkPosition.z - chunkGridMinZ] = null;
+				rebuildChunkList();
+			}
+			world.collisionComparer.newGrid();
 		}
 	}
 
@@ -195,7 +202,7 @@ public class Land {
 		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
 		rebuildChunkList();
 		updateWalkMapNodeNeighbors(tempChunk);
-		world.collisionComparer.newGrid();
+
 	}
 
 	public void updateWalkMapNodeNeighbors(Chunk chunk) {

@@ -30,4 +30,9 @@ public class PacketMultiplayerLobbyInfo extends Packet {
 		playerReadyStates = data.getBooleanArray("playerReadyStates");
 
 	}
+
+	@Override
+	public String getName() {
+		return "MultiplayerLobbyInfo";
+	}
 }

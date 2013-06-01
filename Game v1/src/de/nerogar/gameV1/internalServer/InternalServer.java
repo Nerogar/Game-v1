@@ -30,6 +30,7 @@ public class InternalServer extends Thread {
 
 	public void initiateWorld(String levelName, long seed) {
 		world.initiateWorld(levelName, seed);
+		world.internalServer = this;
 		start();
 	}
 
@@ -55,7 +56,7 @@ public class InternalServer extends Thread {
 	}
 
 	public void cleanup() {
-		world.closeWorld();
+		if (world.isLoaded) world.closeWorld();
 		server.stopServer();
 	}
 

@@ -37,7 +37,7 @@ public class ReceiveThread extends Thread {
 					receivedBytes += in.read(buffer, receivedBytes, buffer.length - receivedBytes);
 				}
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
-				if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("received packet: " + receivedPacket.packetID + " (" + receivedBytes + "/" + buffer.length + " bytes)");
+				if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("received packet: " + receivedPacket.getName() + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
 				receivedPacket.unpack();
 

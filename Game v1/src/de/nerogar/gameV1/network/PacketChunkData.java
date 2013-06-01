@@ -30,4 +30,9 @@ public class PacketChunkData extends Packet {
 		chunkFile.fromByteArray(data.getByteArray("chunkData"));
 		chunkPos = new Position(data.getInt("posX"), data.getInt("posZ"));
 	}
+
+	@Override
+	public String getName() {
+		return "ChunkData";
+	}
 }

@@ -42,6 +42,8 @@ public abstract class Packet {
 		return data;
 	}
 
+	public abstract String getName();
+
 	private static void registerPacket(Class<? extends Packet> packet) {
 		packetIdMap.put(packet, biggestID);
 
@@ -57,5 +59,6 @@ public abstract class Packet {
 		registerPacket(PacketMultiplayerLobbyClient.class);
 		registerPacket(PacketExitMultiplayerLobby.class);
 		registerPacket(PacketChunkData.class);
+		registerPacket(PacketExitGame.class);
 	}
 }

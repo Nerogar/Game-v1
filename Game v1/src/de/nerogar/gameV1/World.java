@@ -10,6 +10,7 @@ import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.Client;
 import de.nerogar.gameV1.network.Packet;
 import de.nerogar.gameV1.network.PacketChunkData;
+import de.nerogar.gameV1.network.PacketExitGame;
 import de.nerogar.gameV1.network.Server;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
@@ -17,7 +18,9 @@ import de.nerogar.gameV1.ai.Path;
 import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.gui.GuiMain;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
+import de.nerogar.gameV1.internalServer.InternalServer;
 
 public class World {
 	public Game game;
@@ -30,6 +33,7 @@ public class World {
 	public CollisionComparer collisionComparer;
 	public Server server;
 	public Client client;
+	public InternalServer internalServer;
 	public boolean serverWorld;
 	public ArrayList<Player> players;
 	public Player player;
@@ -71,10 +75,7 @@ public class World {
 		land.seed = worldData.seed;
 		land.levelGenerator = new LevelGenerator(land);
 
-		if (!serverWorld) {
-			player.camera.init();
-			loadPosition = player.camera.getCamCenter().toPosition();
-		} else {
+		if (serverWorld) {
 			loadPosition = new Position();
 
 			land.loadAllAroundXZ(loadPosition);
@@ -105,20 +106,34 @@ public class World {
 		// Der letzte, zusätzliche Parameter ist Testweise die Skalierung (Der AABB)
 	}
 
-	public void initiateClientWorld() {
+	public void initiateClientWorld(Client client) {
 		isLoaded = true;
+		this.client = client;
+		player.camera.init();
+		loadPosition = player.camera.getCamCenter().toPosition();
 	}
 
 	public void closeWorld() {
-		if (!serverWorld) RenderHelper.renderLoadingScreen("Speichere Welt...");
+		//if (!serverWorld) RenderHelper.renderLoadingScreen("Speichere Welt...");
+
+		if (serverWorld) {
+			exitWorld(true);
+		} else {
+			PacketExitGame exitPacket = new PacketExitGame();
+			client.sendPacket(exitPacket);
+		}
+		System.gc();
+	}
+
+	public void exitWorld(boolean save) {
 		isLoaded = false;
-		land.unloadAll();
+		land.unloadAll(save);
 		entityList.unloadAll();
 		collisionComparer.cleanup();
-		worldData.save();
-		worldData = null;
-
-		System.gc();
+		if (save) {
+			worldData.save();
+			worldData = null;
+		}
 	}
 
 	public void updateServer() {
@@ -140,7 +155,12 @@ public class World {
 	}
 
 	private void processServerPackets(Client connectionClient, Packet packet) {
-
+		if (packet instanceof PacketExitGame) {
+			PacketExitGame exitGame = (PacketExitGame) packet;
+			closeWorld();
+			server.broadcastData(exitGame);
+			internalServer.stopServer();
+		}
 	}
 
 	public void updateClient() {
@@ -160,6 +180,9 @@ public class World {
 			Chunk recChunk = new Chunk(chunkData.chunkPos, land.saveName, this, false);
 			recChunk.buildChunk(chunkData.chunkFile);
 			land.addChunk(recChunk);
+		} else if (packet instanceof PacketExitGame) {
+			exitWorld(false);
+			game.guiList.addGui(new GuiMain(game));
 		}
 	}
 

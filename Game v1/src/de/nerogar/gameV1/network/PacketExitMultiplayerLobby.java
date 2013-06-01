@@ -19,4 +19,9 @@ public class PacketExitMultiplayerLobby extends Packet {
 		data = new DNFile("");
 		data.fromByteArray(packedData);
 	}
+
+	@Override
+	public String getName() {
+		return "ExitMultiplayerLobby";
+	}
 }

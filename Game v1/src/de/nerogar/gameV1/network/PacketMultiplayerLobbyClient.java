@@ -26,4 +26,9 @@ public class PacketMultiplayerLobbyClient extends Packet {
 
 		readyState = data.getBoolean("readyState");
 	}
+
+	@Override
+	public String getName() {
+		return "MultiplayerLobyClient";
+	}
 }

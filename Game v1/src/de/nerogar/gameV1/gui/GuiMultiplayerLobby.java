@@ -123,8 +123,7 @@ public class GuiMultiplayerLobby extends Gui {
 			} else if (packet instanceof PacketExitMultiplayerLobby) {
 				//PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
 				game.guiList.removeGui(getName());
-				game.world.initiateClientWorld();
-				game.world.client = client;
+				game.world.initiateClientWorld(client);
 			}
 		}
 	}
@@ -175,9 +174,10 @@ public class GuiMultiplayerLobby extends Gui {
 		} else if (id == startButton.id && mouseButton == 0) {
 			InternalServer internalServer = new InternalServer(game, server);
 			game.internalServer = internalServer;
-			internalServer.initiateWorld("serverWorld", 0); //hardcoded world for now
 			PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
 			server.broadcastData(exitPacket);
+			internalServer.initiateWorld("serverWorld", 0); //hardcoded world for now
+			
 		}
 	}
 }
