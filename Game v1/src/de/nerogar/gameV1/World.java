@@ -159,6 +159,7 @@ public class World {
 			PacketExitGame exitGame = (PacketExitGame) packet;
 			closeWorld();
 			server.broadcastData(exitGame);
+			
 			internalServer.stopServer();
 		}
 	}

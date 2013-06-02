@@ -30,7 +30,7 @@ public class SendThread extends Thread {
 				DataOutputStream out;
 				out = new DataOutputStream(socket.getOutputStream());
 
-				while (running) {
+				while (running || data.size() > 0) {
 					if (data.size() == 0) startWaiting();
 
 					synchronized (data) {
@@ -50,6 +50,14 @@ public class SendThread extends Thread {
 							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.getName() + " (" + buffer.length + " bytes)");
 						}
 					}
+				}
+
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (NullPointerException e) {
+					e.printStackTrace();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

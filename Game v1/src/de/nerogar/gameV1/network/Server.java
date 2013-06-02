@@ -51,11 +51,12 @@ public class Server extends Thread {
 	}
 
 	public void broadcastData(Packet packet) {
+		if (!packet.packed) {
+			packet.pack();
+			packet.packed = true;
+		}
+
 		for (Client broadcastClient : clients) {
-			if (!packet.packed) {
-				packet.pack();
-				packet.packed = true;
-			}
 
 			broadcastClient.sendPacket(packet);
 		}

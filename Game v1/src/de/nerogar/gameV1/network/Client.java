@@ -79,14 +79,6 @@ public class Client {
 
 		receiver.stopThread();
 
-		try {
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-
 		sender.stopThread();
 		if (clientType == SERVER_CLIENT) {
 			server.removeClient(this);
