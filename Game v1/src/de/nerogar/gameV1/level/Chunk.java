@@ -1,10 +1,12 @@
 package de.nerogar.gameV1.level;
 
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.io.File;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
@@ -15,6 +17,7 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.PathNode;
+import de.nerogar.gameV1.debug.DebugNerogar;
 
 public class Chunk {
 	public static final int CHUNKSIZE = 64;
@@ -29,8 +32,13 @@ public class Chunk {
 	private String filename;
 	private String dirname = "saves/";
 
-	public FloatBuffer vertexData, colorData, textureData;
-	int vboVertexHandle, vboColorHandle, vboTextureHandle;
+	private static final int POSITIONSIZE = CHUNKSIZE * CHUNKSIZE * 4 * 3;
+	private static final int TEXTURESIZE = CHUNKSIZE * CHUNKSIZE * 4 * 2;
+	private static final int VERTEXNUMBER = CHUNKSIZE * CHUNKSIZE * 4;
+	public FloatBuffer vertexData;
+	public IntBuffer atribData;
+	public int vboVertexHandle, atribHandle;
+
 	public World world;
 	private boolean serverChunk;
 
@@ -40,9 +48,8 @@ public class Chunk {
 		filename = dirname + "chunk_" + String.valueOf(chunkPosition.x) + "#" + String.valueOf(chunkPosition.z) + fileExtension;
 		this.chunkPosition = chunkPosition;
 		if (!serverChunk) {
-			vertexData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
-			colorData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 3);
-			textureData = BufferUtils.createFloatBuffer(CHUNKSIZE * CHUNKSIZE * 4 * 2);
+			vertexData = BufferUtils.createFloatBuffer(POSITIONSIZE + TEXTURESIZE);
+			atribData = BufferUtils.createIntBuffer(POSITIONSIZE + TEXTURESIZE);
 		}
 
 		this.world = world;
@@ -89,9 +96,8 @@ public class Chunk {
 
 	public void updateVbo() {
 
-		float[] vertices = new float[CHUNKSIZE * CHUNKSIZE * 4 * 3];
-		float[] colors = new float[CHUNKSIZE * CHUNKSIZE * 4 * 3];
-		float[] texCoords = new float[CHUNKSIZE * CHUNKSIZE * 4 * 2];
+		float[] vertices = new float[POSITIONSIZE + TEXTURESIZE];
+		int[] atributes = new int[VERTEXNUMBER];
 
 		Position chunkOffset = Position.multiply(chunkPosition, CHUNKSIZE);
 
@@ -137,86 +143,72 @@ public class Chunk {
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
 				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();*/
 
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i + chunkOffset.x;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j + chunkOffset.z;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = heightMap[i][j] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = heightMap[i][j] / 6 + 0.2f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = textPos1.getZf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 0] = i + chunkOffset.x;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 1] = heightMap[i][j];
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 2] = j + chunkOffset.z;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 3] = textPos1.getXf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 4] = textPos1.getZf();
 
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i + chunkOffset.x;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1 + chunkOffset.z;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = heightMap[i][j + 1] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = heightMap[i][j + 1] / 6 + 0.2f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = textPos2.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = textPos1.getZf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 5] = i + chunkOffset.x;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 6] = heightMap[i][j + 1];
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 7] = j + 1 + chunkOffset.z;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 8] = textPos2.getXf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 9] = textPos1.getZf();
 
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1 + chunkOffset.x;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1 + chunkOffset.z;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = heightMap[i + 1][j + 1] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = heightMap[i + 1][j + 1] / 6 + 0.2f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = textPos2.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = textPos2.getZf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 10] = i + 1 + chunkOffset.x;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 11] = heightMap[i + 1][j + 1];
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 12] = j + 1 + chunkOffset.z;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 13] = textPos2.getXf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 14] = textPos2.getZf();
 
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1 + chunkOffset.x;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j + chunkOffset.z;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = heightMap[i + 1][j] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j] / 6 + 0.2f;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = heightMap[i + 1][j] / 6 + 0.2f;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getZf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 15] = i + 1 + chunkOffset.x;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 16] = heightMap[i + 1][j];
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 17] = j + chunkOffset.z;
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 18] = textPos1.getXf();
+				vertices[(j + (CHUNKSIZE * i)) * 20 + 19] = textPos2.getZf();
+
+				atributes[(j + (CHUNKSIZE * i)) * 4 + 0] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 4 + 1] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 4 + 2] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 4 + 3] = tileMap[i][j];
 			}
 		}
 
 		vertexData.put(vertices);
 		vertexData.flip();
-
-		colorData.put(colors);
-		colorData.flip();
-
-		textureData.put(texCoords);
-		textureData.flip();
-
 		vboVertexHandle = glGenBuffers();
-		vboColorHandle = glGenBuffers();
-		vboTextureHandle = glGenBuffers();
+
+		atribData.put(atributes);
+		atribData.flip();
+		atribHandle = glGenBuffers();
 
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
 		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
-		glBufferData(GL_ARRAY_BUFFER, colorData, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vboTextureHandle);
-		glBufferData(GL_ARRAY_BUFFER, textureData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, atribHandle);
+		glBufferData(GL_ARRAY_BUFFER, atribData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	public void render() {
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
-		glVertexPointer(3, GL_FLOAT, 0, 0L);
+		glVertexPointer(3, GL_FLOAT, 20, 0);
+		glTexCoordPointer(2, GL_FLOAT, 20, 12);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
-		glColorPointer(3, GL_FLOAT, 0, 0L);
+		glBindBuffer(GL_ARRAY_BUFFER, atribHandle);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vboTextureHandle);
-		glTexCoordPointer(2, GL_FLOAT, 0, 0L);
+		glVertexAttribPointer(DebugNerogar.TILE_ID_LOCATION, 1, GL_FLOAT, true, 4, 0);
+		//glVertexAttribPointer(glGetAttribLocation(DebugNerogar.terrainShader.shaderHandle, "tileID"), 1, GL_FLOAT, true, 4, 0);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glEnableVertexAttribArray(DebugNerogar.TILE_ID_LOCATION);
 		glDrawArrays(GL_QUADS, 0, (Chunk.CHUNKSIZE) * (Chunk.CHUNKSIZE) * 4);
+		glDisableVertexAttribArray(DebugNerogar.TILE_ID_LOCATION);
+
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 
@@ -286,8 +278,6 @@ public class Chunk {
 	public void cleanup() {
 		if (!serverChunk) {
 			glDeleteBuffers(vboVertexHandle);
-			glDeleteBuffers(vboColorHandle);
-			glDeleteBuffers(vboTextureHandle);
 		}
 
 		heightMap = null;

@@ -33,8 +33,5 @@ void main(){
 	gl_FragColor = vec4(colorR, colorG, colorB, colorA);*/
 
 	float heightMult = (verpos.y / 5) + 0.4;
-	vec4 distVec = verpos - vec4(center.x, 0, center.y, 0);
-	float distMult = 1 - sqrt(distVec.x * distVec.x + distVec.z * distVec.z) / 200;
-	distMult = distMult < 0.1 ? 0.1 : distMult;
-	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult * distMult; //And that is all we need.
+	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult;
 }

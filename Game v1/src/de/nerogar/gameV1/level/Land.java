@@ -152,7 +152,6 @@ public class Land {
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
-		int i = 0;
 		int max = (GameOptions.instance.getIntOption("loaddistance") * 2) + 1;
 		max *= max;
 		int updates = loadChunksAroundXZ(blockPosition);
@@ -412,7 +411,7 @@ public class Land {
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
-		Shader testShader = ShaderBank.instance.getShader("test");
+		Shader testShader = ShaderBank.instance.getShader("terrain");
 
 		testShader.activate();
 
