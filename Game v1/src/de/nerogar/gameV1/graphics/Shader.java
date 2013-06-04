@@ -24,13 +24,19 @@ public class Shader {
 	public void setVertexShader(String filename) {
 		useVertexShader = true;
 		vertexShaderFile = filename;
-		vertexShader = readFile(vertexShaderFile);
+		File tempFile = new File(filename);
+		String dirPath = tempFile.getParentFile().getAbsolutePath() + File.separator;
+		String newFilename = tempFile.getName();
+		vertexShader = readFile(dirPath, newFilename, null);
 	}
 
 	public void setFragmentShader(String filename) {
 		useFragmentShader = true;
 		fragmentShaderFile = filename;
-		fragmentShader = readFile(fragmentShaderFile);
+		File tempFile = new File(filename);
+		String dirPath = tempFile.getParentFile().getAbsolutePath() + File.separator;
+		String newFilename = tempFile.getName();
+		fragmentShader = readFile(dirPath, newFilename, null);
 	}
 
 	public void compile() {
@@ -83,15 +89,31 @@ public class Shader {
 		}
 	}
 
-	public String readFile(String filename) {
-		StringBuilder text = new StringBuilder();
+	public String readFile(String dirname, String filename, StringBuilder text) {
+		if (text == null) {
+			text = new StringBuilder();
+		}
 
 		try {
 			BufferedReader fileReader = null;
-			fileReader = new BufferedReader(new FileReader(filename));
+			fileReader = new BufferedReader(new FileReader(dirname + filename));
 			String line;
 			while ((line = fileReader.readLine()) != null) {
-				text.append(line).append('\n');
+				line = line.trim();
+				if (line.startsWith("#")) {
+					if (line.startsWith("#insert")) {
+						String[] lineSegments = line.split(" ");
+						if (lineSegments.length > 1) {
+							String filepath = dirname + File.separator + lineSegments[1];
+							File tempFile = new File(filepath);
+							String dirPath = tempFile.getParentFile().getAbsolutePath() + File.separator;
+							String newFilename = tempFile.getName();
+							readFile(dirPath, newFilename, text);
+						}
+					}
+				} else {
+					text.append(line).append('\n');
+				}
 			}
 			fileReader.close();
 		} catch (IOException e) {

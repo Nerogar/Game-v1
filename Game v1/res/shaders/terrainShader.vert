@@ -4,14 +4,12 @@ uniform vec2 center;
 
 attribute int tileID;
 
-void main(void)
-{
+void main(){
 	verpos = gl_Vertex;
 	
 	if(tileID == 2){
 		verpos += vec4(0, sin(time*5f + verpos.x) / 5f, 0, 0);
 	}
-	
 
 	gl_Position = gl_ModelViewProjectionMatrix * verpos;
 
