@@ -38,8 +38,6 @@ public class Game {
 
 	public void run() {
 		try {
-			timer = new Timer();
-
 			init();
 			//timer.registerEvent("gc", 10);
 
@@ -141,6 +139,10 @@ public class Game {
 	private void init() {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
 
+		timer = new Timer();
+		timer.init();
+		timer.printFPS = true;
+
 		world = new World(this, false);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(this, world));
@@ -148,7 +150,6 @@ public class Game {
 		guiList.addGui(new GuiMain(this));
 		Entity.initEntityList(this);
 		Tile.initTileList();
-		timer.init();
 
 		try {
 			AL.create();

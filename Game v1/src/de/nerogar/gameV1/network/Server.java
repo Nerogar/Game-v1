@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.GameOptions;
-
 public class Server extends Thread {
 
 	private ArrayList<Client> clients = new ArrayList<Client>();
@@ -13,9 +11,9 @@ public class Server extends Thread {
 	public int port;
 	private boolean running = true;
 
-	public Server() {
+	public Server(int port) {
 		setName("ServerThread");
-		port = GameOptions.instance.STANDARDPORT;
+		this.port = port;
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {

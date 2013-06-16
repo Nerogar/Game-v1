@@ -61,7 +61,7 @@ public class GuiMultiplayerCreate extends Gui {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiMultiplayer(game));
 		} else if (id == createButton.id && mouseButton == 0) {
-			server = new Server();
+			server = new Server(Integer.parseInt(portText.getText()));
 			client = new Client("localhost", server.port);
 
 			game.guiList.removeGui(getName());

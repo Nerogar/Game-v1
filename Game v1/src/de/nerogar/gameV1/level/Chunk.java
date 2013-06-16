@@ -17,9 +17,6 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.PathNode;
-import de.nerogar.gameV1.debug.DebugNerogar;
-import de.nerogar.gameV1.graphics.Shader;
-import de.nerogar.gameV1.graphics.ShaderBank;
 
 public class Chunk {
 	public static final int CHUNKSIZE = 64;

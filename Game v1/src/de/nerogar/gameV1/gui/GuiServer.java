@@ -3,6 +3,7 @@ package de.nerogar.gameV1.gui;
 import java.util.ArrayList;
 
 import de.nerogar.gameV1.Game;
+import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.RenderHelper;
 import de.nerogar.gameV1.network.*;
 
@@ -14,7 +15,7 @@ public class GuiServer extends Gui {
 
 	public GuiServer(Game game) {
 		super(game);
-		server = new Server();
+		server = new Server(GameOptions.instance.STANDARDPORT);
 	}
 
 	@Override

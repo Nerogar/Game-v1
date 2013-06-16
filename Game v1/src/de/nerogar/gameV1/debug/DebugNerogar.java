@@ -1,16 +1,10 @@
 package de.nerogar.gameV1.debug;
 
-import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.InputHandler;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.graphics.Shader;
-import de.nerogar.gameV1.graphics.ShaderBank;
-import static org.lwjgl.opengl.GL20.*;
 
 public class DebugNerogar {
 
-	private Game game;
+	public Game game;
 	//private EntityTestparticle[] testParticles;
 	//private boolean spawned = false;
 	public double time = 0;
@@ -23,11 +17,6 @@ public class DebugNerogar {
 
 	public void startup() {
 
-		/*
-		 * noch kleine Probleme beim erstellen von Shadern
-		 * schwarz gerendert ohne fragment shader
-		 * 
-		 */
 	}
 
 	public void run() {

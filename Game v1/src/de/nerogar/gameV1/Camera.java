@@ -25,12 +25,12 @@ public class Camera {
 	private boolean dragRotate = false;
 	private boolean dragMoving = false;
 
-	private World world;
+	//private World world;
 	private Timer timer;
 
 	public Camera(World world) {
-		this.world = world;
-		timer = this.world.game.timer;
+		//this.world = world;
+		timer = world.game.timer;
 	}
 
 	public void init() {

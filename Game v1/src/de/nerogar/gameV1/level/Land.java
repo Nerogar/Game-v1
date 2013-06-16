@@ -561,7 +561,7 @@ public class Land {
 		Chunk.TILE_ID01_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID01");
 		Chunk.TILE_ID10_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID10");
 		Chunk.TILE_ID11_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID11");
-System.out.println(Chunk.TILE_ID01_LOCATION);
+
 		terrainShader.attributes.put("tileID", Chunk.TILE_ID_LOCATION);
 		terrainShader.attributes.put("tileID00", Chunk.TILE_ID00_LOCATION);
 		terrainShader.attributes.put("tileID01", Chunk.TILE_ID01_LOCATION);
