@@ -218,7 +218,9 @@ public class Chunk {
 
 		glBindBuffer(GL_ARRAY_BUFFER, atribHandle);
 
-		glVertexAttribPointer(TILE_ID_LOCATION, 1, GL_FLOAT, true, 20, 0);
+		//System.out.println(glGetError());
+		//glVertexAttribPointer(TILE_ID_LOCATION, 1, GL_FLOAT, true, 2, 1);
+		//RenderEngine.instance.checkErrors();
 		glVertexAttribPointer(TILE_ID00_LOCATION, 1, GL_FLOAT, true, 20, 4);
 		glVertexAttribPointer(TILE_ID01_LOCATION, 1, GL_FLOAT, true, 20, 8);
 		glVertexAttribPointer(TILE_ID10_LOCATION, 1, GL_FLOAT, true, 20, 12);
@@ -226,13 +228,13 @@ public class Chunk {
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableVertexAttribArray(TILE_ID_LOCATION);
+		//glEnableVertexAttribArray(TILE_ID_LOCATION);
 		glEnableVertexAttribArray(TILE_ID00_LOCATION);
 		glEnableVertexAttribArray(TILE_ID01_LOCATION);
 		glEnableVertexAttribArray(TILE_ID10_LOCATION);
 		glEnableVertexAttribArray(TILE_ID11_LOCATION);
 		glDrawArrays(GL_QUADS, 0, (Chunk.CHUNKSIZE) * (Chunk.CHUNKSIZE) * 4);
-		glDisableVertexAttribArray(TILE_ID_LOCATION);
+		//glDisableVertexAttribArray(TILE_ID_LOCATION);
 		glDisableVertexAttribArray(TILE_ID00_LOCATION);
 		glDisableVertexAttribArray(TILE_ID01_LOCATION);
 		glDisableVertexAttribArray(TILE_ID10_LOCATION);

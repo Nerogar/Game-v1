@@ -9,11 +9,13 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.Client;
 import de.nerogar.gameV1.network.Packet;
+import de.nerogar.gameV1.network.PacketBuildHouse;
 import de.nerogar.gameV1.network.PacketChunkData;
 import de.nerogar.gameV1.network.PacketExitGame;
+import de.nerogar.gameV1.network.PacketSpawnEntity;
 import de.nerogar.gameV1.network.Server;
 import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.physics.Ray;
+import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.Path;
 import de.nerogar.gameV1.ai.PathNode;
 import de.nerogar.gameV1.ai.Pathfinder;
@@ -35,7 +37,6 @@ public class World {
 	public Client client;
 	public InternalServer internalServer;
 	public boolean serverWorld;
-	public ArrayList<Player> players;
 	public Player player;
 
 	public Pathfinder pathfinder;
@@ -51,7 +52,7 @@ public class World {
 		this.collisionComparer = new CollisionComparer(this);
 		entityList.setCollisionComparer(collisionComparer);
 		if (serverWorld) {
-			players = new ArrayList<Player>();
+
 		} else {
 			player = new Player(game, this);
 		}
@@ -159,8 +160,17 @@ public class World {
 			PacketExitGame exitGame = (PacketExitGame) packet;
 			closeWorld();
 			server.broadcastData(exitGame);
-			
+
 			internalServer.stopServer();
+		} else if (packet instanceof PacketBuildHouse) {
+			PacketBuildHouse buildingData = (PacketBuildHouse) packet;
+
+			Entity newBuilding = Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
+
+			Position buildPosition = buildingData.buildPos;
+			newBuilding.matrix.position = new Vector3d(buildPosition.x, game.world.land.getHeight(new Position(buildPosition.x, buildPosition.z)), buildPosition.z);
+			newBuilding.init(this);
+			spawnEntity(newBuilding);
 		}
 	}
 
@@ -184,6 +194,11 @@ public class World {
 		} else if (packet instanceof PacketExitGame) {
 			exitWorld(false);
 			game.guiList.addGui(new GuiMain(game));
+		} else if (packet instanceof PacketSpawnEntity) {
+			PacketSpawnEntity entityData = (PacketSpawnEntity) packet;
+			Entity newEntity = Entity.getEntity(game, this, entityData.tagName);
+			newEntity.load(entityData.entityData, "");
+			spawnEntity(newEntity);
 		}
 	}
 
@@ -208,63 +223,6 @@ public class World {
 		entityList.update(game);
 
 		if (!serverWorld) {
-			//if (Keyboard.isKeyDown(Keyboard.KEY_M)) entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(), null, 10, 1F));
-
-			Ray sightRay = new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection());
-			//long time1 = System.nanoTime();
-			Entity[] clickedEntities = entityList.getEntitiesInSight(sightRay);
-			//long time2 = System.nanoTime();
-			//System.out.println("Pick time: " + (time2 - time1) / 1000000D);
-			//double time1 = System.nanoTime();
-			Vector3d floorIntersection = land.getFloorpointInSight(sightRay);
-			//double time2 = System.nanoTime();
-			//if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
-
-			if (clickedEntities.length > 0) {
-				if (InputHandler.isMouseButtonPressed(0)) {
-					clickedEntities[0].click(0);
-				} else if (InputHandler.isMouseButtonPressed(1)) {
-					clickedEntities[0].click(1);
-				}
-			}
-
-			/*if (floorIntersection != null) {
-				if (InputHandler.isMouseButtonPressed(0)) {
-					land.click(0, floorIntersection);
-					if (pathStart != null) {
-						pathEnd = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
-						//pathEnd = pathfinder.getNode(new Position(-28, 0));
-						int multiplier = 10;
-						long time1 = System.nanoTime();
-						for (int i = 0; i < multiplier; i++) {
-							path = new Path(pathStart, pathEnd);
-						}
-						long time2 = System.nanoTime();
-						System.out.println("Calculated "+multiplier+" Paths -> total: " + ((time2 - time1) / 1000000d) + "ms | individual: " + ((time2 - time1) / (1000000d * multiplier)));
-					}
-				} else if (InputHandler.isMouseButtonPressed(1)) {
-					land.click(1, floorIntersection);
-					pathStart = pathfinder.getNode(new Position(MathHelper.roundDownToInt(floorIntersection.getX(), 1), MathHelper.roundDownToInt(floorIntersection.getZ(), 1)));
-					//pathStart = pathfinder.getNode(new Position(12, 28));
-				}
-			}*/
-
-			InputHandler.set3DmousePosition(floorIntersection);
-			if (floorIntersection != null) {
-				if (InputHandler.isMouseButtonPressed(0)) {
-					land.click(0, floorIntersection);
-					//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
-					//spawnEntity(new EntityHouse(game, om));
-					// wtf, warum machst du das hierhin?
-				}
-				if (InputHandler.isMouseButtonPressed(1)) {
-					land.click(1, floorIntersection);
-				}
-				if (InputHandler.isMouseButtonPressed(2)) {
-					land.click(2, floorIntersection);
-				}
-				land.setMousePos(floorIntersection);
-			}
 			player.update();
 		}
 
@@ -323,7 +281,21 @@ public class World {
 	}
 
 	public void spawnEntity(Entity entity) {
-		if (isLoaded) entityList.addEntity(entity, this);
+		if (isLoaded) {
+			if (!serverWorld || entity.saveEntity) { //don't spawn temp-entities on serverworld
+				entityList.addEntity(entity, this);
+				if (serverWorld && entity.saveEntity) {
+					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
+					entityPacket.tagName = entity.getNameTag();
+
+					DNFile entityData = new DNFile("");
+					entity.save(entityData, "");
+					entityPacket.entityData = entityData;
+
+					server.broadcastData(entityPacket);
+				}
+			}
+		}
 	}
 
 	public void despawnEntity(Entity entity) {
