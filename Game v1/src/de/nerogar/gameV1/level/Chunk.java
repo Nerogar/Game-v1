@@ -17,7 +17,6 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.PathNode;
-import de.nerogar.gameV1.debug.DebugNerogar;
 
 public class Chunk {
 	public static final int CHUNKSIZE = 64;
@@ -32,9 +31,17 @@ public class Chunk {
 	private String filename;
 	private String dirname = "saves/";
 
+	public static int TILE_ID_LOCATION;
+	public static int TILE_ID00_LOCATION;
+	public static int TILE_ID01_LOCATION;
+	public static int TILE_ID10_LOCATION;
+	public static int TILE_ID11_LOCATION;
+
 	private static final int POSITIONSIZE = CHUNKSIZE * CHUNKSIZE * 4 * 3;
 	private static final int TEXTURESIZE = CHUNKSIZE * CHUNKSIZE * 4 * 2;
 	private static final int VERTEXNUMBER = CHUNKSIZE * CHUNKSIZE * 4;
+	private static final int ATTRIBNUMBER = VERTEXNUMBER * 5;
+
 	public FloatBuffer vertexData;
 	public IntBuffer atribData;
 	public int vboVertexHandle, atribHandle;
@@ -49,7 +56,7 @@ public class Chunk {
 		this.chunkPosition = chunkPosition;
 		if (!serverChunk) {
 			vertexData = BufferUtils.createFloatBuffer(POSITIONSIZE + TEXTURESIZE);
-			atribData = BufferUtils.createIntBuffer(POSITIONSIZE + TEXTURESIZE);
+			atribData = BufferUtils.createIntBuffer(ATTRIBNUMBER);
 		}
 
 		this.world = world;
@@ -97,7 +104,7 @@ public class Chunk {
 	public void updateVbo() {
 
 		float[] vertices = new float[POSITIONSIZE + TEXTURESIZE];
-		int[] atributes = new int[VERTEXNUMBER];
+		int[] atributes = new int[ATTRIBNUMBER];
 
 		Position chunkOffset = Position.multiply(chunkPosition, CHUNKSIZE);
 
@@ -106,42 +113,6 @@ public class Chunk {
 
 				Vector2d textPos1 = Tile.getTileByID(tileMap[i][j]).texturePos1;
 				Vector2d textPos2 = Tile.getTileByID(tileMap[i][j]).texturePos2;
-
-				/*vertices[(j + (CHUNKSIZE * i)) * 12 + 0] = i;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 2] = j;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 1] = heightMap[i][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 0] = nodeMap[i][j].colR;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 1] = nodeMap[i][j].colG;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 2] = nodeMap[i][j].colB;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 0] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 1] = textPos1.getYf();
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 3] = i;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 5] = j + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 4] = heightMap[i][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 3] = nodeMap[i][j].colR;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 4] = nodeMap[i][j].colG;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 5] = nodeMap[i][j].colB;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 2] = textPos2.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 3] = textPos1.getYf();
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 6] = i + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 8] = j + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 7] = heightMap[i + 1][j + 1];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 6] = nodeMap[i][j].colR;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 7] = nodeMap[i][j].colG;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 8] = nodeMap[i][j].colB;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 4] = textPos2.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 5] = textPos2.getYf();
-
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 9] = i + 1;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 11] = j;
-				vertices[(j + (CHUNKSIZE * i)) * 12 + 10] = heightMap[i + 1][j];
-				colors[(j + (CHUNKSIZE * i)) * 12 + 9] = nodeMap[i][j].colR;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 10] = nodeMap[i][j].colG;
-				colors[(j + (CHUNKSIZE * i)) * 12 + 11] = nodeMap[i][j].colB;
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 6] = textPos1.getXf();
-				texCoords[(j + (CHUNKSIZE * i)) * 8 + 7] = textPos2.getYf();*/
 
 				vertices[(j + (CHUNKSIZE * i)) * 20 + 0] = i + chunkOffset.x;
 				vertices[(j + (CHUNKSIZE * i)) * 20 + 1] = heightMap[i][j];
@@ -167,10 +138,59 @@ public class Chunk {
 				vertices[(j + (CHUNKSIZE * i)) * 20 + 18] = textPos1.getXf();
 				vertices[(j + (CHUNKSIZE * i)) * 20 + 19] = textPos2.getZf();
 
-				atributes[(j + (CHUNKSIZE * i)) * 4 + 0] = tileMap[i][j];
-				atributes[(j + (CHUNKSIZE * i)) * 4 + 1] = tileMap[i][j];
-				atributes[(j + (CHUNKSIZE * i)) * 4 + 2] = tileMap[i][j];
-				atributes[(j + (CHUNKSIZE * i)) * 4 + 3] = tileMap[i][j];
+				//attributes
+				int i2 = i + 1 >= CHUNKSIZE ? i : i + 1;
+				int j2 = j + 1 >= CHUNKSIZE ? j : j + 1;
+				int i0 = i - 1 < 0 ? 0 : i - 1;
+				int j0 = j - 1 < 0 ? 0 : j - 1;
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 0] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 1] = tileMap[i0][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 2] = tileMap[i0][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 3] = tileMap[i][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 4] = tileMap[i][j];
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 5] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 6] = tileMap[i0][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 7] = tileMap[i0][j2];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 8] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 9] = tileMap[i][j2];
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 10] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 11] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 12] = tileMap[i][j2];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 13] = tileMap[i2][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 14] = tileMap[i2][j2];
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 15] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 16] = tileMap[i][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 17] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 18] = tileMap[i2][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 19] = tileMap[i2][j];
+
+				/*atributes[(j + (CHUNKSIZE * i)) * 20 + 0] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 1] = tileMap[i0][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 2] = tileMap[i0][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 3] = tileMap[i][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 4] = tileMap[i][j];
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 5] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 6] = tileMap[i0][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 7] = tileMap[i0][j2];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 8] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 9] = tileMap[i][j2];
+
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 11] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 12] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 13] = tileMap[i][j2];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 14] = tileMap[i2][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 15] = tileMap[i2][j2];
+				
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 15] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 16] = tileMap[i][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 17] = tileMap[i][j];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 18] = tileMap[i2][j0];
+				atributes[(j + (CHUNKSIZE * i)) * 20 + 19] = tileMap[i2][j];*/
 			}
 		}
 
@@ -198,16 +218,27 @@ public class Chunk {
 
 		glBindBuffer(GL_ARRAY_BUFFER, atribHandle);
 
-		glVertexAttribPointer(DebugNerogar.TILE_ID_LOCATION, 1, GL_FLOAT, true, 4, 0);
-		//glVertexAttribPointer(glGetAttribLocation(DebugNerogar.terrainShader.shaderHandle, "tileID"), 1, GL_FLOAT, true, 4, 0);
+		//System.out.println(glGetError());
+		//glVertexAttribPointer(TILE_ID_LOCATION, 1, GL_FLOAT, true, 2, 1);
+		//RenderEngine.instance.checkErrors();
+		glVertexAttribPointer(TILE_ID00_LOCATION, 1, GL_FLOAT, true, 20, 4);
+		glVertexAttribPointer(TILE_ID01_LOCATION, 1, GL_FLOAT, true, 20, 8);
+		glVertexAttribPointer(TILE_ID10_LOCATION, 1, GL_FLOAT, true, 20, 12);
+		glVertexAttribPointer(TILE_ID11_LOCATION, 1, GL_FLOAT, true, 20, 16);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		glEnableVertexAttribArray(DebugNerogar.TILE_ID_LOCATION);
+		//glEnableVertexAttribArray(TILE_ID_LOCATION);
+		glEnableVertexAttribArray(TILE_ID00_LOCATION);
+		glEnableVertexAttribArray(TILE_ID01_LOCATION);
+		glEnableVertexAttribArray(TILE_ID10_LOCATION);
+		glEnableVertexAttribArray(TILE_ID11_LOCATION);
 		glDrawArrays(GL_QUADS, 0, (Chunk.CHUNKSIZE) * (Chunk.CHUNKSIZE) * 4);
-		glDisableVertexAttribArray(DebugNerogar.TILE_ID_LOCATION);
-
+		//glDisableVertexAttribArray(TILE_ID_LOCATION);
+		glDisableVertexAttribArray(TILE_ID00_LOCATION);
+		glDisableVertexAttribArray(TILE_ID01_LOCATION);
+		glDisableVertexAttribArray(TILE_ID10_LOCATION);
+		glDisableVertexAttribArray(TILE_ID11_LOCATION);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}

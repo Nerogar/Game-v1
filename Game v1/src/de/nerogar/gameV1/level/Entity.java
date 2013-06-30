@@ -20,7 +20,7 @@ public abstract class Entity {
 	public Bounding boundingBox = new BoundingAABB();
 	public ObjectMatrix matrix = new ObjectMatrix(new Vector3d(0, 0, 0), // Position 0
 			new Vector3d(0, 0, 0), // Rotation 0
-			new Vector3d(1, 1, 1));  // Skalierung 1
+			new Vector3d(1, 1, 1)); // Skalierung 1
 
 	public Object3D object;
 	public String texture;
@@ -37,6 +37,7 @@ public abstract class Entity {
 	}
 
 	public void setObject(String objectName, String textureName) {
+		if (world.serverWorld) return;
 		if (objectName != "") {
 			object = Object3DBank.instance.getObject(objectName);
 		} else {
@@ -46,6 +47,7 @@ public abstract class Entity {
 	}
 
 	public void setSprite(float size, String textureName) {
+		if (world.serverWorld) return;
 		object = new ObjectSprite(size, world.player.camera);
 		texture = textureName;
 	}

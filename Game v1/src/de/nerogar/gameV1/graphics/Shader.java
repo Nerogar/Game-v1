@@ -4,11 +4,15 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.*;
+import java.util.HashMap;
 
 public class Shader {
 
 	public int shaderHandle;
 	public String name;
+	public HashMap<String, Integer> uniforms;
+	public HashMap<String, Integer> attributes;
+
 	private String vertexShaderFile, vertexShader;
 	private String fragmentShaderFile, fragmentShader;
 	private int vertexShaderHandle, fragmentShaderHandle;
@@ -19,6 +23,8 @@ public class Shader {
 
 	public Shader(String name) {
 		this.name = name;
+		uniforms = new HashMap<String, Integer>();
+		attributes = new HashMap<String, Integer>();
 	}
 
 	public void setVertexShader(String filename) {

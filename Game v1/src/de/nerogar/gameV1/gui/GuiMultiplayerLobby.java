@@ -177,7 +177,6 @@ public class GuiMultiplayerLobby extends Gui {
 			PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
 			server.broadcastData(exitPacket);
 			internalServer.initiateWorld("serverWorld", 0); //hardcoded world for now
-			
 		}
 	}
 }

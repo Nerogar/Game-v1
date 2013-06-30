@@ -10,6 +10,7 @@ public class Timer {
 	public int mfFps;
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private long framecount;
+	public boolean printFPS = false;
 
 	//private ArrayList<String> eventNames = new ArrayList<String>();
 	//public static Timer instance = new Timer();
@@ -25,7 +26,7 @@ public class Timer {
 
 	private void printFPS() {
 		if (getTime() - lastFps > 1000) {
-			if (GameOptions.instance.getBoolOption("debug")) System.out.println("FPS: " + fps);
+			if (GameOptions.instance.getBoolOption("debug") && printFPS) System.out.println("FPS: " + fps);
 			mfFps = fps;
 			fps = 0;
 			lastFps += 1000;

@@ -1,6 +1,9 @@
 package de.nerogar.gameV1.level;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glGetAttribLocation;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1f;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,7 @@ public class Land {
 	public World world;
 	public LevelGenerator levelGenerator;
 	private Vector3d mousePosition;
+	private Shader terrainShader;
 
 	//private Entity buildableEntity = null;
 	//private boolean buildable = false;
@@ -36,6 +40,7 @@ public class Land {
 		chunks = new ArrayList<Chunk>();
 		this.game = game;
 		this.world = world;
+		if (!world.serverWorld) setupShaders();
 	}
 
 	public Chunk generateLand(Chunk chunk, Position chunkPosition) {
@@ -409,11 +414,12 @@ public class Land {
 	}
 
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
+
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
-		Shader testShader = ShaderBank.instance.getShader("terrain");
 
-		testShader.activate();
+		terrainShader.activate();
+		updateTerrainShader();
 
 		for (int i = chunkLoadPosition.x - maxChunkRenderDistance; i <= chunkLoadPosition.x + maxChunkRenderDistance; i++) {
 			for (int j = chunkLoadPosition.z - maxChunkRenderDistance; j <= chunkLoadPosition.z + maxChunkRenderDistance; j++) {
@@ -424,7 +430,7 @@ public class Land {
 			}
 		}
 
-		testShader.deactivate();
+		terrainShader.deactivate();
 
 		//updateBuildable();
 		/*
@@ -532,5 +538,37 @@ public class Land {
 
 	public Vector3d getMousePos() {
 		return this.mousePosition;
+	}
+
+	private void updateTerrainShader() {
+		//setupShaders();
+		glUniform1f(terrainShader.uniforms.get("time"), (System.nanoTime() / 1000000000f));
+	}
+
+	public void setupShaders() {
+		ShaderBank.instance.createShaderProgramm("terrain");
+		Shader terrainShader = ShaderBank.instance.getShader("terrain");
+		this.terrainShader = terrainShader;
+
+		terrainShader.setVertexShader("res/shaders/terrainShader.vert");
+		terrainShader.setFragmentShader("res/shaders/terrainShader.frag");
+		terrainShader.compile();
+
+		terrainShader.activate();
+
+		Chunk.TILE_ID_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID");
+		Chunk.TILE_ID00_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID00");
+		Chunk.TILE_ID01_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID01");
+		Chunk.TILE_ID10_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID10");
+		Chunk.TILE_ID11_LOCATION = glGetAttribLocation(terrainShader.shaderHandle, "tileID11");
+
+		terrainShader.attributes.put("tileID", Chunk.TILE_ID_LOCATION);
+		terrainShader.attributes.put("tileID00", Chunk.TILE_ID00_LOCATION);
+		terrainShader.attributes.put("tileID01", Chunk.TILE_ID01_LOCATION);
+		terrainShader.attributes.put("tileID10", Chunk.TILE_ID10_LOCATION);
+		terrainShader.attributes.put("tileID11", Chunk.TILE_ID11_LOCATION);
+		terrainShader.uniforms.put("time", glGetUniformLocation(terrainShader.shaderHandle, "time"));
+
+		terrainShader.deactivate();
 	}
 }

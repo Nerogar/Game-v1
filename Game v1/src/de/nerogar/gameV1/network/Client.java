@@ -1,6 +1,5 @@
 package de.nerogar.gameV1.network;
 
-import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 

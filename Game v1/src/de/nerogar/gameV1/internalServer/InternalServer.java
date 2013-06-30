@@ -36,6 +36,7 @@ public class InternalServer extends Thread {
 
 	public void initiateWorld(String levelName) {
 		world.initiateWorld(levelName);
+		world.internalServer = this;
 		start();
 	}
 
