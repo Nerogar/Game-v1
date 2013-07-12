@@ -1,9 +1,12 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -52,5 +55,11 @@ public class EntityHouse extends Entity {
 		if (key == 1) {
 			markToRemove = true;
 		}
+	}
+
+	@Override
+	public void update(float time, ArrayList<PacketEntity> packets) {
+		// TODO Auto-generated method stub
+		
 	}
 }

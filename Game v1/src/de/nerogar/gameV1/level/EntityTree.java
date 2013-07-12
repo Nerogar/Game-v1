@@ -1,9 +1,13 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketClickEntity;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -59,7 +63,13 @@ public class EntityTree extends Entity {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, ArrayList<PacketEntity> packets) {
+		for (PacketEntity packet : packets) {
+			if (packet instanceof PacketClickEntity) {
+				System.out.println(((PacketClickEntity) packet).mouseButton);
+			}
+		}
+
 		/*elapsedTime += time;
 		int rand = 1;
 		if (elapsedTime > 1) {

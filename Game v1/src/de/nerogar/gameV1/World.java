@@ -219,10 +219,28 @@ public class World {
 			player.camera.updatePostition();
 			InputHandler.updateMousePositions(game);
 			loadPosition = player.camera.getCamCenter().toPosition();
-		}
 
-		ArrayList<Packet> receivedPackets = client.getData(Packet.ENTITY_CHANNEL);
-		entityList.update(game, receivedPackets);
+			ArrayList<Packet> receivedPackets = client.getData(Packet.ENTITY_CHANNEL);
+			entityList.update(game, receivedPackets);
+		} else {
+
+			ArrayList<Packet> receivedPackets = new ArrayList<Packet>();
+
+			ArrayList<Client> clients = server.getClients();
+			for (int i = 0; i < clients.size(); i++) {
+				if (clients.get(i).connectionInfo != null) {
+					Client connectionClient = clients.get(i);
+					ArrayList<Packet> receivedPacketsClient = connectionClient.getData(Packet.ENTITY_CHANNEL);
+					if (receivedPacketsClient != null) {
+						for (Packet packet : receivedPacketsClient) {
+							receivedPackets.add(packet);
+						}
+					}
+				}
+			}
+
+			entityList.update(game, receivedPackets);
+		}
 
 		if (!serverWorld) {
 			player.update();

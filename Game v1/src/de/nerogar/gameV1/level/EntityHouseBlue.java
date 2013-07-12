@@ -1,10 +1,13 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameResources;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -24,7 +27,7 @@ public class EntityHouseBlue extends EntityBuilding {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, ArrayList<PacketEntity> packets) {
 
 		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
 		world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));

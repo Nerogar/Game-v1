@@ -63,13 +63,23 @@ public class EntityList {
 		removeNullEntities();
 		updateInProgress = true;
 
-		/*for (Entity e : entities) {
-			e.update(game.timer.delta / 1000F);
-		}*/
-		
-		for (Entity e: entities.values()) {
-		    e.update(game.timer.delta / 1000F);
+		HashMap<Integer, ArrayList<PacketEntity>> sortedPackets = new HashMap<Integer, ArrayList<PacketEntity>>();
+
+		for (int id : entities.keySet()) {
+			sortedPackets.put(id, new ArrayList<PacketEntity>());
 		}
+
+		if (receivedPackets != null) {
+			for (Packet packet : receivedPackets) {
+				PacketEntity entityPacket = (PacketEntity) packet;
+				sortedPackets.get(entityPacket.entityID).add(entityPacket);
+			}
+		}
+
+		for (Entity e : entities.values()) {
+			e.update(game.timer.delta / 1000F, sortedPackets.get(e.id));
+		}
+
 		updateInProgress = false;
 		addNewEntities();
 
@@ -86,7 +96,7 @@ public class EntityList {
 	}
 
 	public void render(Position loadPosition, int maxChunkRenderDistance) {
-		for (Entity entity: world.entityList.entities.values()) {
+		for (Entity entity : world.entityList.entities.values()) {
 			if (MathHelper.roundUpToInt(entity.matrix.position.getX(), Chunk.CHUNKSIZE) >= (loadPosition.x + 1) - maxChunkRenderDistance * Chunk.CHUNKSIZE && MathHelper.roundDownToInt(entity.matrix.position.getX(), Chunk.CHUNKSIZE) <= loadPosition.x + maxChunkRenderDistance * Chunk.CHUNKSIZE) {
 				if (MathHelper.roundUpToInt(entity.matrix.position.getZ(), Chunk.CHUNKSIZE) >= (loadPosition.z + 1) - maxChunkRenderDistance * Chunk.CHUNKSIZE && MathHelper.roundDownToInt(entity.matrix.position.getZ(), Chunk.CHUNKSIZE) <= loadPosition.z + maxChunkRenderDistance * Chunk.CHUNKSIZE) {
 					entity.render();

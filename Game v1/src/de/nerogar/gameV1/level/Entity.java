@@ -2,6 +2,7 @@ package de.nerogar.gameV1.level;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
@@ -9,6 +10,7 @@ import de.nerogar.gameV1.GameOptions;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.object.Object3D;
 import de.nerogar.gameV1.object.Object3DBank;
 import de.nerogar.gameV1.object.ObjectSprite;
@@ -64,9 +66,7 @@ public abstract class Entity {
 		return world;
 	}
 
-	public void update(float time) {
-
-	}
+	public abstract void update(float time, ArrayList<PacketEntity> packets);
 
 	public Bounding getBoundingBox() {
 

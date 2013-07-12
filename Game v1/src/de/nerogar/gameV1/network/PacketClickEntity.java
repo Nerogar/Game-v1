@@ -7,7 +7,7 @@ public class PacketClickEntity extends PacketEntity {
 	public int mouseButton;
 
 	public PacketClickEntity() {
-		channel = WORLD_CHANNEL;
+		channel = ENTITY_CHANNEL;
 	}
 
 	@Override
