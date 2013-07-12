@@ -2,6 +2,7 @@ package de.nerogar.gameV1.physics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
@@ -145,7 +146,20 @@ public class CollisionComparer {
 
 		emptyGrid();
 
-		for (int i = 0; i < world.entityList.entities.size(); i++) {
+		for (Entity e: world.entityList.entities.values()) {
+			BoundingAABB bound = (world.entityList.entities.get(e.id).getAABB());
+
+			for (int j = (int) (bound.a.getX() + shift.x) / GRIDSIZE; j <= (int) (bound.b.getX() + shift.x) / GRIDSIZE; j++) {
+				for (int k = (int) (bound.a.getZ() + shift.z) / GRIDSIZE; k <= (int) (bound.b.getZ() + shift.z) / GRIDSIZE; k++) {
+
+					if (j >= 0 && j < max.x && k >= 0 && k < max.z) {
+						grid[j][k].add(e.id);
+					}
+				}
+			}
+		}
+
+		/*for (int i = 0; i < world.entityList.entities.size(); i++) {
 			//if (game.world.entityList.entities.get(i) instanceof EntityBlock) {
 
 			BoundingAABB bound = (world.entityList.entities.get(i).getAABB());
@@ -159,7 +173,7 @@ public class CollisionComparer {
 				}
 			}
 			//}
-		}
+		}*/
 	}
 
 	public void renderGrid() {
@@ -173,7 +187,8 @@ public class CollisionComparer {
 	}
 
 	private int maxMinGridPosX(int pos) {
-		if (pos < 0) pos = 0;
+		if (pos < 0)
+			pos = 0;
 		else if (pos > max.x) pos = max.x;
 		return pos;
 	}
