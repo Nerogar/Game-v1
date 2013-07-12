@@ -505,7 +505,7 @@ public class CollisionComparer {
 						double entityZ = entity.matrix.position.getZ();
 
 						if (entityX >= gridX && entityX < gridX + GRIDSIZE && entityZ >= gridZ && entityZ < gridZ + GRIDSIZE) {
-							world.entityList.entities.set(grid[i][j].get(k), null);
+							world.entityList.entities.remove(grid[i][j].get(k));
 						}
 					}
 				}

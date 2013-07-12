@@ -1,18 +1,20 @@
 package de.nerogar.gameV1.level;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.network.Packet;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
 public class EntityList {
-	public ArrayList<Entity> entities = new ArrayList<Entity>();
+	public HashMap<Integer, Entity> entities = new HashMap<Integer, Entity>();
 	public ArrayList<Entity> newEntities = new ArrayList<Entity>();
 	private boolean updateInProgress = false;
-	public ArrayList<Integer> entityID = new ArrayList<Integer>();
 	public int maxID;
 	CollisionComparer collisionComparer;
 	Game game;
@@ -23,18 +25,9 @@ public class EntityList {
 		this.world = world;
 	}
 
-	public Entity getEntity(int id) {
-		return entities.get(entityID.indexOf(id));
-	}
-
-	public boolean containsEntity(Entity entity) {
-		return entities.contains(entity);
-	}
-
 	public void addEntity(Entity entity, World world) {
 		if (!updateInProgress) {
-			entities.add(entity);
-			entityID.add(maxID + 1);
+			entities.put(entity.id, entity);
 			entity.game = game;
 			entity.init(world);
 		} else {
@@ -63,14 +56,19 @@ public class EntityList {
 		return collisionComparer.getEntitiesInRay(ray);
 	}
 
-	public void update(Game game) {
+	public void update(Game game, ArrayList<Packet> receivedPackets) {
 		//for (int i = 0; i < entities.size(); i++) {
 		//	entities.get(i).update(Timer.instance.delta / 1000F);
 		//}
 		removeNullEntities();
 		updateInProgress = true;
-		for (Entity e : entities) {
+
+		/*for (Entity e : entities) {
 			e.update(game.timer.delta / 1000F);
+		}*/
+		
+		for (Entity e: entities.values()) {
+		    e.update(game.timer.delta / 1000F);
 		}
 		updateInProgress = false;
 		addNewEntities();

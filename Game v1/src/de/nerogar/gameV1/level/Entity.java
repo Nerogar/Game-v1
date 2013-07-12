@@ -17,6 +17,7 @@ import de.nerogar.gameV1.physics.*;
 public abstract class Entity {
 	public Game game;
 	public World world;
+	public int id;
 	public Bounding boundingBox = new BoundingAABB();
 	public ObjectMatrix matrix = new ObjectMatrix(new Vector3d(0, 0, 0), // Position 0
 			new Vector3d(0, 0, 0), // Rotation 0
@@ -27,6 +28,7 @@ public abstract class Entity {
 	public boolean saveEntity = true;
 	public boolean markToRemove = false;
 	public float opacity = 1;
+
 	public static final String NODEFOLDERSAVENAME = "entities";
 	private static HashMap<String, Class<? extends Entity>> entityList = new HashMap<String, Class<? extends Entity>>();
 
@@ -34,6 +36,12 @@ public abstract class Entity {
 		this.game = game;
 		this.world = world;
 		this.matrix = matrix;
+		if (world != null && world.serverWorld) setID();
+	}
+
+	private void setID() {
+		world.maxEntityID++;
+		id = world.maxEntityID;
 	}
 
 	public void setObject(String objectName, String textureName) {
@@ -80,6 +88,7 @@ public abstract class Entity {
 		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
 		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
 		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
+		id = chunkFile.getInt(folder + ".id");
 
 		loadProperties(chunkFile, folder);
 	}
@@ -89,6 +98,7 @@ public abstract class Entity {
 		chunkFile.addNode(folder + ".position.x", matrix.position.getX());
 		chunkFile.addNode(folder + ".position.y", matrix.position.getY());
 		chunkFile.addNode(folder + ".position.z", matrix.position.getZ());
+		chunkFile.addNode(folder + ".id", id);
 
 		saveProperties(chunkFile, folder);
 	}

@@ -5,6 +5,7 @@ import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBuilding;
 import de.nerogar.gameV1.level.Position;
 import de.nerogar.gameV1.network.PacketBuildHouse;
+import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Player {
@@ -110,11 +111,19 @@ public class Player {
 		//if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 
 		if (clickedEntities.length > 0) {
+
 			if (InputHandler.isMouseButtonPressed(0)) {
-				clickedEntities[0].click(0);
+				PacketClickEntity clickPacket = new PacketClickEntity();
+				clickPacket.entityID = clickedEntities[0].id;
+				clickPacket.mouseButton = 0;
+				world.client.sendPacket(clickPacket);
 			} else if (InputHandler.isMouseButtonPressed(1)) {
-				clickedEntities[0].click(1);
+				PacketClickEntity clickPacket = new PacketClickEntity();
+				clickPacket.entityID = clickedEntities[0].id;
+				clickPacket.mouseButton = 1;
+				world.client.sendPacket(clickPacket);
 			}
+
 		}
 
 		/*if (floorIntersection != null) {

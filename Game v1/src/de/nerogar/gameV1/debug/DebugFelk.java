@@ -161,7 +161,7 @@ public class DebugFelk {
 		SoundManager.setListenerLazy(game.world.player.camera);
 		SoundManager.instance.update();
 
-		if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
+		/*if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = game.world.entityList.entities;
 			System.out.println(entities.size() + " entities gefunden.");
 			for (int i = 0; i < entities.size(); i++) {
@@ -170,7 +170,7 @@ public class DebugFelk {
 					entity.addForce(new Vector3d(0, 5, 0));
 				}
 			}
-		}
+		}*/
 
 		if (InputHandler.isKeyDown(Keyboard.KEY_0)) {
 			testSkelett.bones[1].relative.rotation.add(new Vector3d(0, 0, MathHelper.DegToRad(1)));

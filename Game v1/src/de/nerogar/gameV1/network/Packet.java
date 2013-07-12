@@ -17,6 +17,8 @@ public abstract class Packet {
 	public static final int LOBBY_CHANNEL = 1;
 	public static final int WORLD_CHANNEL = 2;
 	public static final int PLAYER_CHANNEL = 3;
+	public static final int ENTITY_CHANNEL = 3;
+	
 
 	private static int biggestID = 0; //0 is reserved for PacketConnectionInfo
 
@@ -63,5 +65,6 @@ public abstract class Packet {
 		registerPacket(PacketExitGame.class);
 		registerPacket(PacketBuildHouse.class);
 		registerPacket(PacketSpawnEntity.class);
+		registerPacket(PacketClickEntity.class);
 	}
 }

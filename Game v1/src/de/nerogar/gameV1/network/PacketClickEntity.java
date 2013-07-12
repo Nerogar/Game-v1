@@ -2,10 +2,9 @@ package de.nerogar.gameV1.network;
 
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 
-public class PacketClickEntity extends Packet {
+public class PacketClickEntity extends PacketEntity {
 
 	public int mouseButton;
-	public int entityID;
 
 	public PacketClickEntity() {
 		channel = WORLD_CHANNEL;

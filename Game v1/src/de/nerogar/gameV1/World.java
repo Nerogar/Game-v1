@@ -27,6 +27,7 @@ import de.nerogar.gameV1.internalServer.InternalServer;
 public class World {
 	public Game game;
 	public EntityList entityList;
+	public int maxEntityID = 0;
 	public Land land;
 	public WorldData worldData;
 	public boolean isLoaded = false;
@@ -60,7 +61,7 @@ public class World {
 	}
 
 	public void initiateWorld(String levelName, long seed) {
-		worldData = new WorldData(levelName);
+		worldData = new WorldData(this, levelName);
 		worldData.seed = seed;
 		initiateWorld(levelName);
 	}
@@ -68,7 +69,7 @@ public class World {
 	public void initiateWorld(String levelName) {
 		if (!serverWorld) RenderHelper.renderLoadingScreen("Lade Welt...");
 		if (worldData == null) {
-			worldData = new WorldData(levelName);
+			worldData = new WorldData(this, levelName);
 			worldData.load();
 		}
 
@@ -220,7 +221,8 @@ public class World {
 			loadPosition = player.camera.getCamCenter().toPosition();
 		}
 
-		entityList.update(game);
+		ArrayList<Packet> receivedPackets = client.getData(Packet.ENTITY_CHANNEL);
+		entityList.update(game, receivedPackets);
 
 		if (!serverWorld) {
 			player.update();
@@ -300,9 +302,5 @@ public class World {
 
 	public void despawnEntity(Entity entity) {
 		if (isLoaded) entityList.entities.remove(entity);
-	}
-
-	public boolean containsEntity(Entity entity) {
-		return entityList.containsEntity(entity);
 	}
 }
