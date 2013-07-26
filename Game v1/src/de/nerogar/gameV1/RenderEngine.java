@@ -220,10 +220,8 @@ public class RenderEngine {
 	}
 
 	public void checkErrors() {
-		boolean debug = GameOptions.instance.getBoolOption("debug");
-
 		int errorCode = glGetError();
-		if (errorCode != GL_NO_ERROR && debug) {
+		if (errorCode != GL_NO_ERROR) {
 			String errorString = GLU.gluErrorString(errorCode);
 			System.out.println("openGL error detected:");
 			System.out.println(errorString);

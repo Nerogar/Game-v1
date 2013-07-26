@@ -1,12 +1,13 @@
 uniform float time;
 varying vec4 verpos;
-uniform vec2 center;
 
 attribute int tileID;
 attribute int tileID00;
 attribute int tileID01;
 attribute int tileID10;
 attribute int tileID11;
+
+uniform vec2 buildQuadA;
 
 void main(){
 	verpos = gl_Vertex;

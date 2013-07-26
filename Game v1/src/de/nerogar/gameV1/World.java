@@ -201,7 +201,7 @@ public class World {
 			Entity newEntity = Entity.getEntity(game, this, entityData.tagName);
 			newEntity.load(entityData.entityData, "");
 			spawnEntity(newEntity);
-		}else if (packet instanceof PacketRemoveEntity) {
+		} else if (packet instanceof PacketRemoveEntity) {
 			PacketRemoveEntity entityData = (PacketRemoveEntity) packet;
 			Entity remEntity = entityList.entities.get(entityData.id);
 			remEntity.remove();
@@ -307,16 +307,16 @@ public class World {
 
 	public void spawnEntity(Entity entity) {
 		if (isLoaded) {
-			if(!serverWorld){
-				if(entity.saveEntity){
+			if (!serverWorld) {
+				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
-				}else{
+				} else {
 					entityList.addTempEntity(entity, this);
 				}
-			}else{
-				if(entity.saveEntity){
+			} else {
+				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
-					
+
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
 
@@ -327,7 +327,7 @@ public class World {
 					server.broadcastData(entityPacket);
 				}
 			}
-			
+
 			/*
 			if (!serverWorld || entity.saveEntity) { //don't spawn temp-entities on serverworld
 				entityList.addEntity(entity, this);

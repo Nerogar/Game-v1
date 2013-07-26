@@ -568,6 +568,12 @@ public class Land {
 		terrainShader.attributes.put("tileID10", Chunk.TILE_ID10_LOCATION);
 		terrainShader.attributes.put("tileID11", Chunk.TILE_ID11_LOCATION);
 		terrainShader.uniforms.put("time", glGetUniformLocation(terrainShader.shaderHandle, "time"));
+		
+		//buildOverlayQuad
+		terrainShader.uniforms.put("buildQuadA", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadA"));
+		terrainShader.uniforms.put("buildQuadB", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadB"));
+		terrainShader.uniforms.put("buildQuadRender", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadRender"));
+		terrainShader.uniforms.put("buildQuadColor", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadColor"));
 
 		terrainShader.deactivate();
 	}

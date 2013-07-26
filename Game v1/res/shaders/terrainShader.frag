@@ -1,8 +1,11 @@
 varying vec4 verpos;
 uniform float time;
-uniform vec2 center;
-//uniform float width;
 uniform sampler2D texture1;
+
+uniform vec2 buildQuadA;
+uniform vec2 buildQuadB;
+uniform bool buildQuadRender;
+uniform vec4 buildQuadColor;
 
 void main(){
 	/*vec4 color;
@@ -33,5 +36,17 @@ void main(){
 	gl_FragColor = vec4(colorR, colorG, colorB, colorA);*/
 
 	float heightMult = (verpos.y / 5) + 0.4;
-	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult;
+	vec4 textureColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult;
+
+	if(buildQuadRender){
+		if((verpos.x > buildQuadA.x && verpos.x < buildQuadB.x) || (verpos.x < buildQuadA.x && verpos.x > buildQuadB.x)){
+			if((verpos.z > buildQuadA.y && verpos.z < buildQuadB.y) || (verpos.z < buildQuadA.y && verpos.z > buildQuadB.y)){
+				float brightness = (textureColor.r + textureColor.g + textureColor.b) / 3.0;
+				textureColor = vec4(brightness + buildQuadColor.r, brightness + buildQuadColor.g, brightness + buildQuadColor.b, textureColor.w);
+			}
+		}
+	}
+
+	gl_FragColor = textureColor;
+
 }

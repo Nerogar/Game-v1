@@ -1,5 +1,9 @@
 package de.nerogar.gameV1;
 
+import static org.lwjgl.opengl.GL20.*;
+
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.gui.GuiBuildingTest;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBuilding;
@@ -84,18 +88,28 @@ public class Player {
 			}
 
 			RenderHelper.enableAlpha();
-			Vector2d posA = new Vector2d(buildingOnCursor.getAABB().a.getX(), buildingOnCursor.getAABB().a.getZ());
-			Vector2d posB = new Vector2d(buildingOnCursor.getAABB().b.getX(), buildingOnCursor.getAABB().b.getZ());
-			Vector3d a = new Vector3d(posA.getX(), world.land.getHeight(posA) + 0.1, posA.getZ());
-			Vector3d b = new Vector3d(posA.getX(), world.land.getHeight(posA.getX(), posB.getZ()) + 0.1, posB.getZ());
-			Vector3d c = new Vector3d(posB.getX(), world.land.getHeight(posB) + 0.1, posB.getZ());
-			Vector3d d = new Vector3d(posB.getX(), world.land.getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());
+
+			Shader terrainShader = ShaderBank.instance.getShader("terrain");
+			terrainShader.activate();
 			if (isbuildingOnCursorBuildable) {
 				//RenderHelper.drawQuad(a, b, c, d, 0x00ff0066);
+				glUniform1i(terrainShader.uniforms.get("buildQuadRender"), 0);
 			} else {
-				RenderHelper.drawQuad(a, b, c, d, 0xff000066);
+				Vector2d posA = new Vector2d(buildingOnCursor.getAABB().a.getX(), buildingOnCursor.getAABB().a.getZ());
+				Vector2d posB = new Vector2d(buildingOnCursor.getAABB().b.getX(), buildingOnCursor.getAABB().b.getZ());
+				Vector3d a = new Vector3d(posA.getX(), world.land.getHeight(posA) + 0.1, posA.getZ());
+				Vector3d b = new Vector3d(posA.getX(), world.land.getHeight(posA.getX(), posB.getZ()) + 0.1, posB.getZ());
+				Vector3d c = new Vector3d(posB.getX(), world.land.getHeight(posB) + 0.1, posB.getZ());
+				Vector3d d = new Vector3d(posB.getX(), world.land.getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());
+				//RenderHelper.drawQuad(a, b, c, d, 0xff000066);
+
+				glUniform2f(terrainShader.uniforms.get("buildQuadA"), a.getXf(), a.getZf());
+				glUniform2f(terrainShader.uniforms.get("buildQuadB"), c.getXf(), c.getZf());
+				glUniform1i(terrainShader.uniforms.get("buildQuadRender"), 1);
+				glUniform4f(terrainShader.uniforms.get("buildQuadColor"), 1.0f, 0.0f, 0.0f, 1.0f);
 			}
 			RenderHelper.disableAlpha();
+			terrainShader.deactivate();
 		}
 	}
 
