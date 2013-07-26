@@ -1,8 +1,11 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityPhysic extends Entity {
@@ -24,8 +27,8 @@ public abstract class EntityPhysic extends Entity {
 		return 1 / inverseMass;
 	}
 
-	public void update(float time) {
-
+	@Override
+	public void update(float time, ArrayList<PacketEntity> packets) {
 		updatePhysics(time);
 	}
 

@@ -7,6 +7,7 @@ import de.nerogar.gameV1.GameResources;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -28,10 +29,19 @@ public class EntityHouseBlue extends EntityBuilding {
 
 	@Override
 	public void update(float time, ArrayList<PacketEntity> packets) {
-
-		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
-		world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
-
+		if (!world.serverWorld) {
+			ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
+			world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
+		}
+		
+		for (PacketEntity packet : packets) {
+			if (packet instanceof PacketClickEntity) {
+				int mouseButton = ((PacketClickEntity) packet).mouseButton;
+				if (mouseButton == 1){
+					remove();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -57,6 +67,6 @@ public class EntityHouseBlue extends EntityBuilding {
 	@Override
 	public void click(int key) {
 		// TODO Auto-generated method stub
-		if (key == 1) markToRemove = true;
+		if (key == 1) remove();
 	}
 }

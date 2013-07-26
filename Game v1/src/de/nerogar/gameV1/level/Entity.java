@@ -11,6 +11,7 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.PacketRemoveEntity;
 import de.nerogar.gameV1.object.Object3D;
 import de.nerogar.gameV1.object.Object3DBank;
 import de.nerogar.gameV1.object.ObjectSprite;
@@ -138,6 +139,15 @@ public abstract class Entity {
 	// register der Entities, wird zum laden/speichern gebraucht
 	public static void registerEntity(Entity entity) {
 		entityList.put(entity.getNameTag(), (Class<? extends Entity>) entity.getClass());
+	}
+	
+	public void remove(){
+		markToRemove = true;
+		if(world.serverWorld){
+			PacketRemoveEntity removePacket = new PacketRemoveEntity();
+			removePacket.id = id;
+			world.server.broadcastData(removePacket);
+		}
 	}
 
 	public static Entity getEntity(Game game, World world, String tagName) {

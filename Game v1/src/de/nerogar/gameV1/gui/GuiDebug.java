@@ -26,7 +26,7 @@ public class GuiDebug extends Gui {
 		labels = new GElementTextLabel[10];
 
 		labels[0] = new GElementTextLabel(genNewID(), 0.01F, 0F, .5F, .05F, "Game v1", FontRenderer.LEFT);
-		labels[1] = new GElementTextLabel(genNewID(), 0.01F, 0.03F, .5F, .05F, "", FontRenderer.LEFT);
+		labels[1] = new GElementTextLabel(genNewID(), 0.01F, 0.03F, 1F, .05F, "", FontRenderer.LEFT);
 
 		labels[2] = new GElementTextLabel(genNewID(), 0.01F, 0.09F, .5F, .05F, "", FontRenderer.LEFT);
 		labels[3] = new GElementTextLabel(genNewID(), 0.01F, 0.12F, .5F, .05F, "", FontRenderer.LEFT);
@@ -62,7 +62,7 @@ public class GuiDebug extends Gui {
 			fpsLabel.text = "FPS: " + String.valueOf(game.timer.mfFps);
 			delayCount = 0;
 		}
-		labels[1].text = "Entities: " + world.entityList.entities.size() + ", Vergleiche: " + world.collisionComparer.comparations;
+		labels[1].text = "Entities: " + world.entityList.entities.size() + ", TempEntities: " + world.entityList.tempEntities.size() + ", Vergleiche: " + world.collisionComparer.comparations;
 
 		updateStressTimes();
 

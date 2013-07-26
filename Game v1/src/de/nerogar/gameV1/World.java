@@ -12,6 +12,7 @@ import de.nerogar.gameV1.network.Packet;
 import de.nerogar.gameV1.network.PacketBuildHouse;
 import de.nerogar.gameV1.network.PacketChunkData;
 import de.nerogar.gameV1.network.PacketExitGame;
+import de.nerogar.gameV1.network.PacketRemoveEntity;
 import de.nerogar.gameV1.network.PacketSpawnEntity;
 import de.nerogar.gameV1.network.Server;
 import de.nerogar.gameV1.physics.CollisionComparer;
@@ -200,6 +201,10 @@ public class World {
 			Entity newEntity = Entity.getEntity(game, this, entityData.tagName);
 			newEntity.load(entityData.entityData, "");
 			spawnEntity(newEntity);
+		}else if (packet instanceof PacketRemoveEntity) {
+			PacketRemoveEntity entityData = (PacketRemoveEntity) packet;
+			Entity remEntity = entityList.entities.get(entityData.id);
+			remEntity.remove();
 		}
 	}
 
@@ -302,6 +307,28 @@ public class World {
 
 	public void spawnEntity(Entity entity) {
 		if (isLoaded) {
+			if(!serverWorld){
+				if(entity.saveEntity){
+					entityList.addEntity(entity, this);
+				}else{
+					entityList.addTempEntity(entity, this);
+				}
+			}else{
+				if(entity.saveEntity){
+					entityList.addEntity(entity, this);
+					
+					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
+					entityPacket.tagName = entity.getNameTag();
+
+					DNFile entityData = new DNFile("");
+					entity.save(entityData, "");
+					entityPacket.entityData = entityData;
+
+					server.broadcastData(entityPacket);
+				}
+			}
+			
+			/*
 			if (!serverWorld || entity.saveEntity) { //don't spawn temp-entities on serverworld
 				entityList.addEntity(entity, this);
 				if (serverWorld && entity.saveEntity) {
@@ -314,7 +341,7 @@ public class World {
 
 					server.broadcastData(entityPacket);
 				}
-			}
+			}*/
 		}
 	}
 

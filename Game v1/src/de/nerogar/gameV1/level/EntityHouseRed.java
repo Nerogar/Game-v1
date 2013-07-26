@@ -49,7 +49,7 @@ public class EntityHouseRed extends EntityBuilding {
 	@Override
 	public void click(int key) {
 		// TODO Auto-generated method stub
-		if (key == 1) markToRemove = true;
+		if (key == 1) remove();
 	}
 
 	@Override

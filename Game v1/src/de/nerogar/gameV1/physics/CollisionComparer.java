@@ -2,7 +2,6 @@ package de.nerogar.gameV1.physics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;

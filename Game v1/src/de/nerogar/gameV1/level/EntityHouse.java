@@ -52,9 +52,7 @@ public class EntityHouse extends Entity {
 
 	@Override
 	public void click(int key) {
-		if (key == 1) {
-			markToRemove = true;
-		}
+		if (key == 1) remove();
 	}
 
 	@Override

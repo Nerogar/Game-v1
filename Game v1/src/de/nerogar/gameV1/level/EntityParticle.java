@@ -18,6 +18,7 @@ public abstract class EntityParticle extends EntityPhysic {
 		standardAcceleration = new Vector3d(0, -GameOptions.instance.GRAVITY, 0);
 	}
 
+	@Override
 	public void updatePhysics(float time) {
 		updatePosition(time);
 	}

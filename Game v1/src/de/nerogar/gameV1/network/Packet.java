@@ -66,5 +66,6 @@ public abstract class Packet {
 		registerPacket(PacketBuildHouse.class);
 		registerPacket(PacketSpawnEntity.class);
 		registerPacket(PacketClickEntity.class);
+		registerPacket(PacketRemoveEntity.class);
 	}
 }

@@ -39,7 +39,7 @@ public class GuiVideoSettings extends Gui {
 		resSlider.position = displayMode;
 
 		//vSync
-		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.2f, 0.1f, "vertical Sync:", FontRenderer.LEFT));
+		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.2f, 0.1f, "vSync:", FontRenderer.LEFT));
 		vSyncButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("vSync")), FontRenderer.LEFT, "Buttons/button.png", false, "");
 
 		//fps limit

@@ -26,12 +26,13 @@ public class EntityTestparticle extends EntityParticle {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, ArrayList<PacketEntity> packets) {
 		//addForce(new Vector3d(0, 15, 0));
 		liveTime -= time;
 		opacity = liveTime;
-		if (liveTime <= 0) markToRemove = true;
-		super.update(time);
+		if (liveTime <= 0) remove();
+		super.update(time, packets);
+		
 	}
 
 	@Override
@@ -59,11 +60,5 @@ public class EntityTestparticle extends EntityParticle {
 	@Override
 	public String getNameTag() {
 		return "Testpartikel";
-	}
-
-	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
-		// TODO Auto-generated method stub
-		
 	}
 }
