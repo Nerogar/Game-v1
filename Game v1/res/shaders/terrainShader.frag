@@ -42,7 +42,8 @@ void main(){
 		if((verpos.x > buildQuadA.x && verpos.x < buildQuadB.x) || (verpos.x < buildQuadA.x && verpos.x > buildQuadB.x)){
 			if((verpos.z > buildQuadA.y && verpos.z < buildQuadB.y) || (verpos.z < buildQuadA.y && verpos.z > buildQuadB.y)){
 				float brightness = (textureColor.r + textureColor.g + textureColor.b) / 3.0;
-				textureColor = vec4(brightness + buildQuadColor.r, brightness + buildQuadColor.g, brightness + buildQuadColor.b, textureColor.w);
+				float n = 1.0;
+				textureColor = vec4((brightness + n*buildQuadColor.r)/(n+1), (brightness + buildQuadColor.g)/(n+1), (brightness + buildQuadColor.b)/(n+1), textureColor.w);
 			}
 		}
 	}

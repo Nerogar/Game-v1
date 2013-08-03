@@ -1,12 +1,7 @@
 package de.nerogar.gameV1.debug;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL11.*;
 
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.Game;
@@ -22,8 +17,6 @@ import de.nerogar.gameV1.animation.MeshVertex;
 import de.nerogar.gameV1.animation.Skeleton;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
-import de.nerogar.gameV1.level.Entity;
-import de.nerogar.gameV1.level.EntityPhysic;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.ALBufferBank;
@@ -37,7 +30,6 @@ public class DebugFelk {
 	public Skeleton testSkelett;
 	public Animation testAnimation = new Animation();
 	public MeshVertex testVertex, testVertex1, testVertexA, testVertexB, testVertex2;
-	private Vector3d testVector;
 
 	public DebugFelk(Game game) {
 		this.game = game;
@@ -54,7 +46,7 @@ public class DebugFelk {
 
 		//SoundManager.instance.preLoadSounds();
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
-		sound = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
+		sound = SoundManager.instance.create("forecast.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
 
 		Bone rootBone = new Bone(null, 0, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), MatrixHelperR3.getTransformationMatrix(1, 1, 1, 0, 0, 0, 5, 5, 0));
 
@@ -194,6 +186,14 @@ public class DebugFelk {
 
 		if (InputHandler.isKeyPressed(Keyboard.KEY_J)) {
 			testAnimation.play();
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_C)) {
+			sound.crash();
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_V)) {
+			sound.uncrash();
 		}
 
 		testAnimation.update();

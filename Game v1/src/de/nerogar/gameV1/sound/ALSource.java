@@ -27,6 +27,7 @@ public class ALSource {
 	private int byteOffset;
 	private float offset;
 	private int state;
+	private boolean crashed = false;
 	
 	private boolean deleted = false;
 
@@ -41,8 +42,17 @@ public class ALSource {
 		this.setPitch(pitch);
 		ALHelper.bindBufferToSource(alBuffer, this);
 	}
+	
+	public void crash() {
+		crashed = true;
+	}
+	
+	public void uncrash() {
+		crashed = false;
+	}
 
 	public void update() {
+		if (crashed) setOffset(offset);
 		try {
 			byteOffset = ALHelper.getByteOffset(this);
 			state = ALHelper.getSourceState(this);
