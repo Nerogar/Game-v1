@@ -13,12 +13,19 @@ import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Player {
+	public static int TEAM_BLUE = 1;
+	public static int TEAM_GREEN = 2;
+	public static int TEAM_RED = 3;
+	public static int TEAM_YELLOW = 4;
+
 	public Game game;
 	public World world;
 	public Camera camera;
 	public int buildingOnCursorID = -1;
 	public EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
+	private int ownTeam = TEAM_BLUE;
+
 	public GuiBuildingTest guiBuildingTest;
 
 	public Player(Game game, World world) {
@@ -79,38 +86,42 @@ public class Player {
 	}
 
 	private void renderEntityOnCursor(World world) {
+		Shader terrainShader = ShaderBank.instance.getShader("terrain");
+		terrainShader.activate();
+
 		if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
 			//buildingOnCursor.opacity = 0.5f;
 			//buildingOnCursor.render();
 
+			RenderHelper.enableAlpha();
 			if (isbuildingOnCursorBuildable) {
 				buildingOnCursor.render();
 			}
+			RenderHelper.disableAlpha();
 
-			RenderHelper.enableAlpha();
-
-			Shader terrainShader = ShaderBank.instance.getShader("terrain");
-			terrainShader.activate();
 			if (isbuildingOnCursorBuildable) {
 				//RenderHelper.drawQuad(a, b, c, d, 0x00ff0066);
 				glUniform1i(terrainShader.uniforms.get("buildQuadRender"), 0);
 			} else {
 				Vector2d posA = new Vector2d(buildingOnCursor.getAABB().a.getX(), buildingOnCursor.getAABB().a.getZ());
 				Vector2d posB = new Vector2d(buildingOnCursor.getAABB().b.getX(), buildingOnCursor.getAABB().b.getZ());
-				Vector3d a = new Vector3d(posA.getX(), world.land.getHeight(posA) + 0.1, posA.getZ());
+				/*Vector3d a = new Vector3d(posA.getX(), world.land.getHeight(posA) + 0.1, posA.getZ());
 				Vector3d b = new Vector3d(posA.getX(), world.land.getHeight(posA.getX(), posB.getZ()) + 0.1, posB.getZ());
 				Vector3d c = new Vector3d(posB.getX(), world.land.getHeight(posB) + 0.1, posB.getZ());
-				Vector3d d = new Vector3d(posB.getX(), world.land.getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());
+				Vector3d d = new Vector3d(posB.getX(), world.land.getHeight(posB.getX(), posA.getZ()) + 0.1, posA.getZ());*/
 				//RenderHelper.drawQuad(a, b, c, d, 0xff000066);
 
-				glUniform2f(terrainShader.uniforms.get("buildQuadA"), a.getXf(), a.getZf());
-				glUniform2f(terrainShader.uniforms.get("buildQuadB"), c.getXf(), c.getZf());
+				glUniform2f(terrainShader.uniforms.get("buildQuadA"), posA.getXf(), posA.getZf());
+				glUniform2f(terrainShader.uniforms.get("buildQuadB"), posB.getXf(), posB.getZf());
 				glUniform1i(terrainShader.uniforms.get("buildQuadRender"), 1);
 				glUniform4f(terrainShader.uniforms.get("buildQuadColor"), 1.0f, 0.0f, 0.0f, 1.0f);
 			}
-			RenderHelper.disableAlpha();
-			terrainShader.deactivate();
+
+		} else {
+			glUniform1i(terrainShader.uniforms.get("buildQuadRender"), 0);
 		}
+
+		terrainShader.deactivate();
 	}
 
 	public void handleMouseClick() {

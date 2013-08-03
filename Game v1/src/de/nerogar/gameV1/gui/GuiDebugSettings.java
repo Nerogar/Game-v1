@@ -8,7 +8,7 @@ import de.nerogar.gameV1.InputHandler;
 import de.nerogar.gameV1.RenderHelper;
 
 public class GuiDebugSettings extends Gui {
-	private GElementButton showAABBsButton, showNetworkTrafficButton, okButton;
+	private GElementButton showAABBsButton, showNetworkTrafficButton, okButton, tempIngameButton;
 
 	//private GElementOptionSlider ;
 	//private GElementSlider ;
@@ -42,9 +42,13 @@ public class GuiDebugSettings extends Gui {
 		//ok button
 		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");
 
+		//tempIngameButton
+		tempIngameButton = new GElementButton(genNewID(), 0.7f, 0.8f, 0.4f, 0.1f, "ingame", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		
 		addGElement(showAABBsButton);
 		addGElement(showNetworkTrafficButton);
 		addGElement(okButton);
+		addGElement(tempIngameButton);
 	}
 
 	@Override
@@ -73,6 +77,9 @@ public class GuiDebugSettings extends Gui {
 		} else if (id == okButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
 			game.guiList.addGui(new GuiVideoSettings(game));
+		} else if (id == tempIngameButton.id && mouseButton == 0) {
+			game.guiList.removeGui(getName());
+			game.guiList.addGui(new GuiIngameOverlay(game));
 		}
 	}
 }

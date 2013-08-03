@@ -12,13 +12,16 @@ public class Camera {
 	private float scrollXLoc;
 	private float scrollYLoc;
 	private float scrollZLoc;
+	private float targetScrollY;
+
 	private float scrollBack;
 	public float rotation;
 	public float rotationDown;
 
-	private final float MAXSCROLLBACK = 20;
+	private final float MAXSCROLLBACK = 20f;
 	private final float MINSCROLLUP = 10f;
-	private final float MINROTDOWN = 35;
+	private final float MAXSCROLLUP = 80f;
+	private final float MINROTDOWN = 35f;
 
 	private int mouseX = Mouse.getX();
 	private int mouseY = Mouse.getY();
@@ -119,19 +122,25 @@ public class Camera {
 		rY -= InputHandler.isKeyDown(Keyboard.KEY_LEFT) ? 1.0f : 0;
 		rotation += timer.delta / 20f * rY;
 
-		sY = InputHandler.isKeyDown(Keyboard.KEY_DOWN) ? 1.0f : 0;
-		sY -= InputHandler.isKeyDown(Keyboard.KEY_UP) ? 1.0f : 0;
-
-		sY = InputHandler.isKeyDown(Keyboard.KEY_DOWN) ? 1.0f : 0;
+		/*sY = InputHandler.isKeyDown(Keyboard.KEY_DOWN) ? 1.0f : 0;
 		sY -= InputHandler.isKeyDown(Keyboard.KEY_UP) ? 1.0f : 0;
 		sY -= Mouse.getDWheel() / 100f;
 		sY += InputHandler.getGamepadButtonData("up");
-
 		scrollYLoc += timer.delta / 20f * sY;
-
 		scrollYLoc = (scrollYLoc < 0 ? 0 : scrollYLoc);
-		scrollY = scrollYLoc + MINSCROLLUP;
+		scrollY = scrollYLoc + MINSCROLLUP;*/
 
+		if (InputHandler.isKeyPressed(Keyboard.KEY_DOWN)) {
+			targetScrollY = MAXSCROLLUP + MINSCROLLUP;
+		} else if (InputHandler.isKeyPressed(Keyboard.KEY_UP)) {
+			targetScrollY = 0;
+		}
+		scrollYLoc += scrollYLoc < targetScrollY ? 2 : -2;
+		if (scrollYLoc < 0) scrollYLoc = 0;
+		if (scrollYLoc > MAXSCROLLUP) scrollYLoc = MAXSCROLLUP;
+		
+		scrollY = scrollYLoc + MINSCROLLUP;
+		
 		float temp;
 
 		temp = (float) Math.sqrt(scrollYLoc) * 8;

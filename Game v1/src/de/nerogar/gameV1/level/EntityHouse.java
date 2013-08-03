@@ -21,7 +21,7 @@ public class EntityHouse extends Entity {
 
 	@Override
 	public void init(World world) {
-		setObject("houses/test1", "houses/test1-1.png");
+		setObject("houses/house", "houses/house_white.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
 

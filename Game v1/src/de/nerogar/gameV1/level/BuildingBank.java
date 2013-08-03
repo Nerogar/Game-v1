@@ -12,7 +12,7 @@ public class BuildingBank {
 		buildings.put(3, "HousePink");
 		buildings.put(4, "HouseRed");
 	}
-	
+
 	/*public static EntityBuilding getNewInstance(int id, Object... ctorArgument) {
 		if (!buildings.containsKey(id)) return null;
 		Object object = null;
@@ -32,5 +32,5 @@ public class BuildingBank {
 		if (!buildings.containsKey(i)) return null;
 		return buildings.get(i);
 	}
-	
+
 }

@@ -15,11 +15,6 @@ public class GuiBuildingTest extends Gui {
 	}
 
 	@Override
-	public boolean pauseGame() {
-		return false;
-	}
-
-	@Override
 	public String getName() {
 		return "buildingTest";
 	}

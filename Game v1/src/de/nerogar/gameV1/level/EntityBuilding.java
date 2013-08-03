@@ -2,6 +2,7 @@ package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameResources;
+import de.nerogar.gameV1.Player;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
@@ -12,6 +13,7 @@ public abstract class EntityBuilding extends Entity {
 
 	public Position size;
 	public Position centerPosition;
+	public int team = Player.TEAM_BLUE;
 
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 

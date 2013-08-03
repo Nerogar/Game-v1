@@ -109,18 +109,22 @@ public class GuiList {
 		newAlerts = new ArrayList<Alert>();
 
 		RenderEngine.instance.setOrtho();
-		beginRender();
-		if (noGuiLoaded() && !activeAlert()) { return; }
 
-		for (int i = 0; i < guis.size(); i++) {
-			guis.get(i).render();
+		if (noGuiLoaded() && !activeAlert()) {
+			return;
+		} else {
+			beginRender();
+
+			for (int i = 0; i < guis.size(); i++) {
+				guis.get(i).render();
+			}
+
+			for (int i = 0; i < alerts.size(); i++) {
+				alerts.get(i).render();
+			}
+
+			endRender();
 		}
-
-		for (int i = 0; i < alerts.size(); i++) {
-			alerts.get(i).render();
-		}
-
-		endRender();
 	}
 
 	public void beginRender() {
