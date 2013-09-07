@@ -44,10 +44,16 @@ public class SendThread extends Thread {
 							}
 
 							byte[] buffer = packet.packedData;
+							long time1 = System.nanoTime();//send start
 							out.writeInt(buffer.length);
+							long time2 = System.nanoTime();//send length
 							out.writeInt(packet.packetID);
+							long time3 = System.nanoTime();//send id
 							out.write(buffer);
-							out.flush();
+							long time4 = System.nanoTime();//send packet
+							System.out.println(((time2-time1)/1000) + " send length");
+							System.out.println(((time3-time2)/1000) + " send id");
+							System.out.println(((time4-time3)/1000) + " send packet");
 							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.getName() + " (" + buffer.length + " bytes)");
 						}
 					}

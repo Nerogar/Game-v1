@@ -28,14 +28,21 @@ public class ReceiveThread extends Thread {
 			byte[] buffer = null;
 
 			while (!connectionClosed) {
+				long time1 = System.nanoTime();//read start
 				buffer = new byte[in.readInt()];
+				long time2 = System.nanoTime();//read length
 				int packetID = in.readInt();
+				long time3 = System.nanoTime();//read id
 
 				int receivedBytes = 0;
 
 				while (receivedBytes < buffer.length) {
 					receivedBytes += in.read(buffer, receivedBytes, buffer.length - receivedBytes);
 				}
+				long time4 = System.nanoTime();//read packet
+				System.out.println(((time2-time1)/1000) + " read length");
+				System.out.println(((time3-time2)/1000) + " read id");
+				System.out.println(((time4-time3)/1000) + " read packet");
 				Packet receivedPacket = Packet.getPacket(packetID).newInstance();
 				if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("received packet: " + receivedPacket.getName() + " (" + receivedBytes + "/" + buffer.length + " bytes)");
 				receivedPacket.packedData = buffer;
