@@ -29,7 +29,8 @@ public class ReceiveThread extends Thread {
 
 			while (!connectionClosed) {
 				long time1 = System.nanoTime();//read start
-				buffer = new byte[in.readInt()];
+				int length = in.readInt();
+				buffer = new byte[length];
 				long time2 = System.nanoTime();//read length
 				int packetID = in.readInt();
 				long time3 = System.nanoTime();//read id

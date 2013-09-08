@@ -1,5 +1,6 @@
 package de.nerogar.gameV1.network;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -27,8 +28,10 @@ public class SendThread extends Thread {
 
 			try {
 
-				DataOutputStream out;
-				out = new DataOutputStream(socket.getOutputStream());
+				//DataOutputStream out;
+				BufferedOutputStream out;
+				//out = new DataOutputStream(socket.getOutputStream());
+				out = new BufferedOutputStream(socket.getOutputStream());
 
 				while (running || data.size() > 0) {
 					if (data.size() == 0) startWaiting();
@@ -40,20 +43,18 @@ public class SendThread extends Thread {
 
 							if (!packet.packed) {
 								packet.pack();
+								packet.packInNetworkBuffer();
 								packet.packed = true;
 							}
 
-							byte[] buffer = packet.packedData;
+							byte[] buffer = packet.networkBuffer;
 							long time1 = System.nanoTime();//send start
-							out.writeInt(buffer.length);
-							long time2 = System.nanoTime();//send length
-							out.writeInt(packet.packetID);
-							long time3 = System.nanoTime();//send id
 							out.write(buffer);
-							long time4 = System.nanoTime();//send packet
-							System.out.println(((time2-time1)/1000) + " send length");
-							System.out.println(((time3-time2)/1000) + " send id");
-							System.out.println(((time4-time3)/1000) + " send packet");
+							long time2 = System.nanoTime();//send packet
+							out.flush();
+							long time3 = System.nanoTime();//send flush
+							System.out.println(((time2 - time1) / 1000) + " send packet");
+							System.out.println(((time3 - time2) / 1000) + " send flush");
 							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.getName() + " (" + buffer.length + " bytes)");
 						}
 					}

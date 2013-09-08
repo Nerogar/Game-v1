@@ -9,6 +9,7 @@ public abstract class Packet {
 
 	protected DNFile data;
 	public byte[] packedData;
+	public byte[] networkBuffer;
 	public int packetID;
 	public int channel = DEFAULT_CHANNEL;
 	public boolean packed = false;
@@ -18,7 +19,6 @@ public abstract class Packet {
 	public static final int WORLD_CHANNEL = 2;
 	public static final int PLAYER_CHANNEL = 3;
 	public static final int ENTITY_CHANNEL = 3;
-	
 
 	private static int biggestID = 0; //0 is reserved for PacketConnectionInfo
 
@@ -38,6 +38,20 @@ public abstract class Packet {
 	}
 
 	public abstract void pack();
+
+	public void packInNetworkBuffer() {
+		networkBuffer = new byte[packedData.length + 8];
+		System.arraycopy(packedData, 0, networkBuffer, 8, packedData.length);
+		networkBuffer[0] = (byte) ((packedData.length & 0xff000000) >> 24);
+		networkBuffer[1] = (byte) ((packedData.length & 0xff0000) >> 16);
+		networkBuffer[2] = (byte) ((packedData.length & 0xff00) >> 8);
+		networkBuffer[3] = (byte) ((packedData.length & 0xff));
+
+		networkBuffer[4] = (byte) ((packetID & 0xff000000) >> 24);
+		networkBuffer[5] = (byte) ((packetID & 0xff0000) >> 16);
+		networkBuffer[6] = (byte) ((packetID & 0xff00) >> 8);
+		networkBuffer[7] = (byte) ((packetID & 0xff));
+	}
 
 	public abstract void unpack();
 
