@@ -49,10 +49,11 @@ public class Server extends Thread {
 	}
 
 	public void broadcastData(Packet packet) {
-		/*if (!packet.packed) {
+		if (!packet.packed) {
 			packet.pack();
+			packet.packInNetworkBuffer();
 			packet.packed = true;
-		}*/
+		}
 
 		for (Client broadcastClient : clients) {
 
