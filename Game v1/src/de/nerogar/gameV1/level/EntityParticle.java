@@ -25,7 +25,7 @@ public abstract class EntityParticle extends EntityPhysic {
 
 	public void updatePosition(float time) {
 
-		velocity.add(Vector3d.multiply(Vector3d.add(Vector3d.multiply(force, inverseMass), Vector3d.multiply(standardAcceleration, time)), 1));
+		velocity.add(Vector3d.add(Vector3d.multiply(force, inverseMass), Vector3d.multiply(standardAcceleration, time)));
 
 		matrix.position.add(Vector3d.multiply(velocity, time));
 
