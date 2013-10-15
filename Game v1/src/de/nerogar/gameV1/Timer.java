@@ -38,9 +38,9 @@ public class Timer {
 		framecount++;
 		double time = getTime();
 		delta = (float) (time - lastFrame);
-		if (delta > (1000 / fps) * 2) {
+		if (delta > (1000 / (mfFps+1)) * 2) {
 			System.out.println("capped time delta");
-			delta = (1000 / fps) * 2;
+			delta = (1000 / (mfFps+1)) * 2;
 		}
 		lastFrame = time;
 		printFPS();
