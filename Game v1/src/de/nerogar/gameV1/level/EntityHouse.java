@@ -56,8 +56,14 @@ public class EntityHouse extends Entity {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -11,6 +11,7 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.PacketMoveEntity;
 import de.nerogar.gameV1.network.PacketRemoveEntity;
 import de.nerogar.gameV1.object.Object3D;
 import de.nerogar.gameV1.object.Object3DBank;
@@ -25,6 +26,10 @@ public abstract class Entity {
 	public ObjectMatrix matrix = new ObjectMatrix(new Vector3d(0, 0, 0), // Position 0
 			new Vector3d(0, 0, 0), // Rotation 0
 			new Vector3d(1, 1, 1)); // Skalierung 1
+	public ObjectMatrix serverMatrix = new ObjectMatrix(new Vector3d(0, 0, 0), // Position 0
+			new Vector3d(0, 0, 0), // Rotation 0
+			new Vector3d(1, 1, 1)); // Skalierung 1
+	public long serverPosTime;
 
 	public Object3D object;
 	public String texture;
@@ -67,7 +72,17 @@ public abstract class Entity {
 		return world;
 	}
 
-	public abstract void update(float time, ArrayList<PacketEntity> packets);
+	public void update(float time, ArrayList<PacketEntity> packets) {
+		if (world.serverWorld) {
+			updateServer(time, packets);
+		} else {
+			updateClient(time, packets);
+		}
+	}
+
+	public abstract void updateServer(float time, ArrayList<PacketEntity> packets);
+
+	public abstract void updateClient(float time, ArrayList<PacketEntity> packets);
 
 	public Bounding getBoundingBox() {
 
@@ -83,6 +98,26 @@ public abstract class Entity {
 
 		return PhysicHelper.toAABB(getBoundingBox());
 
+	}
+
+	public void move(Vector3d pos) {
+		matrix.setPosition(pos);
+		broadcastObjectMatrix();
+	}
+
+	public void move(Vector3d pos, Vector3d rot) {
+		matrix.setPosition(pos);
+		matrix.setRotation(rot);
+		broadcastObjectMatrix();
+	}
+
+	private void broadcastObjectMatrix() {
+		if (world.serverWorld) {
+			PacketMoveEntity moveEntityPacket = new PacketMoveEntity();
+			moveEntityPacket.objectMatrix = matrix;
+			moveEntityPacket.entityID = id;
+			world.server.broadcastData(moveEntityPacket);
+		}
 	}
 
 	public void load(DNFile chunkFile, String folder) {
@@ -140,10 +175,10 @@ public abstract class Entity {
 	public static void registerEntity(Entity entity) {
 		entityList.put(entity.getNameTag(), (Class<? extends Entity>) entity.getClass());
 	}
-	
-	public void remove(){
+
+	public void remove() {
 		markToRemove = true;
-		if(world.serverWorld){
+		if (world.serverWorld) {
 			PacketRemoveEntity removePacket = new PacketRemoveEntity();
 			removePacket.id = id;
 			world.server.broadcastData(removePacket);
@@ -174,7 +209,7 @@ public abstract class Entity {
 		registerEntity(new EntityShrine(game, null, objectMatrix));
 		registerEntity(new EntityTestparticle(game, null, objectMatrix));
 		registerEntity(new EntityHut(game, null, objectMatrix));
-		
+		registerEntity(new EntityTestSoldier(game, null, objectMatrix));
 	}
 
 }

@@ -26,13 +26,17 @@ public class EntityTestparticle extends EntityParticle {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+		//this is a client entity
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
 		//addForce(new Vector3d(0, 15, 0));
 		liveTime -= time;
 		opacity = liveTime;
 		if (liveTime <= 0) remove();
-		super.update(time, packets);
-		
+		super.updateClient(time, packets);
 	}
 
 	@Override

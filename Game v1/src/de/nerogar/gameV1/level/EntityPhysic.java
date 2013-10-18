@@ -28,7 +28,12 @@ public abstract class EntityPhysic extends Entity {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+		updatePhysics(time);
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
 		updatePhysics(time);
 	}
 

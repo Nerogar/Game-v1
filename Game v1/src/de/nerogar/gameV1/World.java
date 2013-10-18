@@ -204,7 +204,9 @@ public class World {
 		} else if (packet instanceof PacketRemoveEntity) {
 			PacketRemoveEntity entityData = (PacketRemoveEntity) packet;
 			Entity remEntity = entityList.entities.get(entityData.id);
-			remEntity.remove();
+			if (remEntity != null) {
+				remEntity.remove();
+			}
 		}
 	}
 
@@ -347,5 +349,9 @@ public class World {
 
 	public void despawnEntity(Entity entity) {
 		if (isLoaded) entityList.entities.remove(entity);
+	}
+
+	public Entity getEntityByID(int id) {
+		return entityList.entities.get(id);
 	}
 }

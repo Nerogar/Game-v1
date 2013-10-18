@@ -305,6 +305,18 @@ public class Land {
 		}
 	}
 
+	public double getHeight(Vector2d pos) {
+		return getHeight(pos.getX(), pos.getZ());
+	}
+
+	public double getHeight(Vector3d pos) {
+		return getHeight(pos.getX(), pos.getZ());
+	}
+
+	public double getHeight(Position pos) {
+		return getHeight(pos.x, pos.z);
+	}
+
 	public Vector3d getHighestBetween(Position pos1, Position pos2) {
 		Position chunkPos1Temp = getChunkPosition(pos1);
 		Position chunkPos2Temp = getChunkPosition(pos2);
@@ -487,14 +499,6 @@ public class Land {
 		}
 	}*/
 
-	public double getHeight(Vector2d pos) {
-		return getHeight(pos.getX(), pos.getZ());
-	}
-
-	public double getHeight(Position pos) {
-		return getHeight(pos.x, pos.z);
-	}
-
 	public void click(int button, Vector3d pos) {
 		//if (button == 0) {
 		//game.world.spawnEntity(new EntityHouse(game, new ObjectMatrix(pos)));
@@ -568,7 +572,7 @@ public class Land {
 		terrainShader.attributes.put("tileID10", Chunk.TILE_ID10_LOCATION);
 		terrainShader.attributes.put("tileID11", Chunk.TILE_ID11_LOCATION);
 		terrainShader.uniforms.put("time", glGetUniformLocation(terrainShader.shaderHandle, "time"));
-		
+
 		//buildOverlayQuad
 		terrainShader.uniforms.put("buildQuadA", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadA"));
 		terrainShader.uniforms.put("buildQuadB", glGetUniformLocation(terrainShader.shaderHandle, "buildQuadB"));

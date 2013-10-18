@@ -7,6 +7,7 @@ import de.nerogar.gameV1.GameResources;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
 import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -53,8 +54,29 @@ public class EntityHouseGreen extends EntityBuilding {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
-		// TODO Auto-generated method stub
-		
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+		if (Math.random() < 0.05f) {
+			EntityTestSoldier testSoldier = new EntityTestSoldier(game, world, new ObjectMatrix());
+			double posX = matrix.position.getX() + Math.random() * 10 - 5;
+			double posZ = matrix.position.getZ() + 3;
+			Vector3d pos = new Vector3d(posX, world.land.getHeight(posX, posZ), posZ);
+			testSoldier.matrix.setPosition(pos);
+			testSoldier.faction = 1;
+			world.spawnEntity(testSoldier);
+		}
+
+		for (PacketEntity packet : packets) {
+			if (packet instanceof PacketClickEntity) {
+				int mouseButton = ((PacketClickEntity) packet).mouseButton;
+				if (mouseButton == 1) {
+					remove();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+
 	}
 }

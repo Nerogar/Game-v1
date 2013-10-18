@@ -7,6 +7,7 @@ import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.gui.GuiBuildingTest;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBuilding;
+import de.nerogar.gameV1.level.EntityFighting;
 import de.nerogar.gameV1.level.Position;
 import de.nerogar.gameV1.network.PacketBuildHouse;
 import de.nerogar.gameV1.network.PacketClickEntity;
@@ -25,6 +26,8 @@ public class Player {
 	public EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
 	private int ownTeam = TEAM_BLUE;
+
+	public EntityFighting selectedUnit;
 
 	public GuiBuildingTest guiBuildingTest;
 
@@ -136,19 +139,30 @@ public class Player {
 		//if (Timer.instance.getFramecount() % 60 == 0 && GameOptions.instance.getBoolOption("debug")) System.out.println("zeit für Bodenkollisionsberechnung letzten Frame: " + ((time2 - time1) / 1000000) + "ms");
 
 		if (clickedEntities.length > 0) {
+			Entity clickedEntity = clickedEntities[0];
 
-			if (InputHandler.isMouseButtonPressed(0)) {
-				PacketClickEntity clickPacket = new PacketClickEntity();
-				clickPacket.entityID = clickedEntities[0].id;
-				clickPacket.mouseButton = 0;
-				world.client.sendPacket(clickPacket);
-			} else if (InputHandler.isMouseButtonPressed(1)) {
-				PacketClickEntity clickPacket = new PacketClickEntity();
-				clickPacket.entityID = clickedEntities[0].id;
-				clickPacket.mouseButton = 1;
-				world.client.sendPacket(clickPacket);
+			if (clickedEntity instanceof EntityFighting) {
+				if (InputHandler.isMouseButtonPressed(1)) {
+					selectedUnit = (EntityFighting) clickedEntity;
+				} else if (InputHandler.isMouseButtonPressed(0)) {
+					if (selectedUnit != null) selectedUnit.sendStartAttack((EntityFighting) clickedEntity);
+				}
+
+			} else {
+				if (InputHandler.isMouseButtonPressed(0)) {
+					PacketClickEntity clickPacket = new PacketClickEntity();
+					clickPacket.entityID = clickedEntity.id;
+					clickPacket.mouseButton = 0;
+					world.client.sendPacket(clickPacket);
+				} else if (InputHandler.isMouseButtonPressed(1)) {
+					PacketClickEntity clickPacket = new PacketClickEntity();
+					clickPacket.entityID = clickedEntity.id;
+					clickPacket.mouseButton = 1;
+					world.client.sendPacket(clickPacket);
+				}
 			}
-
+		} else {
+			if (InputHandler.isMouseButtonPressed(1)) selectedUnit = null;
 		}
 
 		/*if (floorIntersection != null) {

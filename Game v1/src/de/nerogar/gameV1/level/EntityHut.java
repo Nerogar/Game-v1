@@ -53,8 +53,12 @@ public class EntityHut extends EntityBuilding {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
-		// TODO Auto-generated method stub
-		
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+
 	}
 }

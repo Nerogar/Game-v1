@@ -54,7 +54,6 @@ public class EntityTree extends Entity {
 		} else if (key == 1) {
 			matrix.getPosition().add(new Vector3d(0, -1, 0));
 		}
-
 	}
 
 	@Override
@@ -63,30 +62,33 @@ public class EntityTree extends Entity {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
 		for (PacketEntity packet : packets) {
 			if (packet instanceof PacketClickEntity) {
 				System.out.println(((PacketClickEntity) packet).mouseButton);
 			}
 		}
+	}
 
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
 		/*elapsedTime += time;
-		int rand = 1;
-		if (elapsedTime > 1) {
-			Random random = new Random();
-			rand = random.nextInt(5);
-			elapsedTime -= 1;
-		}
-		if (rand == 0) {
-			if (sound != null) if (sound.isDeleted()) sound = null;
-			if (sound == null) {
-				if (Vector3d.subtract(matrix.position, world.camera.getCamPosition()).getSquaredValue() < 500) {
-					sound = SoundManager.instance.create("tree_crack.wav", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 5, 1);
-					// Weil Justin genervt ist
-					//if (sound != null) sound.play();
+				int rand = 1;
+				if (elapsedTime > 1) {
+					Random random = new Random();
+					rand = random.nextInt(5);
+					elapsedTime -= 1;
 				}
-			}
-		}*/
+				if (rand == 0) {
+					if (sound != null) if (sound.isDeleted()) sound = null;
+					if (sound == null) {
+						if (Vector3d.subtract(matrix.position, world.camera.getCamPosition()).getSquaredValue() < 500) {
+							sound = SoundManager.instance.create("tree_crack.wav", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 5, 1);
+							// Weil Justin genervt ist
+							//if (sound != null) sound.play();
+						}
+					}
+				}*/
 	}
 
 }

@@ -28,20 +28,21 @@ public class EntityHouseBlue extends EntityBuilding {
 	}
 
 	@Override
-	public void update(float time, ArrayList<PacketEntity> packets) {
-		if (!world.serverWorld) {
-			ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
-			world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
-		}
-		
+	public void updateServer(float time, ArrayList<PacketEntity> packets) {
 		for (PacketEntity packet : packets) {
 			if (packet instanceof PacketClickEntity) {
 				int mouseButton = ((PacketClickEntity) packet).mouseButton;
-				if (mouseButton == 1){
+				if (mouseButton == 1) {
 					remove();
 				}
 			}
 		}
+	}
+
+	@Override
+	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
+		world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package de.nerogar.gameV1.network;
 
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -40,22 +39,20 @@ public class SendThread extends Thread {
 						while (data.size() > 0) {
 							Packet packet = data.get(0);
 							data.remove(0);
-
 							if (!packet.packed) {
 								packet.pack();
 								packet.packInNetworkBuffer();
 								packet.packed = true;
 							}
-
 							byte[] buffer = packet.networkBuffer;
-							long time1 = System.nanoTime();//send start
+							//long time1 = System.nanoTime();//send start
 							out.write(buffer);
-							long time2 = System.nanoTime();//send packet
+							//long time2 = System.nanoTime();//send packet
 							out.flush();
-							long time3 = System.nanoTime();//send flush
-							System.out.println(((time2 - time1) / 1000) + " send packet");
-							System.out.println(((time3 - time2) / 1000) + " send flush");
-							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.getName() + " (" + buffer.length + " bytes)");
+							//long time3 = System.nanoTime();//send flush
+							//System.out.println(((time2 - time1) / 1000) + " send packet");
+							//System.out.println(((time3 - time2) / 1000) + " send flush");
+							if (GameOptions.instance.getBoolOption("showNetworkTraffic")) System.out.println("sent packet: " + packet.getName() + " (" + (buffer.length - 8) + " bytes)");
 						}
 					}
 				}
