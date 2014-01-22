@@ -2,9 +2,9 @@ package de.nerogar.gameV1.level;
 
 import java.util.ArrayList;
 
+import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -40,13 +40,13 @@ public class EntityTestparticle extends EntityParticle {
 	}
 
 	@Override
-	public void saveProperties(DNFile chunkFile, String folder) {
+	public void saveProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void loadProperties(DNFile chunkFile, String folder) {
+	public void loadProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
 
 	}

@@ -6,24 +6,15 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 
-import de.nerogar.gameV1.level.*;
-import de.nerogar.gameV1.network.Client;
-import de.nerogar.gameV1.network.Packet;
-import de.nerogar.gameV1.network.PacketBuildHouse;
-import de.nerogar.gameV1.network.PacketChunkData;
-import de.nerogar.gameV1.network.PacketExitGame;
-import de.nerogar.gameV1.network.PacketRemoveEntity;
-import de.nerogar.gameV1.network.PacketSpawnEntity;
-import de.nerogar.gameV1.network.Server;
-import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.ai.Path;
-import de.nerogar.gameV1.ai.PathNode;
-import de.nerogar.gameV1.ai.Pathfinder;
+import de.nerogar.DNFileSystem.DNFile;
+import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiMain;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
 import de.nerogar.gameV1.internalServer.InternalServer;
+import de.nerogar.gameV1.level.*;
+import de.nerogar.gameV1.network.*;
+import de.nerogar.gameV1.physics.CollisionComparer;
 
 public class World {
 	public Game game;
@@ -199,7 +190,7 @@ public class World {
 		} else if (packet instanceof PacketSpawnEntity) {
 			PacketSpawnEntity entityData = (PacketSpawnEntity) packet;
 			Entity newEntity = Entity.getEntity(game, this, entityData.tagName);
-			newEntity.load(entityData.entityData, "");
+			newEntity.load(entityData.entityData);
 			spawnEntity(newEntity);
 		} else if (packet instanceof PacketRemoveEntity) {
 			PacketRemoveEntity entityData = (PacketRemoveEntity) packet;
@@ -322,8 +313,8 @@ public class World {
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
 
-					DNFile entityData = new DNFile("");
-					entity.save(entityData, "");
+					DNFile entityData = new DNFile();
+					entity.save(entityData);
 					entityPacket.entityData = entityData;
 
 					server.broadcastData(entityPacket);

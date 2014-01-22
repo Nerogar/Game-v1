@@ -31,6 +31,9 @@ public class ObjectSprite extends Object3D {
 		rot *= 180 / Math.PI;
 		if (dir.getZ() < 0) rot += 180;
 
+		//glRotatef(-camera.rotation, 0, 1, 0);
+		//glRotatef(-camera.rotationDown, 1, 0, 0);
+
 		glRotatef(rot, 0, 1, 0);
 
 		float renderSize = size / 2;

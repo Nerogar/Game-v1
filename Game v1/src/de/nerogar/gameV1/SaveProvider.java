@@ -1,9 +1,10 @@
 package de.nerogar.gameV1;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.WorldData;
 import de.nerogar.gameV1.network.Client;
@@ -47,8 +48,12 @@ public class SaveProvider {
 	public String[] getSavesAsStrings() {
 		String[] buffer = new String[saves.length];
 		for (int i = 0; i < saves.length; i++) {
-			DNFile tempWorldFile = new DNFile(saves[i] + WorldData.FILENAME);
-			tempWorldFile.load();
+			DNFile tempWorldFile = new DNFile();
+			try {
+				tempWorldFile.load(saves[i] + WorldData.FILENAME);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			String saveName = tempWorldFile.getString("levelName") + " (" + saves[i].getName() + ")";
 
@@ -82,10 +87,14 @@ public class SaveProvider {
 	}
 
 	public void renameWorld(int index, String newName) {
-		DNFile tempWorldFile = new DNFile(saves[index] + WorldData.FILENAME);
-		tempWorldFile.load();
-		tempWorldFile.addNode("levelName", newName);
-		tempWorldFile.save();
+		DNFile tempWorldFile = new DNFile();
+		try {
+			tempWorldFile.load(saves[index] + WorldData.FILENAME);
+			tempWorldFile.addString("levelName", newName);
+			tempWorldFile.save(saves[index] + WorldData.FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean deleteWorld(int index) {

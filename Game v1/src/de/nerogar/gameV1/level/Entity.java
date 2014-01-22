@@ -5,17 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.GameOptions;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.network.PacketEntity;
-import de.nerogar.gameV1.network.PacketMoveEntity;
-import de.nerogar.gameV1.network.PacketRemoveEntity;
-import de.nerogar.gameV1.object.Object3D;
-import de.nerogar.gameV1.object.Object3DBank;
-import de.nerogar.gameV1.object.ObjectSprite;
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.network.*;
+import de.nerogar.gameV1.object.*;
 import de.nerogar.gameV1.physics.*;
 
 public abstract class Entity {
@@ -120,28 +113,28 @@ public abstract class Entity {
 		}
 	}
 
-	public void load(DNFile chunkFile, String folder) {
-		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
-		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
-		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
-		id = chunkFile.getInt(folder + ".id");
+	public void load(DNNodePath folder) {
+		matrix.position.setX(folder.getDouble("position.x"));
+		matrix.position.setY(folder.getDouble("position.y"));
+		matrix.position.setZ(folder.getDouble("position.z"));
+		id = folder.getInt("id");
 
-		loadProperties(chunkFile, folder);
+		loadProperties(folder);
 	}
 
-	public void save(DNFile chunkFile, String folder) {
-		chunkFile.addNode(folder + ".type", getNameTag());
-		chunkFile.addNode(folder + ".position.x", matrix.position.getX());
-		chunkFile.addNode(folder + ".position.y", matrix.position.getY());
-		chunkFile.addNode(folder + ".position.z", matrix.position.getZ());
-		chunkFile.addNode(folder + ".id", id);
+	public void save(DNNodePath folder) {
+		folder.addString("type", getNameTag());
+		folder.addDouble("position.x", matrix.position.getX());
+		folder.addDouble("position.y", matrix.position.getY());
+		folder.addDouble("position.z", matrix.position.getZ());
+		folder.addInt("id", id);
 
-		saveProperties(chunkFile, folder);
+		saveProperties(folder);
 	}
 
-	public abstract void saveProperties(DNFile chunkFile, String folder);
+	public abstract void saveProperties(DNNodePath folder);
 
-	public abstract void loadProperties(DNFile chunkFile, String folder);
+	public abstract void loadProperties(DNNodePath folder);
 
 	public void render() {
 		// BoundingRender.renderAABB((BoundingAABB)getBoundingBox(), 0x00FF00);

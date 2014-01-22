@@ -1,11 +1,6 @@
 package de.nerogar.gameV1.level;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.GameResources;
-import de.nerogar.gameV1.Player;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -36,12 +31,6 @@ public abstract class EntityBuilding extends Entity {
 
 	@Override
 	public abstract String getNameTag();
-
-	@Override
-	public abstract void saveProperties(DNFile chunkFile, String folder);
-
-	@Override
-	public abstract void loadProperties(DNFile chunkFile, String folder);
 
 	@Override
 	public abstract void click(int key);

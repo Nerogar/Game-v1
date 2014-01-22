@@ -1,9 +1,10 @@
 package de.nerogar.gameV1.level;
 
 import java.io.File;
+import java.io.IOException;
 
+import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 
 public class WorldData {
 	public String levelName;
@@ -22,8 +23,12 @@ public class WorldData {
 	public boolean load() {
 
 		if (new File(dirname + saveName + FILENAME).exists()) {
-			DNFile worldData = new DNFile(dirname + saveName + FILENAME);
-			worldData.load();
+			DNFile worldData = new DNFile();
+			try {
+				worldData.load(dirname + saveName + FILENAME);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			world.maxEntityID = worldData.getInt("maxEntityID");
 			levelName = worldData.getString("levelName");
@@ -38,12 +43,16 @@ public class WorldData {
 			new File(dirname + saveName).mkdirs();
 		}
 
-		DNFile worldData = new DNFile(dirname + saveName + FILENAME);
+		DNFile worldData = new DNFile();
 
-		worldData.addNode("maxEntityID", world.maxEntityID);
-		worldData.addNode("levelName", levelName);
-		worldData.addNode("seed", seed);
+		worldData.addInt("maxEntityID", world.maxEntityID);
+		worldData.addString("levelName", levelName);
+		worldData.addLong("seed", seed);
 
-		worldData.save();
+		try {
+			worldData.save(dirname + saveName + FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

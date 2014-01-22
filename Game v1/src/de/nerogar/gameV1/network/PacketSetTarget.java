@@ -1,6 +1,8 @@
 package de.nerogar.gameV1.network;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 
 public class PacketSetTarget extends PacketEntity {
 
@@ -13,9 +15,9 @@ public class PacketSetTarget extends PacketEntity {
 	@Override
 	public void pack() {
 
-		data = new DNFile("");
-		data.addNode("tID", targetID);
-		data.addNode("id", entityID);
+		data = new DNFile();
+		data.addInt("tID", targetID);
+		data.addInt("id", entityID);
 
 		packedData = data.toByteArray();
 
@@ -23,8 +25,12 @@ public class PacketSetTarget extends PacketEntity {
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		targetID = data.getInt("tID");
 		entityID = data.getInt("id");

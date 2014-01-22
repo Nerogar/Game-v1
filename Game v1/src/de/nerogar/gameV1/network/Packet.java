@@ -3,7 +3,7 @@ package de.nerogar.gameV1.network;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.DNFileSystem.DNFile;
 
 public abstract class Packet {
 

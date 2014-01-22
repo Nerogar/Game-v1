@@ -1,8 +1,8 @@
 package de.nerogar.gameV1.level;
 
+import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -25,20 +25,17 @@ public abstract class EntityFighting extends Entity {
 	}
 
 	@Override
-	public void load(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
-		super.load(chunkFile, folder);
+	public void load(DNNodePath folder) {
+		super.load(folder);
 	}
 
 	@Override
-	public void save(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
-		super.save(chunkFile, folder);
+	public void save(DNNodePath folder) {
+		super.save(folder);
 	}
 
 	@Override
 	public void click(int key) {
-		// TODO Auto-generated method stub
 
 	}
 }

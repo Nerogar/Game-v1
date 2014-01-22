@@ -1,7 +1,9 @@
 package de.nerogar.gameV1.network;
 
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class PacketMoveEntity extends PacketEntity {
@@ -31,9 +33,9 @@ public class PacketMoveEntity extends PacketEntity {
 			omParts[8] = objectMatrix.scaling.getZ();
 		}
 
-		data = new DNFile("");
-		data.addNode("om", omParts);
-		data.addNode("id", entityID);
+		data = new DNFile();
+		data.addDouble("om", omParts);
+		data.addInt("id", entityID);
 
 		packedData = data.toByteArray();
 
@@ -41,8 +43,12 @@ public class PacketMoveEntity extends PacketEntity {
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		double[] omParts = data.getDoubleArray("om");
 

@@ -1,6 +1,8 @@
 package de.nerogar.gameV1.network;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 
 public class PacketTestString extends Packet {
 	public String name;
@@ -8,17 +10,21 @@ public class PacketTestString extends Packet {
 
 	@Override
 	public void pack() {
-		data = new DNFile("");
-		data.addNode("name", name);
-		data.addNode("testString", testString);
+		data = new DNFile();
+		data.addString("name", name);
+		data.addString("testString", testString);
 
 		packedData = data.toByteArray();
 	}
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		testString = data.getString("testString");
 		name = data.getString("name");
