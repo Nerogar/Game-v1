@@ -136,6 +136,16 @@ public abstract class Entity {
 
 	public abstract void loadProperties(DNNodePath folder);
 
+	public void sendPropertyUpdates() {
+		if (world.serverWorld) {
+			PacketUpdateEntity updateEntityPacket = new PacketUpdateEntity();
+			DNNodePath entityProperties = new DNNodePath(PacketUpdateEntity.ENTITY_DATA_PATHNAME);
+			saveProperties(entityProperties);
+			updateEntityPacket.entityData = entityProperties;
+			world.server.broadcastData(updateEntityPacket);
+		}
+	}
+
 	public void render() {
 		// BoundingRender.renderAABB((BoundingAABB)getBoundingBox(), 0x00FF00);
 		if (GameOptions.instance.getBoolOption("debug")) {
