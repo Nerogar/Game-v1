@@ -189,7 +189,11 @@ public class Player {
 		InputHandler.set3DmousePosition(floorIntersection);
 		if (floorIntersection != null) {
 			if (InputHandler.isMouseButtonPressed(0)) {
-				world.land.click(0, floorIntersection);
+				if (selectedUnit != null) {
+					//selectedUnit.
+				}
+
+				//world.land.click(0, floorIntersection);
 				//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
 				//spawnEntity(new EntityHouse(game, om));
 				// wtf, warum machst du das hierhin?

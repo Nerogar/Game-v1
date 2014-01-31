@@ -1,17 +1,14 @@
 //// Engine
 
 fehler beim collisionComparer wegen MathHelper.round...ToInt beheben
+entity move interpolation
+
 
 //// Gameplay
 
 (kommt später)
 
 //////////////////////////// 
-//// Render Thread
-
-(vorher VBOs von Chunk verbessern, in nur einen VBO)
-
-Laden / generieren von Chunks asyncron
 
 
 ##################################

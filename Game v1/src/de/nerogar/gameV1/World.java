@@ -33,9 +33,6 @@ public class World {
 	public Player player;
 
 	public Pathfinder pathfinder;
-	public Path path;
-	public PathNode pathEnd;
-	public PathNode pathStart;
 
 	public World(Game game, boolean serverWorld) {
 		this.game = game;
@@ -244,10 +241,6 @@ public class World {
 			player.update();
 		}
 
-		/*PathNode start = pathfinder.getNode(new Position(36, 16));
-		PathNode pathEnd = pathfinder.getNode(new Position(0, 8));
-		path = new Path(start, pathEnd, pathfinder);*/
-
 	}
 
 	public void render() {
@@ -274,7 +267,7 @@ public class World {
 		collisionComparer.renderGrid();
 		//InputHandler.renderMouseRay();
 
-		if (path != null) {
+		/*if (path != null) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			for (int i = 1; i < path.finalPath.size(); i++) {
@@ -292,7 +285,7 @@ public class World {
 			}
 			pathStart.draw(0.5f, 0.5f, 1.0f);
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
-		}
+		}*/
 
 		if (player != null) player.renderInWorld(this);
 		glPopMatrix();

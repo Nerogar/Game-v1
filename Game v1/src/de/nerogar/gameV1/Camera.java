@@ -59,7 +59,7 @@ public class Camera {
 		float sR = 0;
 		float sU = 0;
 		float sD = 0;
-		float sY = 0;
+		//float sY = 0;
 		float rY;
 
 		//position mouseGrab

@@ -9,7 +9,7 @@ import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityTestSoldier extends EntityFighting {
+public class EntityTestSoldier extends EntityMobile {
 
 	public EntityTestSoldier(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
@@ -32,9 +32,9 @@ public class EntityTestSoldier extends EntityFighting {
 		}
 
 		//if (target != null) {
-		/*Vector3d newPos = Vector3d.add(matrix.position, new Vector3d(Math.random() * 0.2 - 0.1, 0, Math.random() * 0.2 - 0.1));
+		Vector3d newPos = Vector3d.add(matrix.position, new Vector3d(Math.random() * 0.2 - 0.1, 0, Math.random() * 0.2 - 0.1));
 		newPos.setY(world.land.getHeight(newPos));
-		move(newPos);*/
+		move(newPos);
 		//}
 	}
 
@@ -63,13 +63,11 @@ public class EntityTestSoldier extends EntityFighting {
 
 	@Override
 	public void saveProperties(DNNodePath folder) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void loadProperties(DNNodePath folder) {
-		// TODO Auto-generated method stub
 
 	}
 

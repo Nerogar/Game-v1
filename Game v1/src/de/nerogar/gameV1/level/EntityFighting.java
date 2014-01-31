@@ -3,6 +3,7 @@ package de.nerogar.gameV1.level;
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.ai.AIContainer;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -11,10 +12,12 @@ public abstract class EntityFighting extends Entity {
 	public EntityFighting target;
 	public int faction;
 	public int health;
+	public float moveSpeed = 1;
+	public AIContainer aiContainer;
 
 	public EntityFighting(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
-
+		aiContainer = new AIContainer();
 	}
 
 	public void sendStartAttack(EntityFighting attackTarget) {

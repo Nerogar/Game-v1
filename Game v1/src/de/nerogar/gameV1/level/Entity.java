@@ -136,12 +136,13 @@ public abstract class Entity {
 
 	public abstract void loadProperties(DNNodePath folder);
 
-	public void sendPropertyUpdates() {
+	public void broadcastPropertyUpdates() {
 		if (world.serverWorld) {
 			PacketUpdateEntity updateEntityPacket = new PacketUpdateEntity();
-			DNNodePath entityProperties = new DNNodePath(PacketUpdateEntity.ENTITY_DATA_PATHNAME);
-			saveProperties(entityProperties);
-			updateEntityPacket.entityData = entityProperties;
+			DNNodePath entityData = new DNNodePath(PacketUpdateEntity.ENTITY_DATA_PATHNAME);
+			saveProperties(entityData);
+			updateEntityPacket.entityData = entityData;
+			updateEntityPacket.entityID = id;
 			world.server.broadcastData(updateEntityPacket);
 		}
 	}

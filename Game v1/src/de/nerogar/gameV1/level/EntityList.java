@@ -9,9 +9,7 @@ import java.util.Map.Entry;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.network.Packet;
-import de.nerogar.gameV1.network.PacketEntity;
-import de.nerogar.gameV1.network.PacketMoveEntity;
+import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
@@ -106,12 +104,16 @@ public class EntityList {
 				if (packet instanceof PacketMoveEntity) {
 					PacketMoveEntity moveEntityPacket = (PacketMoveEntity) packet;
 					updateEntityPosition(moveEntityPacket);
+				} else if (packet instanceof PacketUpdateEntity) {
+					PacketUpdateEntity updateEntityPacket = (PacketUpdateEntity) packet;
+					updateEntityProperties(updateEntityPacket);
+				} else {
+					ArrayList<PacketEntity> entityPacketList = sortedPackets.get(entityPacket.entityID);
+					if (entityPacketList != null) {
+						entityPacketList.add(entityPacket);
+					}
 				}
 
-				ArrayList<PacketEntity> entityPacketList = sortedPackets.get(entityPacket.entityID);
-				if (entityPacketList != null) {
-					entityPacketList.add(entityPacket);
-				}
 			}
 		}
 
@@ -139,6 +141,14 @@ public class EntityList {
 				tempEntity.matrix.setPosition(moveEntityPacket.objectMatrix.position);
 				tempEntity.matrix.setRotation(moveEntityPacket.objectMatrix.rotation);
 			}
+		}
+	}
+
+	private void updateEntityProperties(PacketUpdateEntity updateEntityPacket) {
+		if (!world.serverWorld) {
+			Entity tempEntity = entities.get(updateEntityPacket.entityID);
+
+			tempEntity.loadProperties(updateEntityPacket.entityData);
 		}
 	}
 
