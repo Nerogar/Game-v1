@@ -135,7 +135,7 @@ public class Land {
 	public void addChunk(Chunk chunk) {
 		chunks.add(chunk);
 		rebuildChunkGrid();
-		updateWalkMapNodeNeighbors(chunk);
+		if (world.serverWorld) updateWalkMapNodeNeighbors(chunk);
 		world.collisionComparer.newGrid();
 	}
 

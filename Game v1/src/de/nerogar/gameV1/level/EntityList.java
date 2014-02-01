@@ -84,7 +84,7 @@ public class EntityList {
 		return collisionComparer.getEntitiesInRay(ray);
 	}
 
-	public void update(Game game, ArrayList<Packet> receivedPackets) {
+	public void update(Game game, ArrayList<Packet> receivedPackets, float time) {
 		//for (int i = 0; i < entities.size(); i++) {
 		//	entities.get(i).update(Timer.instance.delta / 1000F);
 		//}
@@ -118,11 +118,15 @@ public class EntityList {
 		}
 
 		for (Entity e : entities.values()) {
-			e.update(game.timer.delta / 1000F, sortedPackets.get(e.id));
+			//float time = game.timer.delta / 1000F;
+			e.update(time, sortedPackets.get(e.id));
+			if (e instanceof EntityFighting) {
+				((EntityFighting) e).aiContainer.update(time);
+			}
 		}
 
 		for (int i = 0; i < tempEntities.size(); i++) {
-			tempEntities.get(i).update(game.timer.delta / 1000F, null);
+			tempEntities.get(i).update(time, null);
 		}
 
 		updateInProgress = false;

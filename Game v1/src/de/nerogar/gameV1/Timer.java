@@ -25,11 +25,11 @@ public class Timer {
 	}
 
 	private void printFPS() {
-		if (getTime() - lastFps > 1000) {
+		if (getTime() - lastFps > 1) {
 			if (GameOptions.instance.getBoolOption("debug") && printFPS) System.out.println("FPS: " + fps);
 			mfFps = fps;
 			fps = 0;
-			lastFps += 1000;
+			lastFps += 1;
 		}
 	}
 
@@ -38,9 +38,9 @@ public class Timer {
 		framecount++;
 		double time = getTime();
 		delta = (float) (time - lastFrame);
-		if (delta > (1000 / (mfFps+1)) * 2) {
+		if (delta > 0.1f) {
 			System.out.println("capped time delta");
-			delta = (1000 / (mfFps+1)) * 2;
+			delta = 0.1f;
 		}
 		lastFrame = time;
 		printFPS();
@@ -48,7 +48,7 @@ public class Timer {
 
 	private double getTime() {
 		//return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-		return System.nanoTime() / 1000000D;
+		return System.nanoTime() / 1000000000D;
 	}
 
 	//EVENTS

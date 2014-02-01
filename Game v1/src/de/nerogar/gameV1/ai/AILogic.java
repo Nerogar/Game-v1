@@ -4,6 +4,8 @@ import de.nerogar.gameV1.level.EntityFighting;
 
 public abstract class AILogic {
 
+	private boolean closed;
+
 	protected EntityFighting entity;
 
 	public AILogic(EntityFighting entity) {
@@ -12,7 +14,11 @@ public abstract class AILogic {
 
 	public abstract void update(float time);
 
-	public void remove() {
-		entity.aiContainer.remove(this);
+	public void removeLogic(AILogic logic) {
+		closed = true;
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 }

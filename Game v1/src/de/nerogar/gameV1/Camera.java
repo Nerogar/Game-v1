@@ -75,10 +75,10 @@ public class Camera {
 			dragMoving = false;
 		}
 
-		if (dragRotate) rotation += timer.delta / 100f * (Mouse.getX() - mouseX);
+		if (dragRotate) rotation += timer.delta * 10f * (Mouse.getX() - mouseX);
 		if (dragMoving) {
-			sL += (Mouse.getX() - mouseX) / 5f;
-			sD += (Mouse.getY() - mouseY) / 5f;
+			sL += (Mouse.getX() - mouseX) * 200f;
+			sD += (Mouse.getY() - mouseY) * 200f;
 		}
 
 		mouseX = Mouse.getX();
@@ -138,9 +138,9 @@ public class Camera {
 		scrollYLoc += scrollYLoc < targetScrollY ? 2 : -2;
 		if (scrollYLoc < 0) scrollYLoc = 0;
 		if (scrollYLoc > MAXSCROLLUP) scrollYLoc = MAXSCROLLUP;
-		
+
 		scrollY = scrollYLoc + MINSCROLLUP;
-		
+
 		float temp;
 
 		temp = (float) Math.sqrt(scrollYLoc) * 8;

@@ -1,8 +1,7 @@
 package de.nerogar.gameV1.level;
 
 import de.nerogar.DNFileSystem.DNNodePath;
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.ai.AIContainer;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.ObjectMatrix;
@@ -25,6 +24,16 @@ public abstract class EntityFighting extends Entity {
 		setTargetpacket.targetID = attackTarget.id;
 		setTargetpacket.entityID = id;
 		world.client.sendPacket(setTargetpacket);
+	}
+
+	public void sendStartMoving(Vector3d targetPosition) {
+		if (this instanceof EntityMobile) {
+			PacketSetTarget setTargetpacket = new PacketSetTarget();
+			setTargetpacket.targetPosition = targetPosition;
+			setTargetpacket.type = PacketSetTarget.TYPE_FOLLOW;
+			setTargetpacket.entityID = id;
+			world.client.sendPacket(setTargetpacket);
+		}
 	}
 
 	@Override

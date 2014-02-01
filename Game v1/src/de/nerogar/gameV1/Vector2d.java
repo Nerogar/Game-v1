@@ -28,6 +28,46 @@ public class Vector2d {
 		return (float) this.getZ();
 	}
 
+	public Vector2d add(Vector2d v2) {
+		x += v2.getX();
+		z += v2.getZ();
+		return this;
+	}
+
+	public static Vector2d add(Vector2d v1, Vector2d v2) {
+		return new Vector2d(v1.getX() + v2.getX(), v1.getZ() + v2.getZ());
+	}
+
+	public Vector2d subtract(Vector2d v2) {
+		x -= v2.getX();
+		z -= v2.getZ();
+		return this;
+	}
+
+	public static Vector2d subtract(Vector2d v1, Vector2d v2) {
+		return new Vector2d(v1.getX() - v2.getX(), v1.getZ() - v2.getZ());
+	}
+
+	public Vector2d multiply(double v) {
+		x *= v;
+		z *= v;
+		return this;
+	}
+
+	public static Vector2d multiply(Vector2d v1, double v) {
+		return new Vector2d(v1.getX() * v, v1.getZ() * v);
+	}
+
+	public Vector2d multiply(float v) {
+		x *= v;
+		z *= v;
+		return this;
+	}
+
+	public static Vector2d multiply(Vector2d v1, float v) {
+		return new Vector2d(v1.getX() * v, v1.getZ() * v);
+	}
+
 	public Vector2d normalize() {
 		double value = getValue();
 		this.x /= value;
@@ -41,7 +81,7 @@ public class Vector2d {
 		return v2;
 	}
 
-	private double getValue() {
+	public double getValue() {
 		return Math.sqrt(x * x + z * z);
 	}
 
@@ -60,5 +100,9 @@ public class Vector2d {
 
 	public Position toPosition() {
 		return new Position((int) x, (int) z);
+	}
+
+	public Vector3d toVector3d() {
+		return new Vector3d(x, 0, z);
 	}
 }

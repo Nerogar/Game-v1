@@ -62,8 +62,10 @@ public class Chunk {
 
 	public void updateMaps() {
 		updateWalkableMap();
-		world.pathfinder.updateNodeMap(this);
-		if (!serverChunk) {
+
+		if (serverChunk) {
+			world.pathfinder.updateNodeMap(this);
+		} else if (!serverChunk) {
 			updateVbo();
 		}
 	}

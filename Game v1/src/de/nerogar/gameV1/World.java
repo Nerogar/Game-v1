@@ -33,6 +33,7 @@ public class World {
 	public Player player;
 
 	public Pathfinder pathfinder;
+	private PathNode testNode;
 
 	public World(Game game, boolean serverWorld) {
 		this.game = game;
@@ -46,7 +47,6 @@ public class World {
 		} else {
 			player = new Player(game, this);
 		}
-		pathfinder = new Pathfinder(land);
 	}
 
 	public void initiateWorld(String levelName, long seed) {
@@ -56,12 +56,12 @@ public class World {
 	}
 
 	public void initiateWorld(String levelName) {
-		if (!serverWorld) RenderHelper.renderLoadingScreen("Lade Welt...");
 		if (worldData == null) {
 			worldData = new WorldData(this, levelName);
 			worldData.load();
 		}
 
+		pathfinder = new Pathfinder(land);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
 		land.levelGenerator = new LevelGenerator(land);
@@ -143,6 +143,21 @@ public class World {
 		}
 
 		land.loadChunksAroundXZ(loadPosition);
+
+		//test pathfinder:
+
+		/*PathNode node1 = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());
+		PathNode node2 = pathfinder.getNode(new Vector2d(-6.51, 20.48).toPosition());
+
+		Path np = new Path(node1, node2, new Vector2d(-6.62, 19.66), new Vector2d(-6.51, 20.48));
+		testNode = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());*/
+		/*System.out.println("--");
+		for (PathNode pn : np.finalPath) {
+			for (PathNode neighbor : pn.neighbors) {
+				System.out.println(pn.size + "|" + pn + "|" + pn.locX + " " + pn.locZ + " : " + neighbor + "|" + neighbor.locX + " " + neighbor.locZ + "|" + neighbor.size);
+			}
+			System.out.println();
+		}*/
 	}
 
 	private void processServerPackets(Client connectionClient, Packet packet) {
@@ -172,6 +187,7 @@ public class World {
 				processClientPackets(packet);
 			}
 		}
+		//testNode = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());
 	}
 
 	private void processClientPackets(Packet packet) {
@@ -198,7 +214,7 @@ public class World {
 		}
 	}
 
-	public void update() {
+	public void update(float time) {
 		if (!isLoaded) return;
 
 		if (serverWorld) {
@@ -216,7 +232,7 @@ public class World {
 			loadPosition = player.camera.getCamCenter().toPosition();
 
 			ArrayList<Packet> receivedPackets = client.getData(Packet.ENTITY_CHANNEL);
-			entityList.update(game, receivedPackets);
+			entityList.update(game, receivedPackets, time);
 		} else {
 
 			ArrayList<Packet> receivedPackets = new ArrayList<Packet>();
@@ -234,7 +250,7 @@ public class World {
 				}
 			}
 
-			entityList.update(game, receivedPackets);
+			entityList.update(game, receivedPackets, time);
 		}
 
 		if (!serverWorld) {
@@ -287,6 +303,13 @@ public class World {
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}*/
 
+		if(testNode!=null){
+			testNode.draw(0.5f, 0.0f, 0.0f);
+			/*for(PathNode neighbors:testNode.neighbors){
+				neighbors.draw(0.0f, 0.5f, 0.0f);
+			}*/
+		}
+		
 		if (player != null) player.renderInWorld(this);
 		glPopMatrix();
 	}

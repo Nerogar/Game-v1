@@ -126,7 +126,7 @@ public class Game {
 		timer.update();
 		guiList.update();
 		if (!guiList.pauseGame()) {
-			world.update();
+			world.update(timer.delta);
 		}
 	}
 

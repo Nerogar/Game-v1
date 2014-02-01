@@ -11,6 +11,12 @@ public class AIContainer {
 	}
 
 	public void addLogic(AILogic logic) {
+		for (int i = 0; i < logicList.size(); i++) {
+			if (logicList.get(i).getClass().equals(logic.getClass())) {
+				logicList.remove(i);
+				break;
+			}
+		}
 		logicList.add(logic);
 	}
 
@@ -29,7 +35,7 @@ public class AIContainer {
 
 	public void update(float time) {
 		for (AILogic l : logicList) {
-			l.update(time);
+			if (!l.isClosed()) l.update(time);
 		}
 	}
 }

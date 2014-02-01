@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.ai.AILogicGoToPosition;
 import de.nerogar.gameV1.network.PacketEntity;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.BoundingAABB;
@@ -20,21 +21,29 @@ public class EntityTestSoldier extends EntityMobile {
 	public void init(World world) {
 		setSprite(1, "Entities/peter.png");
 		health = 20;
+		moveSpeed = 5;
 	}
 
 	@Override
 	public void updateServer(float time, ArrayList<PacketEntity> packets) {
 		for (PacketEntity packet : packets) {
 			if (packet instanceof PacketSetTarget) {
+
 				PacketSetTarget setTargetPacket = (PacketSetTarget) packet;
-				target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
+
+				if (setTargetPacket.targetPosition == null) {
+					target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
+				} else {
+					aiContainer.addLogic(new AILogicGoToPosition(this, setTargetPacket.targetPosition));
+				}
+
 			}
 		}
 
 		//if (target != null) {
-		Vector3d newPos = Vector3d.add(matrix.position, new Vector3d(Math.random() * 0.2 - 0.1, 0, Math.random() * 0.2 - 0.1));
+		/*Vector3d newPos = Vector3d.add(matrix.position, new Vector3d(Math.random() * 0.2 - 0.1, 0, Math.random() * 0.2 - 0.1));
 		newPos.setY(world.land.getHeight(newPos));
-		move(newPos);
+		move(newPos);*/
 		//}
 	}
 

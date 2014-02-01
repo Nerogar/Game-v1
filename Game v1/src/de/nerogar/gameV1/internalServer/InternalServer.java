@@ -7,8 +7,8 @@ import de.nerogar.gameV1.network.Server;
 
 public class InternalServer extends Thread {
 	//server
-	private final int TPS = 10;
-	private final double TICK_TIME = (double) 1000 / TPS;
+	public static final int TPS = 10;
+	private static final float TICK_TIME = (float) (1f / TPS);
 	private long lastUpdate;
 	private Timer timer;
 	private boolean running = true;
@@ -53,7 +53,7 @@ public class InternalServer extends Thread {
 	}
 
 	private void mainloop() {
-		world.update();
+		world.update((float) TICK_TIME);
 	}
 
 	public void cleanup() {
@@ -64,11 +64,11 @@ public class InternalServer extends Thread {
 	private void sync() {
 		try {
 			long currentTime = System.nanoTime();
-			double deltaTime = (currentTime - lastUpdate) / 1000000d;
+			double deltaTime = (currentTime - lastUpdate) / 1000000000d;
 
 			//System.out.println("Server delta: " + deltaTime);
 			if (deltaTime < TICK_TIME) {
-				Thread.sleep((long) (TICK_TIME - deltaTime));
+				Thread.sleep((long) ((TICK_TIME - deltaTime) * 1000f));
 			} else {
 				System.out.println("server too slow");
 			}

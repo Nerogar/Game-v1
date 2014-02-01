@@ -1,16 +1,11 @@
 package de.nerogar.gameV1;
 
 import static org.lwjgl.opengl.GL20.*;
-
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.gui.GuiBuildingTest;
-import de.nerogar.gameV1.level.Entity;
-import de.nerogar.gameV1.level.EntityBuilding;
-import de.nerogar.gameV1.level.EntityFighting;
-import de.nerogar.gameV1.level.Position;
+import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.PacketBuildHouse;
-import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Player {
@@ -144,12 +139,14 @@ public class Player {
 			if (clickedEntity instanceof EntityFighting) {
 				if (InputHandler.isMouseButtonPressed(1)) {
 					selectedUnit = (EntityFighting) clickedEntity;
+					System.out.println("entitySelected");
 				} else if (InputHandler.isMouseButtonPressed(0)) {
 					if (selectedUnit != null) selectedUnit.sendStartAttack((EntityFighting) clickedEntity);
+					System.out.println("entityTargeted");
 				}
 
 			} else {
-				if (InputHandler.isMouseButtonPressed(0)) {
+				/*if (InputHandler.isMouseButtonPressed(0)) {
 					PacketClickEntity clickPacket = new PacketClickEntity();
 					clickPacket.entityID = clickedEntity.id;
 					clickPacket.mouseButton = 0;
@@ -159,10 +156,31 @@ public class Player {
 					clickPacket.entityID = clickedEntity.id;
 					clickPacket.mouseButton = 1;
 					world.client.sendPacket(clickPacket);
-				}
+				}*/
 			}
 		} else {
 			if (InputHandler.isMouseButtonPressed(1)) selectedUnit = null;
+
+			InputHandler.set3DmousePosition(floorIntersection);
+			if (floorIntersection != null) {
+				if (InputHandler.isMouseButtonPressed(0)) {
+					if (selectedUnit != null) {
+						selectedUnit.sendStartMoving(floorIntersection);
+					}
+
+					//world.land.click(0, floorIntersection);
+					//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
+					//spawnEntity(new EntityHouse(game, om));
+					// wtf, warum machst du das hierhin?
+				}
+				if (InputHandler.isMouseButtonPressed(1)) {
+					world.land.click(1, floorIntersection);
+				}
+				if (InputHandler.isMouseButtonPressed(2)) {
+					world.land.click(2, floorIntersection);
+				}
+				world.land.setMousePos(floorIntersection);
+			}
 		}
 
 		/*if (floorIntersection != null) {
@@ -186,25 +204,5 @@ public class Player {
 			}
 		}*/
 
-		InputHandler.set3DmousePosition(floorIntersection);
-		if (floorIntersection != null) {
-			if (InputHandler.isMouseButtonPressed(0)) {
-				if (selectedUnit != null) {
-					//selectedUnit.
-				}
-
-				//world.land.click(0, floorIntersection);
-				//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
-				//spawnEntity(new EntityHouse(game, om));
-				// wtf, warum machst du das hierhin?
-			}
-			if (InputHandler.isMouseButtonPressed(1)) {
-				world.land.click(1, floorIntersection);
-			}
-			if (InputHandler.isMouseButtonPressed(2)) {
-				world.land.click(2, floorIntersection);
-			}
-			world.land.setMousePos(floorIntersection);
-		}
 	}
 }
