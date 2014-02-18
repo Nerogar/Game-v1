@@ -33,17 +33,17 @@ public class GuiDebugSettings extends Gui {
 
 		//showAABBs
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "show AABBs:", FontRenderer.LEFT));
-		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showAABBs")), FontRenderer.LEFT, "Buttons/button.png", false, "");
+		showAABBsButton = new GElementButton(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showAABBs")), FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		//showNetworkTraffic
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.2f, 0.1f, "show Network traffic:", FontRenderer.LEFT));
-		showNetworkTrafficButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showNetworkTraffic")), FontRenderer.LEFT, "Buttons/button.png", false, "");
+		showNetworkTrafficButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("showNetworkTraffic")), FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		//ok button
-		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		//tempIngameButton
-		tempIngameButton = new GElementButton(genNewID(), 0.7f, 0.8f, 0.4f, 0.1f, "ingame", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		tempIngameButton = new GElementButton(genNewID(), 0.7f, 0.8f, 0.4f, 0.1f, "ingame", FontRenderer.LEFT, "buttons/button.png", false, "");
 		
 		addGElement(showAABBsButton);
 		addGElement(showNetworkTrafficButton);

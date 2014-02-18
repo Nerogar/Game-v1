@@ -15,6 +15,7 @@ import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
+import de.nerogar.gameV1.physics.Ray;
 
 public class World {
 	public Game game;
@@ -282,6 +283,10 @@ public class World {
 
 		collisionComparer.renderGrid();
 		//InputHandler.renderMouseRay();
+		ArrayList<Position> temppositions = collisionComparer.getGridPositionsInRay2(new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection()));
+		for (Position p : temppositions) {
+			collisionComparer.renderBox(p.x, p.z);
+		}
 
 		/*if (path != null) {
 			glDisable(GL_TEXTURE_2D);
@@ -303,13 +308,13 @@ public class World {
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
 		}*/
 
-		if(testNode!=null){
+		if (testNode != null) {
 			testNode.draw(0.5f, 0.0f, 0.0f);
 			/*for(PathNode neighbors:testNode.neighbors){
 				neighbors.draw(0.0f, 0.5f, 0.0f);
 			}*/
 		}
-		
+
 		if (player != null) player.renderInWorld(this);
 		glPopMatrix();
 	}

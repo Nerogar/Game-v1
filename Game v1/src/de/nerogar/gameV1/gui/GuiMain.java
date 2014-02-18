@@ -41,23 +41,23 @@ public class GuiMain extends Gui {
 
 		//addGElement(new GElementTextLabel(genNewID(), 0.0f, -0.5f, 1.0f, 2.0f, "G", FontRenderer.CENTERED));
 
-		singleplayerButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		multiplayerButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "Multiplayer", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		singleplayerButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		multiplayerButton = new GElementButton(genNewID(), 0.3f, 0.3f, 0.4f, 0.1f, "Multiplayer", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		addGElement(new GElementTextLabel(genNewID(), 0.7f, 0.3f, 0.1f, 0.1f, "(wip!)", FontRenderer.LEFT));
-		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.4f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.4f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		audioButtonPlay = new GElementButton(genNewID(), 0.3f, 0.5f, 0.2f, 0.05f, "play", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		audioButtonStop = new GElementButton(genNewID(), 0.5f, 0.5f, 0.2f, 0.05f, "stop", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.7f, 1f, 0.05f, "", FontRenderer.CENTERED));
 		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.75f, 1f, 0.05f, "", FontRenderer.CENTERED));
-		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 4.0, "", "Buttons/button.png", "Buttons/slider.png");
+		pitchSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.05f, 0.025f, 0.0, 4.0, "", "buttons/button.png", "buttons/slider.png");
 		pitchSlider.position = 1;
 
-		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		exitButton = new GElementButton(genNewID(), 0.3f, 0.6f, 0.4f, 0.1f, "exit", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		//network test
-		clientButton = new GElementButton(genNewID(), 0.3f, 0.95f, 0.2f, 0.05f, "client", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		serverButton = new GElementButton(genNewID(), 0.5f, 0.95f, 0.2f, 0.05f, "server", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		clientButton = new GElementButton(genNewID(), 0.3f, 0.95f, 0.2f, 0.05f, "client", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		serverButton = new GElementButton(genNewID(), 0.5f, 0.95f, 0.2f, 0.05f, "server", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		addGElement(clientButton);
 		addGElement(serverButton);
 

@@ -151,8 +151,8 @@ public abstract class Entity {
 		// BoundingRender.renderAABB((BoundingAABB)getBoundingBox(), 0x00FF00);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			displayBoundingBox(getBoundingBox(), 0x00FF00);
-
 		}
+
 		if (object != null) {
 			object.render(matrix, texture, opacity);
 		}
@@ -214,6 +214,7 @@ public abstract class Entity {
 		registerEntity(new EntityTestparticle(game, null, objectMatrix));
 		registerEntity(new EntityHut(game, null, objectMatrix));
 		registerEntity(new EntityTestSoldier(game, null, objectMatrix));
+		registerEntity(new EntitySpawnPlatform(game, null, objectMatrix));
 	}
 
 }

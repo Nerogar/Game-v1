@@ -23,7 +23,7 @@ public class EntityTree extends Entity {
 
 	@Override
 	public void init(World world) {
-		setObject("tree", "tree.png");
+		setObject("entities/tree/mesh", "entities/tree/texture.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
 

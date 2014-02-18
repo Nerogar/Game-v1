@@ -326,6 +326,7 @@ public class Chunk {
 	}
 
 	public float getLocalHeight(int x, int z) {
+		if (!isInBounds(x, z)) return 0;
 		return heightMap[x][z];
 	}
 
@@ -350,19 +351,22 @@ public class Chunk {
 	}
 
 	public void setLocalHeight(int x, int y, float height) {
-		x = x < 0 ? 0 : x;
-		x = x > GENERATESIZE ? GENERATESIZE : x;
-		y = y < 0 ? 0 : y;
-		y = y > GENERATESIZE ? GENERATESIZE : y;
+		if (!isInBounds(x, y)) return;
 		heightMap[x][y] = height;
-	}
-
-	public boolean getLocalWalkable(int x, int z) {
-		return walkableMap[x][z];
 	}
 
 	public Tile getLocalTile(int x, int z) {
 		return Tile.getTileByID(tileMap[x][z]);
+	}
+
+	public void setLocalTile(int x, int z, Tile tile) {
+		if (!isInBounds(x, z)) return;
+		tileMap[x][z] = tile.id;
+	}
+
+	public boolean getLocalWalkable(int x, int z) {
+		if (!isInBounds(x, z)) return false;
+		return walkableMap[x][z];
 	}
 
 	public void spawnEntity(Entity entity) {
@@ -378,6 +382,10 @@ public class Chunk {
 		//position.z += chunkPosition.z * CHUNKSIZE;
 
 		world.entityList.addEntity(entity, world);
+	}
+
+	private boolean isInBounds(int x, int z) {
+		return !(x < 0 || x >= CHUNKSIZE || z < 0 || z >= CHUNKSIZE);
 	}
 
 	@Override

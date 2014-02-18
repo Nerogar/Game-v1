@@ -16,8 +16,12 @@ public class BoundingRender {
 
 	// renderOBB fehlt
 
+	public static boolean shellRenderOutlines() {
+		return GameOptions.instance.getBoolOption("showAABBs") && GameOptions.instance.getBoolOption("debug");
+	}
+
 	public static void renderAABB(BoundingAABB bound, int color) {
-		if(!GameOptions.instance.getBoolOption("showAABBs")||!GameOptions.instance.getBoolOption("debug"))return;
+		if (!shellRenderOutlines()) return;
 		Vector3d a = bound.a;
 		Vector3d b = bound.b;
 		Vector3d[] v = new Vector3d[8];

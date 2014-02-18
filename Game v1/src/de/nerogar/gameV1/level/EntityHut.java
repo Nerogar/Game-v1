@@ -20,7 +20,7 @@ public class EntityHut extends EntityBuilding {
 
 	@Override
 	public void init(World world) {
-		setObject("houses/hut", "houses/hut.png");
+		setObject("entities/hut/mesh", "entities/hut/texture.png");
 	}
 
 	@Override

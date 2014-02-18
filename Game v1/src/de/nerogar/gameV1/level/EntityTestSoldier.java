@@ -19,7 +19,7 @@ public class EntityTestSoldier extends EntityMobile {
 
 	@Override
 	public void init(World world) {
-		setSprite(1, "Entities/peter.png");
+		setSprite(1, "entities/peter/texture.png");
 		health = 20;
 		moveSpeed = 5;
 	}

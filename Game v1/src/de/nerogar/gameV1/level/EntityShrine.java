@@ -17,7 +17,7 @@ public class EntityShrine extends Entity {
 
 	@Override
 	public void init(World world) {
-		setObject("entities/shrine 1", "entities/shrine 1.png");
+		setObject("entities/shrine/mesh", "entities/shrine/texture.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
 

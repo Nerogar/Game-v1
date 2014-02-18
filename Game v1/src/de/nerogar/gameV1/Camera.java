@@ -20,7 +20,7 @@ public class Camera {
 
 	private final float MAXSCROLLBACK = 20f;
 	private final float MINSCROLLUP = 10f;
-	private final float MAXSCROLLUP = 80f;
+	private final float MAXSCROLLUP = 300f;
 	private final float MINROTDOWN = 35f;
 
 	private int mouseX = Mouse.getX();

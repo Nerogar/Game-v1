@@ -31,12 +31,12 @@ public class GuiMultiplayerCreate extends Gui {
 
 		float adressY = 0.35f;
 		addGElement(new GElementTextLabel(genNewID(), 0.1f, adressY, 0.4f, 0.1f, "start on port: ", FontRenderer.LEFT));
-		portText = new GElementTextField(0.5f, adressY, 0.15f, 0.1f, "4200", "Buttons/textField.png");
+		portText = new GElementTextField(0.5f, adressY, 0.15f, 0.1f, "4200", "buttons/textField.png");
 		portText.numOnly = true;
 
-		createButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "create", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		createButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "create", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(portText);
 

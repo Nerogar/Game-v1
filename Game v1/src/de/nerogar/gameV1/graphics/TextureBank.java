@@ -16,7 +16,7 @@ import org.lwjgl.BufferUtils;
 public class TextureBank {
 	//private HashMap<String, Texture> textures;
 	private HashMap<String, Integer> TextureIDs;
-	
+
 	public static TextureBank instance = new TextureBank();
 
 	public TextureBank() {
@@ -54,6 +54,7 @@ public class TextureBank {
 				//System.out.println("loaded: "+filename);
 			} catch (IOException e1) {
 				e1.printStackTrace();
+				System.out.println("Missing Texture: " + filename);
 			}
 
 			/*try {
@@ -68,7 +69,6 @@ public class TextureBank {
 	}
 
 	public void addTexture(String name, IntBuffer intBuffer, int width, int height) {
-
 		glEnable(GL_TEXTURE_2D);
 
 		IntBuffer buffer = BufferUtils.createIntBuffer(1);

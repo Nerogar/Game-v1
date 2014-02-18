@@ -21,7 +21,7 @@ public class EntityHouseGreen extends EntityBuilding {
 
 	@Override
 	public void init(World world) {
-		setObject("houses/house", "houses/house_green.png");
+		setObject("entities/houseGreen/mesh", "entities/houseGreen/texture.png");
 	}
 
 	@Override

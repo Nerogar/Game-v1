@@ -21,8 +21,7 @@ public class EntityTestparticle extends EntityParticle {
 
 	@Override
 	public void init(World world) {
-		//setObject("houses/cone", "houses/cone.png");
-		setSprite(0.3f, "particleTest.png");
+		setSprite(0.3f, "entities/testParticle/texture.png");
 	}
 
 	@Override

@@ -44,17 +44,17 @@ public class GuiMultiplayerLobby extends Gui {
 		//addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "Multiplayer", FontRenderer.CENTERED));
 		setTitel("Multiplayer Lobby");
 
-		playersList = new GElementListBox(genNewID(), 0.5f, 0.2f, 0.5f, 0.4f, new String[] {}, "Buttons/button.png", "Buttons/scrollbar.png");
+		playersList = new GElementListBox(genNewID(), 0.5f, 0.2f, 0.5f, 0.4f, new String[] {}, "buttons/button.png", "buttons/scrollbar.png");
 		playersList.sliderWidth = 0.02f;
 
-		kickButton = new GElementButton(genNewID(), 0.1f, 0.5f, 0.2f, 0.1f, "kick", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		kickButton = new GElementButton(genNewID(), 0.1f, 0.5f, 0.2f, 0.1f, "kick", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(new GElementTextLabel(genNewID(), 0.5f, 0.7f, 0.1f, 0.1f, "ready:", FontRenderer.RIGHT));
-		readyButton = new GElementButton(genNewID(), 0.6f, 0.7f, 0.05f, 0.1f, "ready", FontRenderer.CENTERED, "Buttons/button.png", true, "Buttons/tick.png");
+		readyButton = new GElementButton(genNewID(), 0.6f, 0.7f, 0.05f, 0.1f, "ready", FontRenderer.CENTERED, "buttons/button.png", true, "buttons/tick.png");
 
-		startButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.35f, 0.1f, "start Game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		startButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.35f, 0.1f, "start Game", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(playersList);
 		addGElement(kickButton);
@@ -106,9 +106,9 @@ public class GuiMultiplayerLobby extends Gui {
 
 		//update ready state button
 		if (readyState) {
-			readyButton.overlayImage = "Buttons/tick.png";
+			readyButton.overlayImage = "buttons/tick.png";
 		} else {
-			readyButton.overlayImage = "Buttons/cross.png";
+			readyButton.overlayImage = "buttons/cross.png";
 		}
 	}
 

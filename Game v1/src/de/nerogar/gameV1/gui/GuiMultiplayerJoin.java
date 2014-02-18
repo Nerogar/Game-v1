@@ -41,20 +41,20 @@ public class GuiMultiplayerJoin extends Gui {
 		ServerList.instance.load();
 		String[] servers = ServerList.instance.getAsStringArray();
 
-		serverList = new GElementListBox(genNewID(), rightX, 0.2f, 1 - rightX, 0.5f, servers, "Buttons/button.png", "Buttons/scrollbar.png");
-		listConnectButton = new GElementButton(genNewID(), rightX, 0.85f, 0.2f, 0.1f, "connect", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		addServerButton = new GElementButton(genNewID(), rightX, 0.7f, 0.2f, 0.1f, "add server", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		removeServerButton = new GElementButton(genNewID(), rightX + 0.2f, 0.7f, 0.2f, 0.1f, "remove server", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		serverList = new GElementListBox(genNewID(), rightX, 0.2f, 1 - rightX, 0.5f, servers, "buttons/button.png", "buttons/scrollbar.png");
+		listConnectButton = new GElementButton(genNewID(), rightX, 0.85f, 0.2f, 0.1f, "connect", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		addServerButton = new GElementButton(genNewID(), rightX, 0.7f, 0.2f, 0.1f, "add server", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		removeServerButton = new GElementButton(genNewID(), rightX + 0.2f, 0.7f, 0.2f, 0.1f, "remove server", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(new GElementTextLabel(genNewID(), leftX, 0.25f, 0.2f, 0.1f, "ip adress:", FontRenderer.RIGHT));
-		adressText = new GElementTextField(leftX, 0.35f, 0.2f, 0.1f, "", "Buttons/textField.png");
+		adressText = new GElementTextField(leftX, 0.35f, 0.2f, 0.1f, "", "buttons/textField.png");
 		addGElement(new GElementTextLabel(genNewID(), leftX + 0.2f, 0.25f, 0.2f, 0.1f, "port:", FontRenderer.LEFT));
-		portText = new GElementTextField(leftX + 0.2f, 0.35f, 0.15f, 0.1f, "4200", "Buttons/textField.png");
+		portText = new GElementTextField(leftX + 0.2f, 0.35f, 0.15f, 0.1f, "4200", "buttons/textField.png");
 		portText.numOnly = true;
 
-		directConnectButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "connect", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		directConnectButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.3f, 0.1f, "connect", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(serverList);
 		addGElement(listConnectButton);

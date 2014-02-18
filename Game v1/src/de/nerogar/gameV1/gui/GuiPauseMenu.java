@@ -29,9 +29,9 @@ public class GuiPauseMenu extends Gui {
 	public void init() {
 		setTitel("Pause");
 		
-		resumeButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "resume", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.35f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		closeGameButton = new GElementButton(genNewID(), 0.3f, 0.5f, 0.4f, 0.1f, "close game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		resumeButton = new GElementButton(genNewID(), 0.3f, 0.2f, 0.4f, 0.1f, "resume", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		videosettingsButton = new GElementButton(genNewID(), 0.3f, 0.35f, 0.4f, 0.1f, "video settings", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		closeGameButton = new GElementButton(genNewID(), 0.3f, 0.5f, 0.4f, 0.1f, "close game", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(resumeButton);
 		addGElement(closeGameButton);
