@@ -99,7 +99,7 @@ public class Object3D {
 		glPushMatrix();
 		glColor4f(1f, 1f, 1f, opacity);
 		glTranslatef(om.getPosition().getXf(), om.getPosition().getYf(), om.getPosition().getZf());
-		glRotatef(om.getRotation().getZf(), 0, 1, 0);
+		glRotatef(om.getRotation().getYf(), 0, 1, 0);
 		glScalef(om.getScaling().getXf(), om.getScaling().getYf(), om.getScaling().getZf());
 
 		//render quads
@@ -107,12 +107,17 @@ public class Object3D {
 			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandleQ);
 			glVertexPointer(3, GL_FLOAT, 0, 0L);
 
+			glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandleQ);
+			glNormalPointer(GL_FLOAT, 0, 0L);
+
 			glBindBuffer(GL_ARRAY_BUFFER, vboTextureHandleQ);
 			glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnableClientState(GL_NORMAL_ARRAY);
 			glDrawArrays(GL_QUADS, 0, verticesQuads.length / 3);
+			glDisableClientState(GL_NORMAL_ARRAY);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 			glDisableClientState(GL_VERTEX_ARRAY);
 		}
@@ -123,13 +128,18 @@ public class Object3D {
 			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandleT);
 			glVertexPointer(3, GL_FLOAT, 0, 0L);
 
+			glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandleT);
+			glNormalPointer(GL_FLOAT, 0, 0L);
+
 			glBindBuffer(GL_ARRAY_BUFFER, vboTextureHandleT);
 			glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
 			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_NORMAL_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glDrawArrays(GL_TRIANGLES, 0, verticesTriangles.length / 3);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_NORMAL_ARRAY);
 			glDisableClientState(GL_VERTEX_ARRAY);
 		}
 

@@ -260,7 +260,7 @@ public class World {
 
 	}
 
-	public void render() {
+	public void render(double time) {
 		if (!isLoaded) return;
 
 		maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
@@ -276,13 +276,13 @@ public class World {
 		glTranslatef(-player.camera.scrollX, -player.camera.scrollY, -player.camera.scrollZ);//position anpassen
 
 		//land.renderOverlay();
-		land.render(loadPosition, maxChunkRenderDistance);
-		entityList.render(loadPosition, maxChunkRenderDistance);
+		land.render(time, loadPosition, maxChunkRenderDistance);
+		entityList.render(time, loadPosition, maxChunkRenderDistance);
 		game.debugFelk.additionalRender();
 		game.debugNerogar.additionalRender();
 
 		collisionComparer.renderGrid();
-		//InputHandler.renderMouseRay();
+		InputHandler.renderMouseRay();
 		ArrayList<Position> temppositions = collisionComparer.getGridPositionsInRay2(new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection()));
 		for (Position p : temppositions) {
 			collisionComparer.renderBox(p.x, p.z);

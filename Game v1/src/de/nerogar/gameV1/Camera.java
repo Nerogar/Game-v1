@@ -20,7 +20,7 @@ public class Camera {
 
 	private final float MAXSCROLLBACK = 20f;
 	private final float MINSCROLLUP = 10f;
-	private final float MAXSCROLLUP = 300f;
+	private final float MAXSCROLLUP = 20f;
 	private final float MINROTDOWN = 35f;
 
 	private int mouseX = Mouse.getX();
@@ -31,9 +31,12 @@ public class Camera {
 	//private World world;
 	private Timer timer;
 
+	public Vector3d xInWorld;
+
 	public Camera(World world) {
 		//this.world = world;
 		timer = world.game.timer;
+		xInWorld = new Vector3d();
 	}
 
 	public void init() {
@@ -153,6 +156,20 @@ public class Camera {
 
 		scrollX = (float) (scrollXLoc - Math.sin((rotation / 360) * 3.1415927 * 2) * scrollBack);
 		scrollZ = (float) (scrollZLoc + Math.cos((rotation / 360) * 3.1415927 * 2) * scrollBack);
+
+		calcXInWorld();
+	}
+
+	private void calcXInWorld() {
+		float camRotSin = (float) Math.sin(rotation / 180f * Math.PI);
+		float camRotCos = (float) Math.cos(rotation / 180f * Math.PI);
+		float camRotDownSin = (float) Math.sin(rotationDown / 180f * Math.PI);
+		float camRotDownCos = (float) Math.cos(rotationDown / 180f * Math.PI);
+
+		xInWorld.setX(-camRotCos);
+		xInWorld.setY(-camRotDownSin * camRotSin);
+		xInWorld.setZ(camRotSin * camRotDownCos);
+
 	}
 
 	public Vector2d getCamCenter() {

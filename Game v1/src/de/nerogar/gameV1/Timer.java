@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Timer {
 	public float delta;
+	public double time;
 	private double lastFrame;
 	private int fps;
 	private double lastFps;
@@ -36,7 +37,7 @@ public class Timer {
 	public void update() {
 		fps++;
 		framecount++;
-		double time = getTime();
+		time = getTime();
 		delta = (float) (time - lastFrame);
 		/*if (delta > 0.1f) {
 			System.out.println("capped time delta");

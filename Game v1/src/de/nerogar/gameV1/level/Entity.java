@@ -114,9 +114,7 @@ public abstract class Entity {
 	}
 
 	public void load(DNNodePath folder) {
-		matrix.position.setX(folder.getDouble("position.x"));
-		matrix.position.setY(folder.getDouble("position.y"));
-		matrix.position.setZ(folder.getDouble("position.z"));
+		matrix.fromFloatArray(folder.getFloatArray("om"));
 		id = folder.getInt("id");
 
 		loadProperties(folder);
@@ -124,9 +122,7 @@ public abstract class Entity {
 
 	public void save(DNNodePath folder) {
 		folder.addString("type", getNameTag());
-		folder.addDouble("position.x", matrix.position.getX());
-		folder.addDouble("position.y", matrix.position.getY());
-		folder.addDouble("position.z", matrix.position.getZ());
+		folder.addFloat("om", matrix.toFloatArray());
 		folder.addInt("id", id);
 
 		saveProperties(folder);

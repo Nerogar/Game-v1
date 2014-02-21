@@ -6,6 +6,7 @@ import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.gui.GuiBuildingTest;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.PacketBuildHouse;
+import de.nerogar.gameV1.network.PacketClickEntity;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Player {
@@ -145,19 +146,19 @@ public class Player {
 					System.out.println("entityTargeted");
 				}
 
-			} else {
-				/*if (InputHandler.isMouseButtonPressed(0)) {
-					PacketClickEntity clickPacket = new PacketClickEntity();
-					clickPacket.entityID = clickedEntity.id;
-					clickPacket.mouseButton = 0;
-					world.client.sendPacket(clickPacket);
-				} else if (InputHandler.isMouseButtonPressed(1)) {
-					PacketClickEntity clickPacket = new PacketClickEntity();
-					clickPacket.entityID = clickedEntity.id;
-					clickPacket.mouseButton = 1;
-					world.client.sendPacket(clickPacket);
-				}*/
 			}
+			if (InputHandler.isMouseButtonPressed(0)) {
+				PacketClickEntity clickPacket = new PacketClickEntity();
+				clickPacket.entityID = clickedEntity.id;
+				clickPacket.mouseButton = 0;
+				world.client.sendPacket(clickPacket);
+			} else if (InputHandler.isMouseButtonPressed(1)) {
+				PacketClickEntity clickPacket = new PacketClickEntity();
+				clickPacket.entityID = clickedEntity.id;
+				clickPacket.mouseButton = 1;
+				world.client.sendPacket(clickPacket);
+			}
+
 		} else {
 			if (InputHandler.isMouseButtonPressed(1)) selectedUnit = null;
 

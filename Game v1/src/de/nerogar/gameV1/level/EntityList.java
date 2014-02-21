@@ -1,14 +1,13 @@
 package de.nerogar.gameV1.level;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import static org.lwjgl.opengl.GL20.*;
+
+import java.util.*;
 import java.util.Map.Entry;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
@@ -20,13 +19,15 @@ public class EntityList {
 	public ArrayList<Entity> newTempEntities = new ArrayList<Entity>();
 	private boolean updateInProgress = false;
 	public int maxID;
-	CollisionComparer collisionComparer;
-	Game game;
-	World world;
+	private CollisionComparer collisionComparer;
+	private Game game;
+	private World world;
+	private Shader entityShader;
 
 	public EntityList(Game game, World world) {
 		this.game = game;
 		this.world = world;
+		setupShaders();
 	}
 
 	public void addEntity(Entity entity, World world) {
@@ -164,7 +165,11 @@ public class EntityList {
 		this.collisionComparer = collisionComparer;
 	}
 
-	public void render(Position loadPosition, int maxChunkRenderDistance) {
+	public void render(double time, Position loadPosition, int maxChunkRenderDistance) {
+		setupShaders();
+		entityShader.activate();
+		updateEntityShader();
+
 		for (Entity entity : world.entityList.entities.values()) {
 			renderEntity(loadPosition, maxChunkRenderDistance, entity);
 		}
@@ -172,6 +177,8 @@ public class EntityList {
 		for (Entity entity : world.entityList.tempEntities) {
 			renderEntity(loadPosition, maxChunkRenderDistance, entity);
 		}
+
+		entityShader.deactivate();
 	}
 
 	private void renderEntity(Position loadPosition, int maxChunkRenderDistance, Entity entity) {
@@ -180,5 +187,27 @@ public class EntityList {
 				entity.render();
 			}
 		}
+	}
+
+	private void updateEntityShader() {
+		glUniform1f(entityShader.uniforms.get("time"), (System.nanoTime() / 1000000000f));
+		Vector3d camDir = world.player.camera.xInWorld;
+		glUniform3f(entityShader.uniforms.get("camDir"), camDir.getXf(), camDir.getYf(), camDir.getZf());
+	}
+
+	public void setupShaders() {
+		ShaderBank.instance.createShaderProgramm("entity");
+		entityShader = ShaderBank.instance.getShader("entity");
+
+		entityShader.setVertexShader("res/shaders/entityShader.vert");
+		entityShader.setFragmentShader("res/shaders/entityShader.frag");
+		entityShader.compile();
+
+		entityShader.activate();
+
+		entityShader.uniforms.put("time", glGetUniformLocation(entityShader.shaderHandle, "time"));
+		entityShader.uniforms.put("camDir", glGetUniformLocation(entityShader.shaderHandle, "camDir"));
+
+		entityShader.deactivate();
 	}
 }

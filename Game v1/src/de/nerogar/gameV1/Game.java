@@ -132,7 +132,7 @@ public class Game {
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		world.render();
+		world.render(timer.time);
 		guiList.render();
 	}
 

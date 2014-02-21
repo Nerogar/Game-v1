@@ -425,7 +425,7 @@ public class Land {
 		}
 	}
 
-	public void render(Position loadPosition, int maxChunkRenderDistance) {
+	public void render(double time, Position loadPosition, int maxChunkRenderDistance) {
 
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
@@ -551,8 +551,7 @@ public class Land {
 
 	public void setupShaders() {
 		ShaderBank.instance.createShaderProgramm("terrain");
-		Shader terrainShader = ShaderBank.instance.getShader("terrain");
-		this.terrainShader = terrainShader;
+		terrainShader = ShaderBank.instance.getShader("terrain");
 
 		terrainShader.setVertexShader("res/shaders/terrainShader.vert");
 		terrainShader.setFragmentShader("res/shaders/terrainShader.frag");
