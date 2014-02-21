@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
-import de.nerogar.gameV1.network.PacketClickEntity;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.EntityPacketClick;
+import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -61,16 +61,16 @@ public class EntityTree extends Entity {
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
-		for (PacketEntity packet : packets) {
-			if (packet instanceof PacketClickEntity) {
-				System.out.println(((PacketClickEntity) packet).mouseButton);
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketClick) {
+				System.out.println(((EntityPacketClick) packet).mouseButton);
 			}
 		}
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 		/*elapsedTime += time;
 				int rand = 1;
 				if (elapsedTime > 1) {

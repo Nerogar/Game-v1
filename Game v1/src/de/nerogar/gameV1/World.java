@@ -11,6 +11,7 @@ import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
 import de.nerogar.gameV1.gui.GuiMain;
 import de.nerogar.gameV1.gui.GuiPauseMenu;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.*;
@@ -31,6 +32,7 @@ public class World {
 	public Client client;
 	public InternalServer internalServer;
 	public boolean serverWorld;
+	public Faction[] factions;
 	public Player player;
 
 	public Pathfinder pathfinder;
@@ -46,22 +48,23 @@ public class World {
 		if (serverWorld) {
 
 		} else {
-			player = new Player(game, this);
+
 		}
 	}
 
-	public void initiateWorld(String levelName, long seed) {
+	public void initiateWorld(String levelName, long seed, Faction[] factions) {
 		worldData = new WorldData(this, levelName);
 		worldData.seed = seed;
-		initiateWorld(levelName);
+		initiateWorld(levelName, factions);
 	}
 
-	public void initiateWorld(String levelName) {
+	public void initiateWorld(String levelName, Faction[] factions) {
 		if (worldData == null) {
 			worldData = new WorldData(this, levelName);
 			worldData.load();
 		}
 
+		this.factions = factions;
 		pathfinder = new Pathfinder(land);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
@@ -98,9 +101,10 @@ public class World {
 		// Der letzte, zusätzliche Parameter ist Testweise die Skalierung (Der AABB)
 	}
 
-	public void initiateClientWorld(Client client) {
+	public void initiateClientWorld(Client client, Faction faction) {
 		isLoaded = true;
 		this.client = client;
+		player = new Player(game, this, faction);
 		player.camera.init();
 		loadPosition = player.camera.getCamCenter().toPosition();
 	}
@@ -168,11 +172,13 @@ public class World {
 			server.broadcastData(exitGame);
 
 			internalServer.stopServer();
-		} else if (packet instanceof PacketBuildHouse) {
-			PacketBuildHouse buildingData = (PacketBuildHouse) packet;
+		} else if (packet instanceof FactionPacketBuildHouse) {
+			FactionPacketBuildHouse buildingData = (FactionPacketBuildHouse) packet;
 
-			Entity newBuilding = Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
-
+			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
+			newBuilding.faction = Faction.getFaction(buildingData.factionID);
+			System.out.println(buildingData.factionID);
+			
 			Position buildPosition = buildingData.buildPos;
 			newBuilding.matrix.position = new Vector3d(buildPosition.x, game.world.land.getHeight(new Position(buildPosition.x, buildPosition.z)), buildPosition.z);
 			newBuilding.init(this);

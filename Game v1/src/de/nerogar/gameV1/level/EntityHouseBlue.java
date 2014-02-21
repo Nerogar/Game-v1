@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
-import de.nerogar.gameV1.network.PacketClickEntity;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.EntityPacketClick;
+import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -25,10 +25,10 @@ public class EntityHouseBlue extends EntityBuilding {
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
-		for (PacketEntity packet : packets) {
-			if (packet instanceof PacketClickEntity) {
-				int mouseButton = ((PacketClickEntity) packet).mouseButton;
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketClick) {
+				int mouseButton = ((EntityPacketClick) packet).mouseButton;
 				if (mouseButton == 1) {
 					remove();
 				}
@@ -37,7 +37,7 @@ public class EntityHouseBlue extends EntityBuilding {
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 		ObjectMatrix particleMatrix = new ObjectMatrix(new Vector3d(matrix.position.getX() + Math.random() * 2 - 1, matrix.position.getY() + 1, matrix.position.getZ() + Math.random() * 2 - 1));
 		world.spawnEntity(new EntityTestparticle(game, world, particleMatrix));
 	}

@@ -28,14 +28,14 @@ public class InternalServer extends Thread {
 		this.server = server;
 	}
 
-	public void initiateWorld(String levelName, long seed) {
-		world.initiateWorld(levelName, seed);
+	public void initiateWorld(String levelName, long seed, Faction[] factions) {
+		world.initiateWorld(levelName, seed, factions);
 		world.internalServer = this;
 		start();
 	}
 
-	public void initiateWorld(String levelName) {
-		world.initiateWorld(levelName);
+	public void initiateWorld(String levelName, Faction[] factions) {
+		world.initiateWorld(levelName, factions);
 		world.internalServer = this;
 		start();
 	}

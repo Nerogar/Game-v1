@@ -149,9 +149,10 @@ public class DebugFelk {
 
 	public void run() {
 
-		sound.setPosition(game.world.player.camera.getCamPosition());
+		//Auskommentiert, da player jetzt auch null sein kann
+		/*sound.setPosition(game.world.player.camera.getCamPosition());
 		SoundManager.setListenerLazy(game.world.player.camera);
-		SoundManager.instance.update();
+		SoundManager.instance.update();*/
 
 		/*if (InputHandler.isKeyPressed(Keyboard.KEY_U)) {
 			ArrayList<Entity> entities = game.world.entityList.entities;

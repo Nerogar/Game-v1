@@ -5,12 +5,12 @@ import java.io.IOException;
 import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.level.Position;
 
-public class PacketBuildHouse extends Packet {
+public class FactionPacketBuildHouse extends FactionPacket {
 
 	public int buildingID;
 	public Position buildPos;
 
-	public PacketBuildHouse() {
+	public FactionPacketBuildHouse() {
 		channel = WORLD_CHANNEL;
 	}
 
@@ -21,6 +21,7 @@ public class PacketBuildHouse extends Packet {
 		data.addInt("id", buildingID);
 		data.addInt("x", buildPos.x);
 		data.addInt("z", buildPos.z);
+		data.addInt("fID", factionID);
 
 		packedData = data.toByteArray();
 
@@ -35,6 +36,7 @@ public class PacketBuildHouse extends Packet {
 			e.printStackTrace();
 		}
 
+		factionID = data.getInt("fID");
 		buildingID = data.getInt("id");
 		buildPos = new Position(data.getInt("x"), data.getInt("z"));
 	}

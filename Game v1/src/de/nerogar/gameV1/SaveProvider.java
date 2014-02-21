@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNFile;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.WorldData;
 import de.nerogar.gameV1.network.Client;
@@ -70,8 +71,8 @@ public class SaveProvider {
 
 		InternalServer internalServer = new InternalServer(game, server);
 		game.internalServer = internalServer;
-		internalServer.initiateWorld(saves[index].getName());
-		game.world.initiateClientWorld(client);
+		internalServer.initiateWorld(saves[index].getName(), new Faction[] { Faction.factionBlue });
+		game.world.initiateClientWorld(client, Faction.factionBlue);
 	}
 
 	public void loadWorld(Game game, String name, long seed) {
@@ -82,8 +83,8 @@ public class SaveProvider {
 
 		InternalServer internalServer = new InternalServer(game, server);
 		game.internalServer = internalServer;
-		internalServer.initiateWorld(name, seed);
-		game.world.initiateClientWorld(client);
+		internalServer.initiateWorld(name, seed, new Faction[] { Faction.factionBlue });
+		game.world.initiateClientWorld(client, Faction.factionBlue);
 	}
 
 	public void renameWorld(int index, String newName) {

@@ -4,32 +4,28 @@ import static org.lwjgl.opengl.GL20.*;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.gui.GuiBuildingTest;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.level.*;
-import de.nerogar.gameV1.network.PacketBuildHouse;
-import de.nerogar.gameV1.network.PacketClickEntity;
+import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.Ray;
 
 public class Player {
-	public static int TEAM_BLUE = 1;
-	public static int TEAM_GREEN = 2;
-	public static int TEAM_RED = 3;
-	public static int TEAM_YELLOW = 4;
-
 	public Game game;
 	public World world;
 	public Camera camera;
+	public Faction ownFaction;
 	public int buildingOnCursorID = -1;
 	public EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
-	private int ownTeam = TEAM_BLUE;
 
 	public EntityFighting selectedUnit;
 
 	public GuiBuildingTest guiBuildingTest;
 
-	public Player(Game game, World world) {
+	public Player(Game game, World world, Faction faction) {
 		this.game = game;
 		this.world = world;
+		this.ownFaction = faction;
 		guiBuildingTest = new GuiBuildingTest(game);
 		guiBuildingTest.player = this;
 		game.guiList.addGui(guiBuildingTest);
@@ -72,7 +68,8 @@ public class Player {
 
 		if (InputHandler.isMouseButtonPressed(0) && isbuildingOnCursorBuildable) {
 			if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
-				PacketBuildHouse packetBuildHouse = new PacketBuildHouse();
+				FactionPacketBuildHouse packetBuildHouse = new FactionPacketBuildHouse();
+				packetBuildHouse.factionID = ownFaction.id;
 				packetBuildHouse.buildingID = buildingOnCursorID;
 				packetBuildHouse.buildPos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
 
@@ -148,12 +145,12 @@ public class Player {
 
 			}
 			if (InputHandler.isMouseButtonPressed(0)) {
-				PacketClickEntity clickPacket = new PacketClickEntity();
+				EntityPacketClick clickPacket = new EntityPacketClick();
 				clickPacket.entityID = clickedEntity.id;
 				clickPacket.mouseButton = 0;
 				world.client.sendPacket(clickPacket);
 			} else if (InputHandler.isMouseButtonPressed(1)) {
-				PacketClickEntity clickPacket = new PacketClickEntity();
+				EntityPacketClick clickPacket = new EntityPacketClick();
 				clickPacket.entityID = clickedEntity.id;
 				clickPacket.mouseButton = 1;
 				world.client.sendPacket(clickPacket);

@@ -7,7 +7,6 @@ public abstract class EntityBuilding extends EntityFighting {
 
 	public Position size;
 	public Position centerPosition;
-	public int team = Player.TEAM_BLUE;
 
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 

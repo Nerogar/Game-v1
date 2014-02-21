@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.EntityPacket;
+import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -50,12 +51,19 @@ public class EntityHousePink extends EntityBuilding {
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
-
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketClick) {
+				int mouseButton = ((EntityPacketClick) packet).mouseButton;
+				if (mouseButton == 1) {
+					System.out.println(faction.id);
+				}
+			}
+		}
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 
 	}
 }

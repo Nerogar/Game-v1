@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class EntityTestparticle extends EntityParticle {
@@ -25,12 +25,12 @@ public class EntityTestparticle extends EntityParticle {
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		//this is a client entity
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 		//addForce(new Vector3d(0, 15, 0));
 		liveTime -= time;
 		opacity = liveTime;

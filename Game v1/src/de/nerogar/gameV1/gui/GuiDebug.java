@@ -66,10 +66,11 @@ public class GuiDebug extends Gui {
 
 		updateStressTimes();
 
-		labels[7].text = "X: " + world.player.camera.scrollX;
-		labels[8].text = "Y: " + world.player.camera.scrollY;
-		labels[9].text = "Z: " + world.player.camera.scrollZ;
-
+		if (world.player != null) {
+			labels[7].text = "X: " + world.player.camera.scrollX;
+			labels[8].text = "Y: " + world.player.camera.scrollY;
+			labels[9].text = "Z: " + world.player.camera.scrollZ;
+		}
 	}
 
 	private void updateStressTimes() {

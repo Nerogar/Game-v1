@@ -1,11 +1,12 @@
 package de.nerogar.gameV1.level;
 
 import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityMobile extends EntityFighting {
 
-	public int team = Player.TEAM_BLUE;
+	public Faction faction;
 
 	public GameResources resourceCost = new GameResources(0, 0, 0);
 

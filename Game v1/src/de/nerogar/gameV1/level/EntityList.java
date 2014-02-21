@@ -92,24 +92,24 @@ public class EntityList {
 		removeNullEntities();
 		updateInProgress = true;
 
-		HashMap<Integer, ArrayList<PacketEntity>> sortedPackets = new HashMap<Integer, ArrayList<PacketEntity>>();
+		HashMap<Integer, ArrayList<EntityPacket>> sortedPackets = new HashMap<Integer, ArrayList<EntityPacket>>();
 
 		for (int id : entities.keySet()) {
-			sortedPackets.put(id, new ArrayList<PacketEntity>());
+			sortedPackets.put(id, new ArrayList<EntityPacket>());
 		}
 
 		if (receivedPackets != null) {
 			for (Packet packet : receivedPackets) {
-				PacketEntity entityPacket = (PacketEntity) packet;
+				EntityPacket entityPacket = (EntityPacket) packet;
 
-				if (packet instanceof PacketMoveEntity) {
-					PacketMoveEntity moveEntityPacket = (PacketMoveEntity) packet;
+				if (packet instanceof EntityPacketMove) {
+					EntityPacketMove moveEntityPacket = (EntityPacketMove) packet;
 					updateEntityPosition(moveEntityPacket);
-				} else if (packet instanceof PacketUpdateEntity) {
-					PacketUpdateEntity updateEntityPacket = (PacketUpdateEntity) packet;
+				} else if (packet instanceof EntityPacketUpdate) {
+					EntityPacketUpdate updateEntityPacket = (EntityPacketUpdate) packet;
 					updateEntityProperties(updateEntityPacket);
 				} else {
-					ArrayList<PacketEntity> entityPacketList = sortedPackets.get(entityPacket.entityID);
+					ArrayList<EntityPacket> entityPacketList = sortedPackets.get(entityPacket.entityID);
 					if (entityPacketList != null) {
 						entityPacketList.add(entityPacket);
 					}
@@ -137,7 +137,7 @@ public class EntityList {
 		world.collisionComparer.compare();
 	}
 
-	private void updateEntityPosition(PacketMoveEntity moveEntityPacket) {
+	private void updateEntityPosition(EntityPacketMove moveEntityPacket) {
 		if (!world.serverWorld) {
 			Entity tempEntity = entities.get(moveEntityPacket.entityID);
 			if (moveEntityPacket.includeScale) {
@@ -149,7 +149,7 @@ public class EntityList {
 		}
 	}
 
-	private void updateEntityProperties(PacketUpdateEntity updateEntityPacket) {
+	private void updateEntityProperties(EntityPacketUpdate updateEntityPacket) {
 		if (!world.serverWorld) {
 			Entity tempEntity = entities.get(updateEntityPacket.entityID);
 

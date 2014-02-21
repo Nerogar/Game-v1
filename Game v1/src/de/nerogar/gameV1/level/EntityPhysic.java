@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityPhysic extends Entity {
@@ -28,12 +28,12 @@ public abstract class EntityPhysic extends Entity {
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		updatePhysics(time);
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 		updatePhysics(time);
 	}
 

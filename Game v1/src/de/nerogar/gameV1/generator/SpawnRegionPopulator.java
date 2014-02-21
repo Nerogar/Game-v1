@@ -2,6 +2,7 @@ package de.nerogar.gameV1.generator;
 
 import de.nerogar.gameV1.MathHelper;
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -20,6 +21,7 @@ public class SpawnRegionPopulator extends Populator {
 				}
 			}
 			EntitySpawnPlatform spawnPlatform = new EntitySpawnPlatform(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(32, 1, 32)));
+			spawnPlatform.faction = Faction.factionBlue;
 			chunk.spawnEntityLocal(spawnPlatform);
 		}
 	}

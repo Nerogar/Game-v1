@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.network.*;
 
@@ -121,9 +122,9 @@ public class GuiMultiplayerLobby extends Gui {
 					playersList.text = clientNames;
 				}
 			} else if (packet instanceof PacketExitMultiplayerLobby) {
-				//PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
+				PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
 				game.guiList.removeGui(getName());
-				game.world.initiateClientWorld(client);
+				game.world.initiateClientWorld(client, Faction.getFaction(exitPacket.factionID));
 			}
 		}
 	}
@@ -174,9 +175,16 @@ public class GuiMultiplayerLobby extends Gui {
 		} else if (id == startButton.id && mouseButton == 0) {
 			InternalServer internalServer = new InternalServer(game, server);
 			game.internalServer = internalServer;
-			PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
-			server.broadcastData(exitPacket);
-			internalServer.initiateWorld("serverWorld", 0); //hardcoded world for now
+
+			Faction[] playingFactions = new Faction[Faction.getMaxFactionCount() < server.getClients().size() ? Faction.getMaxFactionCount() : server.getClients().size()];
+			for (int i = 0; i < playingFactions.length; i++) {
+				playingFactions[i] = Faction.getFaction(i);
+				PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
+				exitPacket.factionID = i;
+				server.getClients().get(i).sendPacket(exitPacket);
+			}
+
+			internalServer.initiateWorld("serverWorld", 0, playingFactions); //TODO hardcoded world for now
 		}
 	}
 }

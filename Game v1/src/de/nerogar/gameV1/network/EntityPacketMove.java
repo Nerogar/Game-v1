@@ -6,12 +6,12 @@ import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class PacketMoveEntity extends PacketEntity {
+public class EntityPacketMove extends EntityPacket {
 
 	public ObjectMatrix objectMatrix;
 	public boolean includeScale = false;
 
-	public PacketMoveEntity() {
+	public EntityPacketMove() {
 		channel = ENTITY_CHANNEL;
 	}
 

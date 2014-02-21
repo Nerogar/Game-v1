@@ -65,7 +65,7 @@ public abstract class Entity {
 		return world;
 	}
 
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void update(float time, ArrayList<EntityPacket> packets) {
 		if (world.serverWorld) {
 			updateServer(time, packets);
 		} else {
@@ -73,9 +73,9 @@ public abstract class Entity {
 		}
 	}
 
-	public abstract void updateServer(float time, ArrayList<PacketEntity> packets);
+	public abstract void updateServer(float time, ArrayList<EntityPacket> packets);
 
-	public abstract void updateClient(float time, ArrayList<PacketEntity> packets);
+	public abstract void updateClient(float time, ArrayList<EntityPacket> packets);
 
 	public Bounding getBoundingBox() {
 
@@ -106,7 +106,7 @@ public abstract class Entity {
 
 	private void broadcastObjectMatrix() {
 		if (world.serverWorld) {
-			PacketMoveEntity moveEntityPacket = new PacketMoveEntity();
+			EntityPacketMove moveEntityPacket = new EntityPacketMove();
 			moveEntityPacket.objectMatrix = matrix;
 			moveEntityPacket.entityID = id;
 			world.server.broadcastData(moveEntityPacket);
@@ -134,8 +134,8 @@ public abstract class Entity {
 
 	public void broadcastPropertyUpdates() {
 		if (world.serverWorld) {
-			PacketUpdateEntity updateEntityPacket = new PacketUpdateEntity();
-			DNNodePath entityData = new DNNodePath(PacketUpdateEntity.ENTITY_DATA_PATHNAME);
+			EntityPacketUpdate updateEntityPacket = new EntityPacketUpdate();
+			DNNodePath entityData = new DNNodePath(EntityPacketUpdate.ENTITY_DATA_PATHNAME);
 			saveProperties(entityData);
 			updateEntityPacket.entityData = entityData;
 			updateEntityPacket.entityID = id;
@@ -211,6 +211,7 @@ public abstract class Entity {
 		registerEntity(new EntityHut(game, null, objectMatrix));
 		registerEntity(new EntityTestSoldier(game, null, objectMatrix));
 		registerEntity(new EntitySpawnPlatform(game, null, objectMatrix));
+		registerEntity(new EntityWood(game, null, objectMatrix));
 	}
 
 }
