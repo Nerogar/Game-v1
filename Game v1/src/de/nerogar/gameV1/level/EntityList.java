@@ -191,8 +191,7 @@ public class EntityList {
 
 	private void updateEntityShader() {
 		glUniform1f(entityShader.uniforms.get("time"), (System.nanoTime() / 1000000000f));
-		Vector3d camDir = world.player.camera.xInWorld;
-		glUniform3f(entityShader.uniforms.get("camDir"), camDir.getXf(), camDir.getYf(), camDir.getZf());
+		glUniformMatrix3(entityShader.uniforms.get("matEyeSpace"), false, world.player.camera.matBuffer);
 	}
 
 	public void setupShaders() {
@@ -206,7 +205,7 @@ public class EntityList {
 		entityShader.activate();
 
 		entityShader.uniforms.put("time", glGetUniformLocation(entityShader.shaderHandle, "time"));
-		entityShader.uniforms.put("camDir", glGetUniformLocation(entityShader.shaderHandle, "camDir"));
+		entityShader.uniforms.put("matEyeSpace", glGetUniformLocation(entityShader.shaderHandle, "matEyeSpace"));
 
 		entityShader.deactivate();
 	}

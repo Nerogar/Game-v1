@@ -1,5 +1,8 @@
 package de.nerogar.gameV1;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -31,12 +34,18 @@ public class Camera {
 	//private World world;
 	private Timer timer;
 
+	//eye space matrix
 	public Vector3d xInWorld;
+	public Vector3d yInWorld;
+	public Vector3d zInWorld;
+	public FloatBuffer matBuffer;
 
 	public Camera(World world) {
 		//this.world = world;
 		timer = world.game.timer;
 		xInWorld = new Vector3d();
+		yInWorld = new Vector3d();
+		zInWorld = new Vector3d();
 	}
 
 	public void init() {
@@ -157,10 +166,10 @@ public class Camera {
 		scrollX = (float) (scrollXLoc - Math.sin((rotation / 360) * 3.1415927 * 2) * scrollBack);
 		scrollZ = (float) (scrollZLoc + Math.cos((rotation / 360) * 3.1415927 * 2) * scrollBack);
 
-		calcXInWorld();
+		calcEyeSpaceInWorld();
 	}
 
-	private void calcXInWorld() {
+	private void calcEyeSpaceInWorld() {
 		float camRotSin = (float) Math.sin(rotation / 180f * Math.PI);
 		float camRotCos = (float) Math.cos(rotation / 180f * Math.PI);
 		float camRotDownSin = (float) Math.sin(rotationDown / 180f * Math.PI);
@@ -170,6 +179,31 @@ public class Camera {
 		xInWorld.setY(-camRotDownSin * camRotSin);
 		xInWorld.setZ(camRotSin * camRotDownCos);
 
+		yInWorld.setX(0);
+		yInWorld.setY(-camRotDownCos);
+		yInWorld.setZ(-camRotDownSin);
+
+		zInWorld.setX(camRotSin);
+		zInWorld.setY(camRotDownSin * -camRotCos);
+		zInWorld.setZ(camRotCos * camRotDownCos);
+
+		matBuffer = BufferUtils.createFloatBuffer(9);
+
+		float[] matArray = new float[9];
+		matArray[0] = xInWorld.getXf();
+		matArray[1] = xInWorld.getYf();
+		matArray[2] = xInWorld.getZf();
+
+		matArray[3] = yInWorld.getXf();
+		matArray[4] = yInWorld.getYf();
+		matArray[5] = yInWorld.getZf();
+
+		matArray[6] = zInWorld.getXf();
+		matArray[7] = zInWorld.getYf();
+		matArray[8] = zInWorld.getZf();
+
+		matBuffer.put(matArray);
+		matBuffer.flip();
 	}
 
 	public Vector2d getCamCenter() {
