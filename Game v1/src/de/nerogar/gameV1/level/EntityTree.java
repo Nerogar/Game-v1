@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
-import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.network.EntityPacket;
+import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityTree extends Entity {
+public class EntityTree extends EntityFighting {
 
-	private int size = 3;
+	public int size = 3;
 
 	//private ALSource sound = null;
 	//private float elapsedTime;

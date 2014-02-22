@@ -178,7 +178,7 @@ public class World {
 			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
 			newBuilding.faction = Faction.getFaction(buildingData.factionID);
 			System.out.println(buildingData.factionID);
-			
+
 			Position buildPosition = buildingData.buildPos;
 			newBuilding.matrix.position = new Vector3d(buildPosition.x, game.world.land.getHeight(new Position(buildPosition.x, buildPosition.z)), buildPosition.z);
 			newBuilding.init(this);
@@ -337,13 +337,17 @@ public class World {
 				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
 
+					for (Faction f : factions) {
+						f.recalcFactionEntities(entityList);
+					}
+
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
 
 					DNFile entityData = new DNFile();
+
 					entity.save(entityData);
 					entityPacket.entityData = entityData;
-
 					server.broadcastData(entityPacket);
 				}
 			}
@@ -366,7 +370,13 @@ public class World {
 	}
 
 	public void despawnEntity(Entity entity) {
-		if (isLoaded) entityList.entities.remove(entity);
+		if (isLoaded) {
+			entityList.entities.remove(entity);
+
+			for (Faction f : factions) {
+				f.recalcFactionEntities(entityList);
+			}
+		}
 	}
 
 	public Entity getEntityByID(int id) {

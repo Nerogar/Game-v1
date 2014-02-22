@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import de.nerogar.DNFileSystem.DNFile;
+import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.World;
+import de.nerogar.gameV1.internalServer.Faction;
 
 public class WorldData {
 	public String levelName;
@@ -33,6 +35,17 @@ public class WorldData {
 			world.maxEntityID = worldData.getInt("maxEntityID");
 			levelName = worldData.getString("levelName");
 			seed = worldData.getLong("seed");
+
+			int[] factionIDs = worldData.getIntArray("factions.IDs");
+			world.factions = new Faction[factionIDs.length];
+
+			for (int i = 0; i < factionIDs.length; i++) {
+				DNNodePath factionFolder = worldData.getPath("factions." + factionIDs[i]);
+				Faction f = Faction.getFaction(factionIDs[i]);
+				f.load(factionFolder);
+				world.factions[i] = f;
+			}
+
 			return true;
 		}
 		return false;
@@ -48,6 +61,16 @@ public class WorldData {
 		worldData.addInt("maxEntityID", world.maxEntityID);
 		worldData.addString("levelName", levelName);
 		worldData.addLong("seed", seed);
+
+		int[] factionIDs = new int[world.factions.length];
+		for (int i = 0; i < factionIDs.length; i++) {
+			Faction f = world.factions[i];
+			DNNodePath factionFolder = worldData.getPath("factions." + f.id);
+			f.save(factionFolder);
+			factionIDs[i] = f.id;
+		}
+
+		worldData.addInt("factions.IDs", factionIDs);
 
 		try {
 			worldData.save(dirname + saveName + FILENAME);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
-import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.network.EntityPacket;
+import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -53,13 +53,16 @@ public class EntityHouseGreen extends EntityBuilding {
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		if (Math.random() < 0.05f) {
-			EntityTestSoldier testSoldier = new EntityTestSoldier(game, world, new ObjectMatrix());
-			double posX = matrix.position.getX() + Math.random() * 10 - 5;
-			double posZ = matrix.position.getZ() + 3;
-			Vector3d pos = new Vector3d(posX, world.land.getHeight(posX, posZ), posZ);
-			testSoldier.matrix.setPosition(pos);
-			testSoldier.faction = faction;
-			world.spawnEntity(testSoldier);
+			if (faction.getUnitCount() < faction.getMaxUnitCount()) {
+				EntityTestSoldier testSoldier = new EntityTestSoldier(game, world, new ObjectMatrix());
+				double posX = matrix.position.getX() + Math.random() * 10 - 5;
+				double posZ = matrix.position.getZ() + 3;
+				Vector3d pos = new Vector3d(posX, world.land.getHeight(posX, posZ), posZ);
+				testSoldier.matrix.setPosition(pos);
+				testSoldier.faction = faction;
+				world.spawnEntity(testSoldier);
+			}
+
 		}
 
 		for (EntityPacket packet : packets) {

@@ -5,7 +5,7 @@ import java.io.IOException;
 import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.Vector3d;
 
-public class TargetPacketSet extends EntityPacket {
+public class PacketSetTarget extends EntityPacket {
 
 	public static final int TYPE_FOLLOW = 0;
 	public static final int TYPE_ATTACK = 1;
@@ -14,7 +14,7 @@ public class TargetPacketSet extends EntityPacket {
 	public Vector3d targetPosition;
 	public int type = TYPE_ATTACK;
 
-	public TargetPacketSet() {
+	public PacketSetTarget() {
 		channel = ENTITY_CHANNEL;
 	}
 

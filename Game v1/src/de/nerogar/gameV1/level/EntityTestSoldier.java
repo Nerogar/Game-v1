@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.ai.AILogicChopWood;
 import de.nerogar.gameV1.ai.AILogicGoToPosition;
 import de.nerogar.gameV1.network.EntityPacket;
-import de.nerogar.gameV1.network.TargetPacketSet;
+import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -19,7 +20,8 @@ public class EntityTestSoldier extends EntityMobile {
 
 	@Override
 	public void init(World world) {
-		setSprite(1, "entities/peter/texture.png");
+		//setSprite(1, "entities/peter/texture.png");
+		setObject("entities/worker/mesh", "entities/worker/texture.png");
 		health = 20;
 		moveSpeed = 5;
 	}
@@ -27,12 +29,17 @@ public class EntityTestSoldier extends EntityMobile {
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		for (EntityPacket packet : packets) {
-			if (packet instanceof TargetPacketSet) {
+			if (packet instanceof PacketSetTarget) {
 
-				TargetPacketSet setTargetPacket = (TargetPacketSet) packet;
+				PacketSetTarget setTargetPacket = (PacketSetTarget) packet;
 
 				if (setTargetPacket.targetPosition == null) {
 					target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
+
+					if (target instanceof EntityTree) {
+						aiContainer.addLogic(new AILogicGoToPosition(this, target.matrix.getPosition()));
+						aiContainer.addLogic(new AILogicChopWood(this, (EntityTree) target, 5));
+					}
 				} else {
 					aiContainer.addLogic(new AILogicGoToPosition(this, setTargetPacket.targetPosition));
 				}

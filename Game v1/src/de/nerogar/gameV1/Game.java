@@ -37,7 +37,7 @@ public class Game {
 	public GameResources gameResources = new GameResources();
 
 	public void run() {
-		try {
+		//try {
 			init();
 			//timer.registerEvent("gc", 10);
 
@@ -81,10 +81,9 @@ public class Game {
 			renderEngine.cleanup();
 			GameOptions.instance.save();
 
-			//} catch (LWJGLException | IOException e) {
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 			Logger.printThrowable(e, "gotta catch 'em all", false);
-		}
+		}*/
 
 	}
 

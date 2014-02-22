@@ -22,7 +22,7 @@ public class LevelGenerator {
 	private void addDefaultPopulators() {
 		addPopulator(new SpawnRegionPopulator());
 		addPopulator(new TilePopulator());
-		addPopulator(new TestPopulator());
+		addPopulator(new TreePopulator());
 	}
 
 	public Chunk generateLevel(Chunk chunk, int x, int y) {

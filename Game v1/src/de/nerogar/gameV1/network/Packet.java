@@ -81,7 +81,7 @@ public abstract class Packet {
 		registerPacket(PacketSpawnEntity.class);
 		registerPacket(EntityPacketClick.class);
 		registerPacket(PacketRemoveEntity.class);
-		registerPacket(TargetPacketSet.class);
+		registerPacket(PacketSetTarget.class);
 		registerPacket(EntityPacketMove.class);
 		registerPacket(EntityPacketUpdate.class);
 	}

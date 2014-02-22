@@ -1,10 +1,11 @@
 package de.nerogar.gameV1.generator;
 
 import de.nerogar.gameV1.Vector3d;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class TestPopulator extends Populator {
+public class TreePopulator extends Populator {
 
 	@Override
 	public void execute(Chunk chunk) {
@@ -20,9 +21,10 @@ public class TestPopulator extends Populator {
 				float y = (float) chunk.getLocalHeight(x, z);
 
 				float rotation = (float) (Math.random() * 360f);
-				chunk.spawnEntityLocal(new EntityTree(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, rotation, 0), new Vector3d(1, 1, 1))));
+				EntityTree tree = new EntityTree(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, rotation, 0), new Vector3d(1, 1, 1)));
+				tree.faction = Faction.factionNone;
+				chunk.spawnEntityLocal(tree);
 			}
-
 		}
 
 		if (Math.random() * 15 < 1) {

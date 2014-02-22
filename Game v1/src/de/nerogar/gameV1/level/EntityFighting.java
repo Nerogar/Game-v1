@@ -4,7 +4,7 @@ import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.ai.AIContainer;
 import de.nerogar.gameV1.internalServer.Faction;
-import de.nerogar.gameV1.network.TargetPacketSet;
+import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityFighting extends Entity {
@@ -21,7 +21,7 @@ public abstract class EntityFighting extends Entity {
 	}
 
 	public void sendStartAttack(EntityFighting attackTarget) {
-		TargetPacketSet setTargetpacket = new TargetPacketSet();
+		PacketSetTarget setTargetpacket = new PacketSetTarget();
 		setTargetpacket.targetID = attackTarget.id;
 		setTargetpacket.entityID = id;
 		world.client.sendPacket(setTargetpacket);
@@ -29,9 +29,9 @@ public abstract class EntityFighting extends Entity {
 
 	public void sendStartMoving(Vector3d targetPosition) {
 		if (this instanceof EntityMobile) {
-			TargetPacketSet setTargetpacket = new TargetPacketSet();
+			PacketSetTarget setTargetpacket = new PacketSetTarget();
 			setTargetpacket.targetPosition = targetPosition;
-			setTargetpacket.type = TargetPacketSet.TYPE_FOLLOW;
+			setTargetpacket.type = PacketSetTarget.TYPE_FOLLOW;
 			setTargetpacket.entityID = id;
 			world.client.sendPacket(setTargetpacket);
 		}
@@ -46,12 +46,12 @@ public abstract class EntityFighting extends Entity {
 	@Override
 	public void save(DNNodePath folder) {
 		super.save(folder);
-		if(faction==null){
-			System.out.println(this);
+		if (faction == null) {
+			System.out.println("Faction null for: " + this);
 		}
-		
+
 		folder.addInt("fID", faction.id);
-		
+
 	}
 
 	@Override

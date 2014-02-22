@@ -2,24 +2,77 @@ package de.nerogar.gameV1.internalServer;
 
 import java.util.ArrayList;
 
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.level.*;
 import de.nerogar.gameV1.network.Client;
 
 public class Faction {
 
-	public static Faction factionNone;
-
+	//factions
+	public static Faction factionNone; // factionless
 	public static Faction factionBlue;
 	public static Faction factionRed;
 	public static Faction factionGreen;
 	public static Faction factionYellow;
-
 	private static ArrayList<Faction> factions;
+	//end factions
 
 	public int id;
 	public Client client;
 
+	public int maxUnits;
+	public ArrayList<EntityFighting> factionEntities;
+
 	public Faction(int id) {
 		this.id = id;
+		maxUnits = 5;
+		factionEntities = new ArrayList<EntityFighting>();
+	}
+
+	public void recalcFactionEntities(EntityList entityList) {
+		factionEntities.clear();
+
+		for (Entity e : entityList.entities.values()) {
+			if (e instanceof EntityFighting) {
+				EntityFighting entityFighting = (EntityFighting) e;
+				if (entityFighting.faction == this) {
+					factionEntities.add(entityFighting);
+				}
+			}
+		}
+
+		for (Entity e : entityList.newEntities) {
+			if (e instanceof EntityFighting) {
+				EntityFighting entityFighting = (EntityFighting) e;
+				if (entityFighting.faction == this) {
+					factionEntities.add(entityFighting);
+				}
+			}
+		}
+	}
+
+	public int getUnitCount() {
+		int count = 0;
+
+		for (EntityFighting ef : factionEntities) {
+			if (ef instanceof EntityMobile) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+	public int getMaxUnitCount() {
+		return maxUnits;
+	}
+
+	public void save(DNNodePath folder) {
+
+	}
+
+	public void load(DNNodePath folder) {
+
 	}
 
 	public static Faction getFaction(int factionID) {
@@ -32,7 +85,7 @@ public class Faction {
 	}
 
 	static {
-		factionBlue = new Faction(-1);
+		factionNone = new Faction(-1);
 
 		factionBlue = new Faction(0);
 		factionRed = new Faction(1);
@@ -44,7 +97,5 @@ public class Faction {
 		factions.add(factionRed);
 		factions.add(factionGreen);
 		factions.add(factionYellow);
-
 	}
-
 }
