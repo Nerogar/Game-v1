@@ -46,7 +46,7 @@ public class EntityShrine extends Entity {
 
 	@Override
 	public String getNameTag() {
-		return "Shrine";
+		return "shrine";
 	}
 
 	@Override

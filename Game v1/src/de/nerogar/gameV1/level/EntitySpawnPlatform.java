@@ -29,7 +29,7 @@ public class EntitySpawnPlatform extends EntityBuilding {
 
 	@Override
 	public String getNameTag() {
-		return "SpawnPlatform";
+		return "spawnPlatform";
 	}
 
 	@Override

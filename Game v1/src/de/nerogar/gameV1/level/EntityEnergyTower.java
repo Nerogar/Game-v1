@@ -8,45 +8,45 @@ import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityHouseRed extends EntityBuilding {
+public class EntityEnergyTower extends Entity {
 
-	public EntityHouseRed(Game game, World world, ObjectMatrix matrix) {
+	public EntityEnergyTower(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
-		size = new Position(2, 2);
-		centerPosition = new Position(1, 1);
-		resourceCost = new GameResources(200, 100, 100);
-		boundingBox = new BoundingAABB(new Vector3d(-size.x / 2, 0, -size.z / 2), new Vector3d(size.x / 2, 1, size.z / 2));
+		boundingBox = new BoundingAABB(new Vector3d(-2, 0, -2), new Vector3d(2, 4, 2));
 	}
 
 	@Override
 	public void init(World world) {
-		setObject("entities/houseRed/mesh", "entities/houseRed/texture.png");
-	}
-
-	@Override
-	public void interact() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public String getNameTag() {
-		return "houseRed";
+		setObject("entities/shrine/mesh", "entities/shrine/texture.png");
+		//setSprite(1, "houses/test1-1.png");
 	}
 
 	@Override
 	public void saveProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void loadProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
+
+	}
+
+	public void interact() {
+		//droppe Holz
+		//reduziere Holz
 	}
 
 	@Override
 	public void click(int key) {
 		// TODO Auto-generated method stub
-		if (key == 1) remove();
+
+	}
+
+	@Override
+	public String getNameTag() {
+		return "energyTower";
 	}
 
 	@Override
@@ -58,4 +58,5 @@ public class EntityHouseRed extends EntityBuilding {
 	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 
 	}
+
 }

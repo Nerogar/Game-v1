@@ -49,7 +49,7 @@ public class EntityHouseBlue extends EntityBuilding {
 
 	@Override
 	public String getNameTag() {
-		return "HouseBlue";
+		return "houseBlue";
 	}
 
 	@Override

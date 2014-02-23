@@ -57,7 +57,7 @@ public class EntityTree extends EntityFighting {
 
 	@Override
 	public String getNameTag() {
-		return "Tree";
+		return "tree";
 	}
 
 	@Override

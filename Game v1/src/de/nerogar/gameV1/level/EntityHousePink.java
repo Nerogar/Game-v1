@@ -31,7 +31,7 @@ public class EntityHousePink extends EntityBuilding {
 
 	@Override
 	public String getNameTag() {
-		return "HousePink";
+		return "housePink";
 	}
 
 	@Override

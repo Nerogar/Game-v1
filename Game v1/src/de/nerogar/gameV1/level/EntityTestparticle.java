@@ -62,6 +62,6 @@ public class EntityTestparticle extends EntityParticle {
 
 	@Override
 	public String getNameTag() {
-		return "Testpartikel";
+		return "testPartikel";
 	}
 }

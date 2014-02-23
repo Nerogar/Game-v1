@@ -30,7 +30,7 @@ public class EntityHut extends EntityBuilding {
 
 	@Override
 	public String getNameTag() {
-		return "Hut";
+		return "hut";
 	}
 
 	@Override

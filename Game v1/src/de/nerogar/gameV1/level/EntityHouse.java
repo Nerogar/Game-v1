@@ -33,7 +33,7 @@ public class EntityHouse extends Entity {
 
 	@Override
 	public String getNameTag() {
-		return "House";
+		return "house";
 	}
 
 	@Override
