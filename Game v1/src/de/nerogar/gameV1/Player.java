@@ -14,7 +14,6 @@ public class Player {
 	public World world;
 	public Camera camera;
 	public Faction ownFaction;
-	public int buildingOnCursorID = -1;
 	public EntityBuilding buildingOnCursor;
 	private boolean isbuildingOnCursorBuildable;
 
@@ -66,19 +65,6 @@ public class Player {
 			}
 		}
 
-		if (InputHandler.isMouseButtonPressed(0) && isbuildingOnCursorBuildable) {
-			if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
-				FactionPacketBuildHouse packetBuildHouse = new FactionPacketBuildHouse();
-				packetBuildHouse.factionID = ownFaction.id;
-				packetBuildHouse.buildingID = buildingOnCursorID;
-				packetBuildHouse.buildPos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
-
-				world.client.sendPacket(packetBuildHouse);
-
-				//world.spawnEntity(buildingOnCursor);
-				buildingOnCursor = null;
-			}
-		}
 	}
 
 	private void renderEntityOnCursor(World world) {
@@ -121,6 +107,8 @@ public class Player {
 	}
 
 	public void handleMouseClick() {
+		if (game.guiList.usedGui) return;
+
 		Ray sightRay = new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection());
 		//long time1 = System.nanoTime();
 		Entity[] clickedEntities = world.entityList.getEntitiesInSight(sightRay);
@@ -171,13 +159,28 @@ public class Player {
 					//spawnEntity(new EntityHouse(game, om));
 					// wtf, warum machst du das hierhin?
 				}
+
 				if (InputHandler.isMouseButtonPressed(1)) {
 					world.land.click(1, floorIntersection);
 				}
+
 				if (InputHandler.isMouseButtonPressed(2)) {
 					world.land.click(2, floorIntersection);
 				}
-				world.land.setMousePos(floorIntersection);
+
+				if (InputHandler.isMouseButtonPressed(0) && isbuildingOnCursorBuildable) {
+					if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
+						FactionPacketBuildHouse packetBuildHouse = new FactionPacketBuildHouse();
+						packetBuildHouse.factionID = ownFaction.id;
+						packetBuildHouse.buildingID = buildingOnCursor.getNameTag();
+						packetBuildHouse.buildPos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
+
+						world.client.sendPacket(packetBuildHouse);
+
+						//world.spawnEntity(buildingOnCursor);
+						buildingOnCursor = null;
+					}
+				}
 			}
 		}
 

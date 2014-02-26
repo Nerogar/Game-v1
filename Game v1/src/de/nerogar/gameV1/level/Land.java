@@ -30,7 +30,6 @@ public class Land {
 	public Game game;
 	public World world;
 	public LevelGenerator levelGenerator;
-	private Vector3d mousePosition;
 	private Shader terrainShader;
 
 	//private Entity buildableEntity = null;
@@ -534,14 +533,6 @@ public class Land {
 			markerCone.addForce(new Vector3d(0, -10000, 0));
 			if (!world.containsEntity(markerCone)) world.spawnEntity(markerCone);
 		}*/
-	}
-
-	public void setMousePos(Vector3d pos) {
-		this.mousePosition = pos;
-	}
-
-	public Vector3d getMousePos() {
-		return this.mousePosition;
 	}
 
 	private void updateTerrainShader() {

@@ -9,8 +9,7 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
-import de.nerogar.gameV1.gui.GuiMain;
-import de.nerogar.gameV1.gui.GuiPauseMenu;
+import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.*;
@@ -105,6 +104,7 @@ public class World {
 		isLoaded = true;
 		this.client = client;
 		player = new Player(game, this, faction);
+		game.guiList.addGui(new GuiIngameOverlay(game, player));
 		player.camera.init();
 		loadPosition = player.camera.getCamCenter().toPosition();
 	}
@@ -126,6 +126,8 @@ public class World {
 		land.unloadAll(save);
 		entityList.unloadAll();
 		collisionComparer.cleanup();
+		game.guiList.removeGui(new GuiIngameOverlay(game, player));
+
 		if (save) {
 			worldData.save();
 			worldData = null;
@@ -175,7 +177,7 @@ public class World {
 		} else if (packet instanceof FactionPacketBuildHouse) {
 			FactionPacketBuildHouse buildingData = (FactionPacketBuildHouse) packet;
 
-			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
+			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, buildingData.buildingID);
 			newBuilding.faction = Faction.getFaction(buildingData.factionID);
 			System.out.println(buildingData.factionID);
 

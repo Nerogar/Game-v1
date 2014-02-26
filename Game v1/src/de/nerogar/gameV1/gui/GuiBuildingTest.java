@@ -2,7 +2,6 @@ package de.nerogar.gameV1.gui;
 
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.Player;
-import de.nerogar.gameV1.level.BuildingBank;
 import de.nerogar.gameV1.level.Entity;
 import de.nerogar.gameV1.level.EntityBuilding;
 
@@ -52,26 +51,20 @@ public class GuiBuildingTest extends Gui {
 
 		if (id == buttonNone.id && mouseButton == 0) {
 			player.buildingOnCursor = null;
-			player.buildingOnCursorID = -1;
 		} else if (id == buttonBlue.id && mouseButton == 0) {
-			player.buildingOnCursorID = 0;
-			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, BuildingBank.getBuildingName(player.buildingOnCursorID));
+			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, "houseBlue");
 			player.buildingOnCursor.init(player.world);
 		} else if (id == buttonGreen.id && mouseButton == 0) {
-			player.buildingOnCursorID = 1;
-			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, BuildingBank.getBuildingName(player.buildingOnCursorID));
+			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, "houseGreen");
 			player.buildingOnCursor.init(player.world);
 		} else if (id == buttonOrange.id && mouseButton == 0) {
-			player.buildingOnCursorID = 2;
-			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, BuildingBank.getBuildingName(player.buildingOnCursorID));
+			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, "houseOrange");
 			player.buildingOnCursor.init(player.world);
 		} else if (id == buttonPink.id && mouseButton == 0) {
-			player.buildingOnCursorID = 3;
-			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, BuildingBank.getBuildingName(player.buildingOnCursorID));
+			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, "housePink");
 			player.buildingOnCursor.init(player.world);
 		} else if (id == buttonRed.id && mouseButton == 0) {
-			player.buildingOnCursorID = 4;
-			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, BuildingBank.getBuildingName(player.buildingOnCursorID));
+			player.buildingOnCursor = (EntityBuilding) Entity.getEntity(game, player.world, "houseRed");
 			player.buildingOnCursor.init(player.world);
 		}
 	}

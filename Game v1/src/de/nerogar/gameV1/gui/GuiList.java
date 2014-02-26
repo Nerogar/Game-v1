@@ -11,6 +11,8 @@ public class GuiList {
 	private ArrayList<Gui> newGuis = new ArrayList<Gui>();
 	private ArrayList<Alert> newAlerts = new ArrayList<Alert>();
 
+	public boolean usedGui;
+
 	public void alert(Alert alert) {
 		newAlerts.add(alert);
 	}
@@ -81,11 +83,16 @@ public class GuiList {
 	}
 
 	public void update() {
+		usedGui = false;
 		if (noGuiLoaded() && !activeAlert()) return;
 		if (!activeAlert()) {
 			for (int i = 0; i < guis.size(); i++) {
-				guis.get(i).update();
+				if (guis.get(i).update()) {
+					usedGui = true;
+				}
 			}
+		} else {
+			usedGui = true;
 		}
 
 		boolean updateNextAlert = true;

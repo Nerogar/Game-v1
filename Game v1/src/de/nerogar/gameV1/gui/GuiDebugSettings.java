@@ -79,7 +79,7 @@ public class GuiDebugSettings extends Gui {
 			game.guiList.addGui(new GuiVideoSettings(game));
 		} else if (id == tempIngameButton.id && mouseButton == 0) {
 			game.guiList.removeGui(getName());
-			game.guiList.addGui(new GuiIngameOverlay(game));
+			game.guiList.addGui(new GuiIngameOverlay(game, null));
 		}
 	}
 }

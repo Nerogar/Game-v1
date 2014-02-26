@@ -7,7 +7,7 @@ import de.nerogar.gameV1.level.Position;
 
 public class FactionPacketBuildHouse extends FactionPacket {
 
-	public int buildingID;
+	public String buildingID;
 	public Position buildPos;
 
 	public FactionPacketBuildHouse() {
@@ -18,7 +18,7 @@ public class FactionPacketBuildHouse extends FactionPacket {
 	public void pack() {
 
 		data = new DNFile();
-		data.addInt("id", buildingID);
+		data.addString("id", buildingID);
 		data.addInt("x", buildPos.x);
 		data.addInt("z", buildPos.z);
 		data.addInt("fID", factionID);
@@ -37,7 +37,7 @@ public class FactionPacketBuildHouse extends FactionPacket {
 		}
 
 		factionID = data.getInt("fID");
-		buildingID = data.getInt("id");
+		buildingID = data.getString("id");
 		buildPos = new Position(data.getInt("x"), data.getInt("z"));
 	}
 
