@@ -37,8 +37,7 @@ public class EntityTestSoldier extends EntityMobile {
 					target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
 
 					if (target instanceof EntityTree) {
-						aiContainer.addLogic(new AILogicGoToPosition(this, target.matrix.getPosition()));
-						aiContainer.addLogic(new AILogicChopWood(this, (EntityTree) target, 5));
+						aiContainer.addLogic(new AILogicChopWood(this, (EntityTree) target, 5, new AILogicGoToPosition(this, target.matrix.getPosition())));
 					}
 				} else {
 					aiContainer.addLogic(new AILogicGoToPosition(this, setTargetPacket.targetPosition));
@@ -96,5 +95,10 @@ public class EntityTestSoldier extends EntityMobile {
 	@Override
 	public String getNameTag() {
 		return "testSoldier";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return 20;
 	}
 }

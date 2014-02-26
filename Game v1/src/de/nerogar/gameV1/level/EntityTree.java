@@ -36,7 +36,7 @@ public class EntityTree extends EntityFighting {
 	@Override
 	public void loadProperties(DNNodePath folder) {
 		size = folder.getInt("size");
-
+		matrix.setScaling(new Vector3d(size / 3f, size / 3f, size / 3f));
 	}
 
 	public void interact() {
@@ -53,11 +53,6 @@ public class EntityTree extends EntityFighting {
 		} else if (key == 1) {
 			matrix.getPosition().add(new Vector3d(0, -1, 0));
 		}
-	}
-
-	@Override
-	public String getNameTag() {
-		return "tree";
 	}
 
 	@Override
@@ -88,6 +83,16 @@ public class EntityTree extends EntityFighting {
 						}
 					}
 				}*/
+	}
+
+	@Override
+	public String getNameTag() {
+		return "tree";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return -1;
 	}
 
 }

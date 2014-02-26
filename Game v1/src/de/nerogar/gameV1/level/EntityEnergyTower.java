@@ -8,16 +8,16 @@ import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityEnergyTower extends Entity {
+public class EntityEnergyTower extends EntityBuilding {
 
 	public EntityEnergyTower(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
-		boundingBox = new BoundingAABB(new Vector3d(-2, 0, -2), new Vector3d(2, 4, 2));
+		boundingBox = new BoundingAABB(new Vector3d(-0.5, 0, -0.5), new Vector3d(0.5, 3, 0.5));
 	}
 
 	@Override
 	public void init(World world) {
-		setObject("entities/shrine/mesh", "entities/shrine/texture.png");
+		setObject("entities/energyTower/mesh", "entities/energyTower/texture.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
 
@@ -45,13 +45,12 @@ public class EntityEnergyTower extends Entity {
 	}
 
 	@Override
-	public String getNameTag() {
-		return "energyTower";
-	}
-
-	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
-
+		for (EntityFighting factionEntity : faction.factionEntities) {
+			if(isDistanceSmaller(factionEntity, 20f)){
+				factionEntity.energy = factionEntity.getMaxEnergy();	
+			}
+		}
 	}
 
 	@Override
@@ -59,4 +58,13 @@ public class EntityEnergyTower extends Entity {
 
 	}
 
+	@Override
+	public String getNameTag() {
+		return "energyTower";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return -1;
+	}
 }

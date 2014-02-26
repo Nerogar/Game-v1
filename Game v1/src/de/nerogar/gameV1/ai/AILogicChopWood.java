@@ -6,18 +6,21 @@ import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public class AILogicChopWood extends AILogic {
 
-	EntityTree tree;
-	float speed;
-	float progress;
+	private EntityTree tree;
+	private float speed;
+	private float progress;
+	private AILogicGoToPosition toPositionLogic;
 
-	public AILogicChopWood(EntityFighting entity, EntityTree tree, float speed) {
+	public AILogicChopWood(EntityFighting entity, EntityTree tree, float speed, AILogicGoToPosition toPositionLogic) {
 		super(entity);
 		this.tree = tree;
 		this.speed = speed;
+		this.toPositionLogic = toPositionLogic;
 	}
 
 	@Override
 	public void update(float time) {
+
 		Vector3d dist = Vector3d.subtract(entity.matrix.getPosition(), tree.matrix.getPosition());
 
 		if (dist.getValue() < 1) {
@@ -35,8 +38,11 @@ public class AILogicChopWood extends AILogic {
 
 			if (tree.size <= 0) {
 				tree.remove();
-
+			} else {
+				tree.broadcastPropertyUpdates();
 			}
+		} else {
+			toPositionLogic.update(time);
 		}
 	}
 }

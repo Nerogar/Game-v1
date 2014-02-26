@@ -163,6 +163,10 @@ public abstract class Entity {
 
 	}
 
+	public boolean isDistanceSmaller(Entity target, float distance) {
+		return Vector3d.subtract(matrix.getPosition(), target.matrix.getPosition()).getSquaredValue() < distance * distance;
+	}
+
 	public abstract void interact(); // wenn andere entities oder objekte mit dieser entity interagieren
 
 	public abstract void click(int key);// klick mit der maus, macht sinn, oder?

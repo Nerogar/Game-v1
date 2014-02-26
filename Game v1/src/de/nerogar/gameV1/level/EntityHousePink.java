@@ -30,11 +30,6 @@ public class EntityHousePink extends EntityBuilding {
 	}
 
 	@Override
-	public String getNameTag() {
-		return "housePink";
-	}
-
-	@Override
 	public void saveProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
 	}
@@ -65,5 +60,15 @@ public class EntityHousePink extends EntityBuilding {
 	@Override
 	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 
+	}
+	
+	@Override
+	public String getNameTag() {
+		return "housePink";
+	}
+	
+	@Override
+	public int getMaxEnergy() {
+		return 1;
 	}
 }

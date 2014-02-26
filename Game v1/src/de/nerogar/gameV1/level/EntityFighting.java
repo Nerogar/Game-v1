@@ -12,6 +12,7 @@ public abstract class EntityFighting extends Entity {
 	public EntityFighting target;
 	public Faction faction;
 	public int health;
+	public int energy;
 	public float moveSpeed = 1;
 	public AIContainer aiContainer;
 
@@ -58,4 +59,6 @@ public abstract class EntityFighting extends Entity {
 	public void click(int key) {
 
 	}
+
+	public abstract int getMaxEnergy();
 }
