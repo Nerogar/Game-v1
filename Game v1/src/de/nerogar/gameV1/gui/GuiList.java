@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import de.nerogar.gameV1.RenderEngine;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.graphics.RenderScene;
 
-public class GuiList {
+public class GuiList extends RenderScene {
 	private ArrayList<Gui> guis = new ArrayList<Gui>();
 	private ArrayList<Alert> alerts = new ArrayList<Alert>();
 	private ArrayList<Gui> newGuis = new ArrayList<Gui>();
@@ -103,7 +104,7 @@ public class GuiList {
 		}
 	}
 
-	public void render() {
+	public void render(double time) {
 
 		for (int i = 0; i < newGuis.size(); i++) {
 			guis.add(newGuis.get(i));

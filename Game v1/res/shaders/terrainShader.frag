@@ -36,7 +36,9 @@ void main(){
 	gl_FragColor = vec4(colorR, colorG, colorB, colorA);*/
 
 	float heightMult = (verpos.y / 5) + 0.4;
-	vec4 textureColor = texture2D(texture1, gl_TexCoord[0].st) * heightMult;
+	vec4 textureColor = texture2D(texture1, gl_TexCoord[0].st);
+	textureColor = vec4(textureColor.r * heightMult, textureColor.g * heightMult, textureColor.b * heightMult, textureColor.a);
+	
 
 	if(buildQuadRender){
 		if((verpos.x > buildQuadA.x && verpos.x < buildQuadB.x) || (verpos.x < buildQuadA.x && verpos.x > buildQuadB.x)){

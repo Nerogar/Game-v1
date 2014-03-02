@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.graphics.RenderScene;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
@@ -17,7 +18,7 @@ import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
-public class World {
+public class World extends RenderScene{
 	public Game game;
 	public EntityList entityList;
 	public int maxEntityID = 0;
