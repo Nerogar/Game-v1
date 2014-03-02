@@ -215,6 +215,7 @@ public abstract class Entity {
 		registerEntity(new EntityHut(game, null, objectMatrix));
 		registerEntity(new EntityTestSoldier(game, null, objectMatrix));
 		registerEntity(new EntitySpawnPlatform(game, null, objectMatrix));
+		registerEntity(new EntityEnergyTower(game, null, objectMatrix));
 		registerEntity(new EntityWood(game, null, objectMatrix));
 	}
 

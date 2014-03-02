@@ -84,20 +84,10 @@ public class World {
 
 		isLoaded = true;
 		//land.loadAllAroundXZ(loadPosition);
+
+		recalcFactionEntities();
+
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
-		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
-		/*
-				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
-
-				for (int i = 0; i < 10; i++) {
-					for (int j = 0; j < 10; j++) {
-						entityList.addEntity(new EntityHouse(game, new ObjectMatrix(new Vector3(i * 1 - 10, 0, j * 1 - 10), new Vector3(0, 0, 0), new Vector3(1, 1, 1))));
-					}
-				}
-
-				entityList.addEntity(new EntityBlock(game, new ObjectMatrix(new Vector3(-6, 10, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10f, 1f));
-				*/
-		// Der letzte, zusätzliche Parameter ist Testweise die Skalierung (Der AABB)
 	}
 
 	public void initiateClientWorld(Client client, Faction faction) {
@@ -339,9 +329,7 @@ public class World {
 				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
 
-					for (Faction f : factions) {
-						f.recalcFactionEntities(entityList);
-					}
+					recalcFactionEntities();
 
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
@@ -375,13 +363,17 @@ public class World {
 		if (isLoaded) {
 			entityList.entities.remove(entity);
 
-			for (Faction f : factions) {
-				f.recalcFactionEntities(entityList);
-			}
+			recalcFactionEntities();
 		}
 	}
 
 	public Entity getEntityByID(int id) {
 		return entityList.entities.get(id);
+	}
+
+	public void recalcFactionEntities() {
+		for (Faction f : factions) {
+			f.recalcFactionEntities(entityList);
+		}
 	}
 }

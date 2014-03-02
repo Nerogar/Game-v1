@@ -17,6 +17,8 @@ public class Faction {
 	private static ArrayList<Faction> factions;
 	//end factions
 
+	private static final int TOWER_BUILDING_RADIUS = 10;
+
 	public int id;
 	public Client client;
 
@@ -65,6 +67,14 @@ public class Faction {
 
 	public int getMaxUnitCount() {
 		return maxUnits;
+	}
+
+	public boolean isEntityInTowerRange(EntityFighting target) {
+
+		for (EntityFighting ef : factionEntities) {
+			if (ef.isDistanceSmaller(target, TOWER_BUILDING_RADIUS)) { return true; }
+		}
+		return false;
 	}
 
 	public void save(DNNodePath folder) {

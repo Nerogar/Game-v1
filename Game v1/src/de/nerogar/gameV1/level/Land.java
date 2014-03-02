@@ -153,6 +153,7 @@ public class Land {
 		rebuildChunkGrid();
 		updateWalkMapNodeNeighbors(chunk);
 		world.collisionComparer.newGrid();
+		world.recalcFactionEntities();
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
@@ -205,7 +206,7 @@ public class Land {
 		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
 		rebuildChunkList();
 		updateWalkMapNodeNeighbors(tempChunk);
-
+		world.recalcFactionEntities();
 	}
 
 	public void updateWalkMapNodeNeighbors(Chunk chunk) {

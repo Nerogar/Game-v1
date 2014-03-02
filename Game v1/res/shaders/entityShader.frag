@@ -15,7 +15,7 @@ void main(){
 
 	vec3 lightDir = normalize(matEyeSpace * vec3(1 ,-1, 0));
 
-	float light = max(0.1, dot(normal, lightDir));
+	float light = max(0.1, dot(normalize(normal), lightDir));
 
 	gl_FragColor = vec4((textureColor * light).xyz, textureColor.a);
 	//gl_FragColor = vec4(light, light, light, 1);

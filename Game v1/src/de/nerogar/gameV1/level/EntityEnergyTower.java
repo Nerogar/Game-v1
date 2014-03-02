@@ -12,6 +12,9 @@ public class EntityEnergyTower extends EntityBuilding {
 
 	public EntityEnergyTower(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
+		size = new Position(2, 2);
+		centerPosition = new Position(1, 1);
+		resourceCost = new GameResources(200, 100, 100);
 		boundingBox = new BoundingAABB(new Vector3d(-0.5, 0, -0.5), new Vector3d(0.5, 3, 0.5));
 	}
 

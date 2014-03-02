@@ -20,9 +20,18 @@ public class SpawnRegionPopulator extends Populator {
 					chunk.setLocalTile(i, j, Tile.TILE_GRASS);
 				}
 			}
-			EntitySpawnPlatform spawnPlatform = new EntitySpawnPlatform(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(32, 1, 32)));
-			spawnPlatform.faction = Faction.factionBlue;
-			chunk.spawnEntityLocal(spawnPlatform);
+
+			int towerCount = 6;
+			float radius = 5;
+			for (int i = 0; i < towerCount; i++) {
+				float angle = (float) (((float) i / towerCount) * Math.PI * 2);
+
+				Vector3d position = (new Vector3d(MathHelper.sin((float) angle), 0, MathHelper.cos(angle))).multiply(radius);
+
+				EntityEnergyTower tower = new EntityEnergyTower(chunk.world.game, chunk.world, new ObjectMatrix(Vector3d.add(new Vector3d(32, 1, 32), position)));
+				tower.faction = Faction.factionBlue;
+				chunk.spawnEntityLocal(tower);
+			}
 		}
 	}
 }
