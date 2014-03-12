@@ -1,17 +1,14 @@
 package de.nerogar.gameV1.level;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import static org.lwjgl.opengl.GL20.*;
+
+import java.util.*;
 import java.util.Map.Entry;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.network.Packet;
-import de.nerogar.gameV1.network.PacketEntity;
-import de.nerogar.gameV1.network.PacketMoveEntity;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.graphics.Shader;
+import de.nerogar.gameV1.graphics.ShaderBank;
+import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
@@ -22,13 +19,15 @@ public class EntityList {
 	public ArrayList<Entity> newTempEntities = new ArrayList<Entity>();
 	private boolean updateInProgress = false;
 	public int maxID;
-	CollisionComparer collisionComparer;
-	Game game;
-	World world;
+	private CollisionComparer collisionComparer;
+	private Game game;
+	private World world;
+	private Shader entityShader;
 
 	public EntityList(Game game, World world) {
 		this.game = game;
 		this.world = world;
+		setupShaders();
 	}
 
 	public void addEntity(Entity entity, World world) {
@@ -86,41 +85,49 @@ public class EntityList {
 		return collisionComparer.getEntitiesInRay(ray);
 	}
 
-	public void update(Game game, ArrayList<Packet> receivedPackets) {
+	public void update(Game game, ArrayList<Packet> receivedPackets, float time) {
 		//for (int i = 0; i < entities.size(); i++) {
 		//	entities.get(i).update(Timer.instance.delta / 1000F);
 		//}
 		removeNullEntities();
 		updateInProgress = true;
 
-		HashMap<Integer, ArrayList<PacketEntity>> sortedPackets = new HashMap<Integer, ArrayList<PacketEntity>>();
+		HashMap<Integer, ArrayList<EntityPacket>> sortedPackets = new HashMap<Integer, ArrayList<EntityPacket>>();
 
 		for (int id : entities.keySet()) {
-			sortedPackets.put(id, new ArrayList<PacketEntity>());
+			sortedPackets.put(id, new ArrayList<EntityPacket>());
 		}
 
 		if (receivedPackets != null) {
 			for (Packet packet : receivedPackets) {
-				PacketEntity entityPacket = (PacketEntity) packet;
+				EntityPacket entityPacket = (EntityPacket) packet;
 
-				if (packet instanceof PacketMoveEntity) {
-					PacketMoveEntity moveEntityPacket = (PacketMoveEntity) packet;
+				if (packet instanceof EntityPacketMove) {
+					EntityPacketMove moveEntityPacket = (EntityPacketMove) packet;
 					updateEntityPosition(moveEntityPacket);
+				} else if (packet instanceof EntityPacketUpdate) {
+					EntityPacketUpdate updateEntityPacket = (EntityPacketUpdate) packet;
+					updateEntityProperties(updateEntityPacket);
+				} else {
+					ArrayList<EntityPacket> entityPacketList = sortedPackets.get(entityPacket.entityID);
+					if (entityPacketList != null) {
+						entityPacketList.add(entityPacket);
+					}
 				}
 
-				ArrayList<PacketEntity> entityPacketList = sortedPackets.get(entityPacket.entityID);
-				if (entityPacketList != null) {
-					entityPacketList.add(entityPacket);
-				}
 			}
 		}
 
 		for (Entity e : entities.values()) {
-			e.update(game.timer.delta / 1000F, sortedPackets.get(e.id));
+			//float time = game.timer.delta / 1000F;
+			e.update(time, sortedPackets.get(e.id));
+			if (e instanceof EntityFighting) {
+				((EntityFighting) e).aiContainer.update(time);
+			}
 		}
 
 		for (int i = 0; i < tempEntities.size(); i++) {
-			tempEntities.get(i).update(game.timer.delta / 1000F, null);
+			tempEntities.get(i).update(time, null);
 		}
 
 		updateInProgress = false;
@@ -130,7 +137,7 @@ public class EntityList {
 		world.collisionComparer.compare();
 	}
 
-	private void updateEntityPosition(PacketMoveEntity moveEntityPacket) {
+	private void updateEntityPosition(EntityPacketMove moveEntityPacket) {
 		if (!world.serverWorld) {
 			Entity tempEntity = entities.get(moveEntityPacket.entityID);
 			if (moveEntityPacket.includeScale) {
@@ -142,6 +149,14 @@ public class EntityList {
 		}
 	}
 
+	private void updateEntityProperties(EntityPacketUpdate updateEntityPacket) {
+		if (!world.serverWorld) {
+			Entity tempEntity = entities.get(updateEntityPacket.entityID);
+
+			tempEntity.loadProperties(updateEntityPacket.entityData);
+		}
+	}
+
 	public void unloadAll() {
 		entities.clear();
 	}
@@ -150,7 +165,11 @@ public class EntityList {
 		this.collisionComparer = collisionComparer;
 	}
 
-	public void render(Position loadPosition, int maxChunkRenderDistance) {
+	public void render(double time, Position loadPosition, int maxChunkRenderDistance) {
+		setupShaders();
+		entityShader.activate();
+		updateEntityShader();
+
 		for (Entity entity : world.entityList.entities.values()) {
 			renderEntity(loadPosition, maxChunkRenderDistance, entity);
 		}
@@ -158,6 +177,8 @@ public class EntityList {
 		for (Entity entity : world.entityList.tempEntities) {
 			renderEntity(loadPosition, maxChunkRenderDistance, entity);
 		}
+
+		entityShader.deactivate();
 	}
 
 	private void renderEntity(Position loadPosition, int maxChunkRenderDistance, Entity entity) {
@@ -166,5 +187,26 @@ public class EntityList {
 				entity.render();
 			}
 		}
+	}
+
+	private void updateEntityShader() {
+		glUniform1f(entityShader.uniforms.get("time"), (System.nanoTime() / 1000000000f));
+		glUniformMatrix3(entityShader.uniforms.get("matEyeSpace"), false, world.player.camera.matBuffer);
+	}
+
+	public void setupShaders() {
+		ShaderBank.instance.createShaderProgramm("entity");
+		entityShader = ShaderBank.instance.getShader("entity");
+
+		entityShader.setVertexShader("res/shaders/entityShader.vert");
+		entityShader.setFragmentShader("res/shaders/entityShader.frag");
+		entityShader.compile();
+
+		entityShader.activate();
+
+		entityShader.uniforms.put("time", glGetUniformLocation(entityShader.shaderHandle, "time"));
+		entityShader.uniforms.put("matEyeSpace", glGetUniformLocation(entityShader.shaderHandle, "matEyeSpace"));
+
+		entityShader.deactivate();
 	}
 }

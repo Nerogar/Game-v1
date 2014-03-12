@@ -1,5 +1,7 @@
 package de.nerogar.gameV1.level;
 
+import de.nerogar.gameV1.Vector3d;
+
 public class Position {
 
 	public int x;
@@ -18,6 +20,13 @@ public class Position {
 	public Position(Position pos) {
 		this.x = pos.x;
 		this.z = pos.z;
+	}
+
+	public Position(Vector3d vec3) {
+		this.x = (int) Math.floor(vec3.getX());
+		this.z = (int) Math.floor(vec3.getZ());
+		//this.x = (int) vec3.getX();
+		//this.z = (int) vec3.getZ();
 	}
 
 	public void add(Position newPosition) {

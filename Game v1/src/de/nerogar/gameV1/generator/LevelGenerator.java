@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import de.nerogar.gameV1.graphics.Noise;
 import de.nerogar.gameV1.level.Chunk;
 import de.nerogar.gameV1.level.Land;
-import de.nerogar.gameV1.level.Tile;
 
 public class LevelGenerator {
 	private Noise[] noise;
@@ -21,7 +20,9 @@ public class LevelGenerator {
 	}
 
 	private void addDefaultPopulators() {
-		addPopulator(new TestPopulator());
+		addPopulator(new SpawnRegionPopulator());
+		addPopulator(new TilePopulator());
+		addPopulator(new TreePopulator());
 	}
 
 	public Chunk generateLevel(Chunk chunk, int x, int y) {
@@ -57,17 +58,6 @@ public class LevelGenerator {
 			}
 		}
 
-		for (int i = 0; i < Chunk.CHUNKSIZE; i++) {
-			for (int j = 0; j < Chunk.CHUNKSIZE; j++) {
-				if (chunk.heightMap[i][j] < 0.6) {
-					chunk.tileMap[i][j] = Tile.TILE_WATER.id;
-				} else if (chunk.heightMap[i][j] < 1.5) {
-					chunk.tileMap[i][j] = Tile.TILE_GRASS.id;
-				} else {
-					chunk.tileMap[i][j] = Tile.TILE_DIRT.id;
-				}
-			}
-		}
 		populate(chunk);
 		chunk.updateMaps();
 		return chunk;

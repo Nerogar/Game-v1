@@ -35,42 +35,42 @@ public class GuiVideoSettings extends Gui {
 
 		//resolution
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.2f, 0.2f, 0.1f, "resolution:", FontRenderer.LEFT));
-		resSlider = new GElementOptionSlider(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, 0.025f, renderEngine.getDisplayModesAsString(), "Buttons/button.png", "Buttons/slider.png");
+		resSlider = new GElementOptionSlider(genNewID(), 0.25f, 0.2f, 0.2f, 0.1f, 0.025f, renderEngine.getDisplayModesAsString(), "buttons/button.png", "buttons/slider.png");
 		resSlider.position = displayMode;
 
 		//vSync
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.35f, 0.2f, 0.1f, "vSync:", FontRenderer.LEFT));
-		vSyncButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("vSync")), FontRenderer.LEFT, "Buttons/button.png", false, "");
+		vSyncButton = new GElementButton(genNewID(), 0.25f, 0.35f, 0.2f, 0.1f, String.valueOf(GameOptions.instance.getBoolOption("vSync")), FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		//fps limit
 		addGElement(new GElementTextLabel(genNewID(), 0.05f, 0.5f, 0.2f, 0.1f, "fps limit:", FontRenderer.LEFT));
-		fpsSlider = new GElementSlider(genNewID(), 0.25f, 0.5f, 0.2f, 0.1f, 0.025f, 20, 144, "", "Buttons/button.png", "Buttons/slider.png");
+		fpsSlider = new GElementSlider(genNewID(), 0.25f, 0.5f, 0.2f, 0.1f, 0.025f, 20, 144, "", "buttons/button.png", "buttons/slider.png");
 		fpsSlider.position = GameOptions.instance.getDoubleOption("fps");
 		fpsSlider.allowFloat = false;
 
 		//fov
 		addGElement(new GElementTextLabel(genNewID(), 0.55f, 0.2f, 0.2f, 0.1f, "fov:", FontRenderer.LEFT));
-		fovSlider = new GElementSlider(genNewID(), 0.75f, 0.2f, 0.2f, 0.1f, 0.025f, 40, 110, "", "Buttons/button.png", "Buttons/slider.png");
+		fovSlider = new GElementSlider(genNewID(), 0.75f, 0.2f, 0.2f, 0.1f, 0.025f, 40, 110, "", "buttons/button.png", "buttons/slider.png");
 		fovSlider.position = GameOptions.instance.getDoubleOption("fov");
 		fovSlider.allowFloat = false;
 
 		//loaddistance
 		addGElement(new GElementTextLabel(genNewID(), 0.55f, 0.35f, 0.2f, 0.1f, "loaddistance:", FontRenderer.LEFT));
-		loaddistanceSlider = new GElementSlider(genNewID(), 0.75f, 0.35f, 0.2f, 0.1f, 0.025f, 0, 20, "", "Buttons/button.png", "Buttons/slider.png");
+		loaddistanceSlider = new GElementSlider(genNewID(), 0.75f, 0.35f, 0.2f, 0.1f, 0.025f, 0, 20, "", "buttons/button.png", "buttons/slider.png");
 		loaddistanceSlider.position = GameOptions.instance.getIntOption("loaddistance");
 		loaddistanceSlider.allowFloat = false;
 
 		//renderdistance
 		addGElement(new GElementTextLabel(genNewID(), 0.55f, 0.5f, 0.2f, 0.1f, "renderdistance:", FontRenderer.LEFT));
-		renderdistanceSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.1f, 0.025f, 0, 20, "", "Buttons/button.png", "Buttons/slider.png");
+		renderdistanceSlider = new GElementSlider(genNewID(), 0.75f, 0.5f, 0.2f, 0.1f, 0.025f, 0, 20, "", "buttons/button.png", "buttons/slider.png");
 		renderdistanceSlider.position = GameOptions.instance.getIntOption("renderdistance");
 		renderdistanceSlider.allowFloat = false;
 
 		//debug settings
-		debugSettingsButton = new GElementButton(genNewID(), 0.75f, 0.8f, 0.2f, 0.05f, "debug Settings", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		debugSettingsButton = new GElementButton(genNewID(), 0.75f, 0.8f, 0.2f, 0.05f, "debug Settings", FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		//ok button
-		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		okButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "Ok", FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		/*optionSliders.add(resSlider);
 		buttons.add(vSyncButton);
@@ -119,6 +119,7 @@ public class GuiVideoSettings extends Gui {
 		} else if (id == okButton.id && mouseButton == 0) {
 			if (resSlider.position != displayMode) {
 				renderEngine.setDisplayMode(resSlider.position);
+				game.setSceneResolutions();
 			}
 			RenderEngine.instance.setVSync();
 			GameOptions.instance.setIntOption("fps", (int) fpsSlider.position);

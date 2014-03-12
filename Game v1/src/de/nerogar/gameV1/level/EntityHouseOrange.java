@@ -2,13 +2,10 @@ package de.nerogar.gameV1.level;
 
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.GameResources;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.network.PacketClickEntity;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.network.EntityPacket;
+import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -24,7 +21,7 @@ public class EntityHouseOrange extends EntityBuilding {
 
 	@Override
 	public void init(World world) {
-		setObject("houses/house", "houses/house_orange.png");
+		setObject("entities/houseOrange/mesh", "entities/houseOrange/texture.png");
 	}
 
 	@Override
@@ -33,41 +30,35 @@ public class EntityHouseOrange extends EntityBuilding {
 	}
 
 	@Override
-	public String getNameTag() {
-		return "HouseOrange";
-	}
-
-	@Override
-	public void saveProperties(DNFile chunkFile, String folder) {
+	public void saveProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void loadProperties(DNFile chunkFile, String folder) {
+	public void loadProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void click(int key) {
-		// TODO Auto-generated method stub
 		if (key == 1) remove();
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		if (Math.random() < 0.01f) {
 			EntityTestSoldier testSoldier = new EntityTestSoldier(game, world, new ObjectMatrix());
 			double posX = matrix.position.getX() + Math.random() * 10 - 5;
 			double posZ = matrix.position.getZ() + 3;
 			Vector3d pos = new Vector3d(posX, world.land.getHeight(posX, posZ), posZ);
 			testSoldier.matrix.setPosition(pos);
-			testSoldier.faction = 2;
+			testSoldier.faction = faction;
 			world.spawnEntity(testSoldier);
 		}
 
-		for (PacketEntity packet : packets) {
-			if (packet instanceof PacketClickEntity) {
-				int mouseButton = ((PacketClickEntity) packet).mouseButton;
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketClick) {
+				int mouseButton = ((EntityPacketClick) packet).mouseButton;
 				if (mouseButton == 1) {
 					remove();
 				}
@@ -76,7 +67,17 @@ public class EntityHouseOrange extends EntityBuilding {
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 
+	}
+
+	@Override
+	public String getNameTag() {
+		return "houseOrange";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return 1;
 	}
 }

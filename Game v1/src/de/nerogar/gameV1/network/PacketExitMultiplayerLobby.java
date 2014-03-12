@@ -1,8 +1,12 @@
 package de.nerogar.gameV1.network;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 
 public class PacketExitMultiplayerLobby extends Packet {
+
+	public int factionID;
 
 	public PacketExitMultiplayerLobby() {
 		channel = LOBBY_CHANNEL;
@@ -10,14 +14,21 @@ public class PacketExitMultiplayerLobby extends Packet {
 
 	@Override
 	public void pack() {
-		data = new DNFile("");
+		data = new DNFile();
+		data.addInt("fID", factionID);
 		packedData = data.toByteArray();
 	}
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		factionID = data.getInt("fID");
 	}
 
 	@Override

@@ -13,11 +13,9 @@ public class PathNode {
 	public double g, f, h;
 	public int x, z;
 	public int locX, locZ;
-	public int size = 1;
-	public boolean mergeable = true;
 	public boolean walkable;
 	public PathNode[] neighbors;
-	public double[] neighborDistance;
+	public float[] neighborDistance;
 	public ArrayList<PathNode> neighborsTemp = new ArrayList<PathNode>();
 	public boolean neighborsProcessed = false;
 	public boolean closed = false;
@@ -64,29 +62,33 @@ public class PathNode {
 
 	public void finalizeNeighbors() {
 		neighbors = new PathNode[neighborsTemp.size()];
-		neighborDistance = new double[neighborsTemp.size()];
+		neighborDistance = new float[neighborsTemp.size()];
 		for (int i = 0; i < neighbors.length; i++) {
 			neighbors[i] = neighborsTemp.get(i);
-
-			double distX = Math.abs(((x + (size / 2f)) - (neighbors[i].x + (neighbors[i].size / 2f))));
-			double distY = Math.abs(((z + (size / 2f)) - (neighbors[i].z + (neighbors[i].size / 2f))));
-
-			neighborDistance[i] = Math.sqrt(distX * distX + distY * distY) * 10;
+			if(neighbors[i]==this)System.out.println("AKSFGAKSF");
+			neighborDistance[i] = getDistanceToNode(neighbors[i]);
 		}
 	}
 
+	public float getDistanceToNode(PathNode node) {
+		double distX = Math.abs(((x + (0.5)) - (node.x + (0.5))));
+		double distY = Math.abs(((z + (0.5)) - (node.z + (0.5))));
+
+		return (float) (Math.sqrt(distX * distX + distY * distY) * 10);
+	}
+
 	public Vector2d getCenter() {
-		return new Vector2d(x + (size / 2f), z + (size / 2f));
+		return new Vector2d(x + (0.5), z + (0.5));
 	}
 
 	public void draw(float r, float g, float b) {
 		glDisable(GL_TEXTURE_2D);
 		glColor3f(r, g, b);
 		glBegin(GL_QUADS);
-		glVertex3f(x, 5, z);
-		glVertex3f(x, 5, z + size);
-		glVertex3f(x + size, 5, z + size);
-		glVertex3f(x + size, 5, z);
+		glVertex3f(x, 2, z);
+		glVertex3f(x, 2, z + 1);
+		glVertex3f(x + 1, 2, z + 1);
+		glVertex3f(x + 1, 2, z);
 		glEnd();
 		glEnable(GL_TEXTURE_2D);
 	}

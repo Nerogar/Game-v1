@@ -28,11 +28,11 @@ public class GuiClient extends Gui {
 	public void init() {
 		setTitel("Client");
 
-		startClientButton = new GElementButton(genNewID(), 0.6f, 0.3f, 0.3f, 0.1f, "start", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		sendDataButton = new GElementButton(genNewID(), 0.3f, 0.7f, 0.4f, 0.1f, "send", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
-		sendText = new GElementTextField(0.1f, 0.5f, 0.8f, 0.1f, "text", "Buttons/textField.png");
-		adressText = new GElementTextField(0.1f, 0.3f, 0.4f, 0.1f, "localhost", "Buttons/textField.png");
+		startClientButton = new GElementButton(genNewID(), 0.6f, 0.3f, 0.3f, 0.1f, "start", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		sendDataButton = new GElementButton(genNewID(), 0.3f, 0.7f, 0.4f, 0.1f, "send", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
+		sendText = new GElementTextField(0.1f, 0.5f, 0.8f, 0.1f, "text", "buttons/textField.png");
+		adressText = new GElementTextField(0.1f, 0.3f, 0.4f, 0.1f, "localhost", "buttons/textField.png");
 
 		addGElement(backButton);
 		addGElement(sendDataButton);

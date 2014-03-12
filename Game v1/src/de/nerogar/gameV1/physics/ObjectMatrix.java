@@ -24,6 +24,31 @@ public class ObjectMatrix {
 		rotation = rot;
 	}
 
+	public void fromFloatArray(float[] values) {
+		if (values.length == 9) {
+			position = new Vector3d(values[0], values[1], values[2]);
+			rotation = new Vector3d(values[3], values[4], values[5]);
+			scaling = new Vector3d(values[6], values[7], values[8]);
+		}
+	}
+
+	public float[] toFloatArray() {
+		float[] values = new float[9];
+		values[0] = position.getXf();
+		values[1] = position.getYf();
+		values[2] = position.getZf();
+
+		values[3] = rotation.getXf();
+		values[4] = rotation.getYf();
+		values[5] = rotation.getZf();
+
+		values[6] = scaling.getXf();
+		values[7] = scaling.getYf();
+		values[8] = scaling.getZf();
+
+		return values;
+	}
+
 	public void setPosition(Vector3d vector) {
 		position = vector;
 	}
@@ -31,7 +56,7 @@ public class ObjectMatrix {
 	public void setScaling(Vector3d vector) {
 		scaling = vector;
 	}
-	
+
 	public void setRotation(Vector3d vector) {
 		rotation = vector;
 	}
@@ -47,7 +72,7 @@ public class ObjectMatrix {
 	public Vector3d getScaling() {
 		return scaling;
 	}
-	
+
 	public ObjectMatrix clone() {
 		return new ObjectMatrix(position.clone(), rotation.clone(), scaling.clone());
 	}

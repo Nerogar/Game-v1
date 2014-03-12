@@ -38,7 +38,7 @@ public class GuiDebug extends Gui {
 		labels[8] = new GElementTextLabel(genNewID(), 0.01F, 0.27F, .5F, .05F, "", FontRenderer.LEFT);
 		labels[9] = new GElementTextLabel(genNewID(), 0.01F, 0.30F, .5F, .05F, "", FontRenderer.LEFT);
 
-		resetCamButton = new GElementButton(genNewID(), 0.95f, 0.98f, 0.05f, 0.02f, "res cam", FontRenderer.LEFT, "Buttons/button.png", false, "");
+		resetCamButton = new GElementButton(genNewID(), 0.95f, 0.98f, 0.05f, 0.02f, "res cam", FontRenderer.LEFT, "buttons/button.png", false, "");
 
 		fpsLabel = new GElementTextLabel(genNewID(), 0.84F, 0F, .5F, .05F, "FPS: 0", FontRenderer.LEFT);
 
@@ -66,10 +66,11 @@ public class GuiDebug extends Gui {
 
 		updateStressTimes();
 
-		labels[7].text = "X: " + world.player.camera.scrollX;
-		labels[8].text = "Y: " + world.player.camera.scrollY;
-		labels[9].text = "Z: " + world.player.camera.scrollZ;
-
+		if (world.player != null) {
+			labels[7].text = "X: " + world.player.camera.scrollX;
+			labels[8].text = "Y: " + world.player.camera.scrollY;
+			labels[9].text = "Z: " + world.player.camera.scrollZ;
+		}
 	}
 
 	private void updateStressTimes() {

@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.debug.DebugFelk;
 import de.nerogar.gameV1.debug.DebugNerogar;
+import de.nerogar.gameV1.graphics.RenderSceneFinal;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.Entity;
@@ -27,6 +28,8 @@ public class Game {
 	public World world;
 	public GuiList guiList = new GuiList();
 	public RenderEngine renderEngine = RenderEngine.instance;
+	public RenderSceneFinal renderSceneFinal;
+
 	private long[] stressTimes = new long[4];
 	public long stressTimeMainloop = 0;
 	public long stressTimeRender = 0;
@@ -37,54 +40,53 @@ public class Game {
 	public GameResources gameResources = new GameResources();
 
 	public void run() {
-		try {
-			init();
-			//timer.registerEvent("gc", 10);
+		//try {
+		init();
+		//timer.registerEvent("gc", 10);
 
-			InputHandler.loadGamepad();
-			InputHandler.registerGamepadButton("start", "7", 0.25f);
-			InputHandler.registerGamepadButton("back", "6", 0.25f);
+		InputHandler.loadGamepad();
+		InputHandler.registerGamepadButton("start", "7", 0.25f);
+		InputHandler.registerGamepadButton("back", "6", 0.25f);
 
-			debugFelk.startup();
-			debugNerogar.startup();
+		debugFelk.startup();
+		debugNerogar.startup();
 
-			while (running) {
-				stressTimes[0] = System.nanoTime();
-				mainloop();
-				stressTimes[1] = System.nanoTime();
-				render();
-				stressTimes[2] = System.nanoTime();
-				Display.update();
-				Display.sync(GameOptions.instance.getIntOption("fps"));
-				stressTimes[3] = System.nanoTime();
-				if (timer.shellExecute("gc")) {
-					long time1 = System.nanoTime();
-					System.gc();
-					long time2 = System.nanoTime();
-					double gcTime = (time2 - time1) / 1000000D;
-					System.out.println("Garbage Collector: " + gcTime + "ms");
-				}
-				//long err1 = System.nanoTime();
-				//RenderEngine.instance.checkErrors();
-				//long err2 = System.nanoTime();
-				//System.out.println("err: " + ((err2 - err1) / 1000000f));
-				updateStressTimes();
-				//InputHandler.printGamepadButtons();
+		while (running) {
+			stressTimes[0] = System.nanoTime();
+			mainloop();
+			stressTimes[1] = System.nanoTime();
+			render();
+			stressTimes[2] = System.nanoTime();
+			Display.update();
+			Display.sync(GameOptions.instance.getIntOption("fps"));
+			stressTimes[3] = System.nanoTime();
+			if (timer.shellExecute("gc")) {
+				long time1 = System.nanoTime();
+				System.gc();
+				long time2 = System.nanoTime();
+				double gcTime = (time2 - time1) / 1000000D;
+				System.out.println("Garbage Collector: " + gcTime + "ms");
 			}
-
-			debugFelk.end();
-			debugNerogar.end();
-			AL.destroy();
-
-			if (world.isLoaded) world.closeWorld();
-			if (internalServer != null) internalServer.stopServer();
-			renderEngine.cleanup();
-			GameOptions.instance.save();
-
-			//} catch (LWJGLException | IOException e) {
-		} catch (Exception e) {
-			Logger.printThrowable(e, "gotta catch 'em all", false);
+			//long err1 = System.nanoTime();
+			//RenderEngine.instance.checkErrors();
+			//long err2 = System.nanoTime();
+			//System.out.println("err: " + ((err2 - err1) / 1000000f));
+			updateStressTimes();
+			//InputHandler.printGamepadButtons();
 		}
+
+		debugFelk.end();
+		debugNerogar.end();
+		AL.destroy();
+
+		if (world.isLoaded) world.closeWorld();
+		if (internalServer != null) internalServer.stopServer();
+		renderEngine.cleanup();
+		GameOptions.instance.save();
+
+		/*} catch (Exception e) {
+			Logger.printThrowable(e, "gotta catch 'em all", false);
+		}*/
 
 	}
 
@@ -126,24 +128,30 @@ public class Game {
 		timer.update();
 		guiList.update();
 		if (!guiList.pauseGame()) {
-			world.update();
+			world.update(timer.delta);
 		}
 	}
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		world.render();
-		guiList.render();
+		//world.render(timer.time);
+		world.renderScene(timer.time);
+		guiList.renderScene(timer.time);
+
+		renderSceneFinal.render(timer.time);
 	}
 
 	private void init() {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
+		renderSceneFinal = new RenderSceneFinal();
+		renderSceneFinal.game = this;
 
 		timer = new Timer();
 		timer.init();
 		timer.printFPS = true;
 
 		world = new World(this, false);
+
 		if (GameOptions.instance.getBoolOption("debug")) {
 			guiList.addGui(new GuiDebug(this, world));
 		}
@@ -156,6 +164,13 @@ public class Game {
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+
+		setSceneResolutions();
+	}
+
+	public void setSceneResolutions() {
+		guiList.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
+		world.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
 	}
 
 	public static void main(String[] args) {

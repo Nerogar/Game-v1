@@ -5,17 +5,15 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 
-import de.nerogar.gameV1.MathHelper;
-import de.nerogar.gameV1.Vector2d;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.DNFileSystem.DNFile;
+import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.ai.PathNode;
 
 public class Chunk {
@@ -64,8 +62,10 @@ public class Chunk {
 
 	public void updateMaps() {
 		updateWalkableMap();
-		world.pathfinder.updateNodeMap(this);
-		if (!serverChunk) {
+
+		if (serverChunk) {
+			world.pathfinder.updateNodeMap(this);
+		} else if (!serverChunk) {
 			updateVbo();
 		}
 	}
@@ -246,8 +246,13 @@ public class Chunk {
 	public boolean load() {
 
 		if (new File(filename).exists()) {
-			DNFile chunkFile = new DNFile(filename);
-			chunkFile.load();
+			DNFile chunkFile = new DNFile();
+			try {
+				chunkFile.load(filename);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
 
 			buildChunk(chunkFile);
 
@@ -265,9 +270,9 @@ public class Chunk {
 			tileMap[i] = chunkFile.getIntArray("tilemap." + i);
 		}
 
-		for (int i = 0; i < chunkFile.getFoldersSize(Entity.NODEFOLDERSAVENAME); i++) {
+		for (int i = 0; i < chunkFile.getPath(Entity.NODEFOLDERSAVENAME).getPaths().size(); i++) {
 			Entity entity = Entity.getEntity(world.game, world, chunkFile.getString(Entity.NODEFOLDERSAVENAME + "." + i + ".type"));
-			entity.load(chunkFile, Entity.NODEFOLDERSAVENAME + "." + i);
+			entity.load(chunkFile.getPath(Entity.NODEFOLDERSAVENAME + "." + i));
 			//System.out.println("laoded entity at X:" + entity.matrix.position.x + " Y:" + entity.matrix.position.y + " Z:" + entity.matrix.position.z);
 			spawnEntity(entity);
 		}
@@ -278,27 +283,31 @@ public class Chunk {
 	public void save() {
 		DNFile chunkFile = getChunkFile();
 		world.collisionComparer.removeEntitiesInChunk(this);
-		chunkFile.save();
+		try {
+			chunkFile.save(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public DNFile getChunkFile() {
 		new File(dirname).mkdirs();
-		DNFile chunkFile = new DNFile(filename);
+		DNFile chunkFile = new DNFile();
 		for (int i = 0; i < GENERATESIZE; i++) {
-			chunkFile.addNode("heightmap." + i, heightMap[i]);
+			chunkFile.addFloat("heightmap." + i, heightMap[i]);
 		}
 
 		for (int i = 0; i < CHUNKSIZE; i++) {
-			chunkFile.addNode("tilemap." + i, tileMap[i]);
+			chunkFile.addInt("tilemap." + i, tileMap[i]);
 		}
 
-		chunkFile.addFolder(Entity.NODEFOLDERSAVENAME);
+		//chunkFile.addFolder(Entity.NODEFOLDERSAVENAME);
 		ArrayList<Entity> entities = world.collisionComparer.getEntitiesInChunk(this);
 
 		int entityIndex = 0;
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities.get(i).saveEntity) {
-				entities.get(i).save(chunkFile, Entity.NODEFOLDERSAVENAME + "." + entityIndex);
+				entities.get(i).save(chunkFile.getPath(Entity.NODEFOLDERSAVENAME + "." + entityIndex));
 				entityIndex++;
 			}
 		}
@@ -317,6 +326,7 @@ public class Chunk {
 	}
 
 	public float getLocalHeight(int x, int z) {
+		if (!isInBounds(x, z)) return 0;
 		return heightMap[x][z];
 	}
 
@@ -341,19 +351,22 @@ public class Chunk {
 	}
 
 	public void setLocalHeight(int x, int y, float height) {
-		x = x < 0 ? 0 : x;
-		x = x > GENERATESIZE ? GENERATESIZE : x;
-		y = y < 0 ? 0 : y;
-		y = y > GENERATESIZE ? GENERATESIZE : y;
+		if (!isInBounds(x, y)) return;
 		heightMap[x][y] = height;
-	}
-
-	public boolean getLocalWalkable(int x, int z) {
-		return walkableMap[x][z];
 	}
 
 	public Tile getLocalTile(int x, int z) {
 		return Tile.getTileByID(tileMap[x][z]);
+	}
+
+	public void setLocalTile(int x, int z, Tile tile) {
+		if (!isInBounds(x, z)) return;
+		tileMap[x][z] = tile.id;
+	}
+
+	public boolean getLocalWalkable(int x, int z) {
+		if (!isInBounds(x, z)) return false;
+		return walkableMap[x][z];
 	}
 
 	public void spawnEntity(Entity entity) {
@@ -369,6 +382,10 @@ public class Chunk {
 		//position.z += chunkPosition.z * CHUNKSIZE;
 
 		world.entityList.addEntity(entity, world);
+	}
+
+	private boolean isInBounds(int x, int z) {
+		return !(x < 0 || x >= CHUNKSIZE || z < 0 || z >= CHUNKSIZE);
 	}
 
 	@Override

@@ -39,20 +39,20 @@ public class GuiLoadWorld extends Gui {
 
 		addGElement(new GElementTextLabel(genNewID(), 0.0f, 0.05f, 0.4f, 0.1f, "Singleplayer", FontRenderer.CENTERED));
 
-		loadButton = new GElementButton(genNewID(), 0.05f, 0.3f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		loadButton = new GElementButton(genNewID(), 0.05f, 0.3f, 0.3f, 0.1f, "load world", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		loadButton.enabled = false;
 
-		renameButton = new GElementButton(genNewID(), 0.05f, 0.4f, 0.3f, 0.1f, "rename world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		renameButton = new GElementButton(genNewID(), 0.05f, 0.4f, 0.3f, 0.1f, "rename world", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		renameButton.enabled = false;
 
-		deleteButton = new GElementButton(genNewID(), 0.05f, 0.5f, 0.3f, 0.1f, "delete world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		deleteButton = new GElementButton(genNewID(), 0.05f, 0.5f, 0.3f, 0.1f, "delete world", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		deleteButton.enabled = false;
 
-		createWorldButton = new GElementButton(genNewID(), 0.05f, 0.65f, 0.3f, 0.1f, "create new world", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		createWorldButton = new GElementButton(genNewID(), 0.05f, 0.65f, 0.3f, 0.1f, "create new world", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		backButton = new GElementButton(genNewID(), 0.05f, 0.8f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.05f, 0.8f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		saveList = new GElementListBox(genNewID(), 0.4f, 0.0f, 0.6f, 1.0f, saveNames, "Buttons/button.png", "Buttons/scrollbar.png");
+		saveList = new GElementListBox(genNewID(), 0.4f, 0.0f, 0.6f, 1.0f, saveNames, "buttons/button.png", "buttons/scrollbar.png");
 		saveList.showedItems = 10;
 
 		addGElement(saveList);

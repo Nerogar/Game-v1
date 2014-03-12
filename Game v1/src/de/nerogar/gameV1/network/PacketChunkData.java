@@ -1,6 +1,8 @@
 package de.nerogar.gameV1.network;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.level.Position;
 
 public class PacketChunkData extends Packet {
@@ -14,20 +16,24 @@ public class PacketChunkData extends Packet {
 
 	@Override
 	public void pack() {
-		data = new DNFile("");
-		data.addNode("posX", chunkPos.x);
-		data.addNode("posZ", chunkPos.z);
-		data.addNode("chunkData", chunkFile.toByteArray());
+		data = new DNFile();
+		data.addInt("posX", chunkPos.x);
+		data.addInt("posZ", chunkPos.z);
+		data.addByte("chunkData", chunkFile.toByteArray());
 		packedData = data.toByteArray();
 	}
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		chunkFile = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+			chunkFile.fromByteArray(data.getByteArray("chunkData"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		chunkFile = new DNFile("");
-		chunkFile.fromByteArray(data.getByteArray("chunkData"));
 		chunkPos = new Position(data.getInt("posX"), data.getInt("posZ"));
 	}
 

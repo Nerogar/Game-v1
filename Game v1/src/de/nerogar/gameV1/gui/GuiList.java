@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import de.nerogar.gameV1.RenderEngine;
 import de.nerogar.gameV1.RenderHelper;
+import de.nerogar.gameV1.graphics.RenderScene;
 
-public class GuiList {
+public class GuiList extends RenderScene {
 	private ArrayList<Gui> guis = new ArrayList<Gui>();
 	private ArrayList<Alert> alerts = new ArrayList<Alert>();
 	private ArrayList<Gui> newGuis = new ArrayList<Gui>();
 	private ArrayList<Alert> newAlerts = new ArrayList<Alert>();
+
+	public boolean usedGui;
 
 	public void alert(Alert alert) {
 		newAlerts.add(alert);
@@ -81,11 +84,16 @@ public class GuiList {
 	}
 
 	public void update() {
+		usedGui = false;
 		if (noGuiLoaded() && !activeAlert()) return;
 		if (!activeAlert()) {
 			for (int i = 0; i < guis.size(); i++) {
-				guis.get(i).update();
+				if (guis.get(i).update()) {
+					usedGui = true;
+				}
 			}
+		} else {
+			usedGui = true;
 		}
 
 		boolean updateNextAlert = true;
@@ -96,7 +104,7 @@ public class GuiList {
 		}
 	}
 
-	public void render() {
+	public void render(double time) {
 
 		for (int i = 0; i < newGuis.size(); i++) {
 			guis.add(newGuis.get(i));

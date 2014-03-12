@@ -7,7 +7,7 @@ public abstract class Tile {
 	public static final TileDirt TILE_DIRT = new TileDirt();
 	public static final TileGrass TILE_GRASS = new TileGrass();
 	public static final TileWater TILE_WATER = new TileWater();
-	public static Tile[] tileList = new Tile[265];
+	public static Tile[] tileList = new Tile[256];
 
 	public Vector2d texturePos1, texturePos2;
 	public int id;

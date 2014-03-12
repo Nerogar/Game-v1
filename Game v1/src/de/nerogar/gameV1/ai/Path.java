@@ -3,21 +3,29 @@ package de.nerogar.gameV1.ai;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import de.nerogar.gameV1.MathHelper;
+import de.nerogar.gameV1.*;
 
 public class Path {
-	private PathNode start;
-	private PathNode destination;
+	public PathNode start;
+	public PathNode destination;
+	public Vector2d startPosition;
+	public Vector2d destinationPosition;
+
 	public ArrayList<PathNode> openList = new ArrayList<PathNode>();
 	public LinkedList<PathNode> closedList = new LinkedList<PathNode>();
 
 	public ArrayList<PathNode> finalPath = new ArrayList<PathNode>();
+	public Vector2d[] finalPathPositions;
+	public float[] finalPathDisances;
 	private boolean goalFound = false;
 	public double pathLength = 0;
 
-	public Path(PathNode start, PathNode destination) {
+	public Path(PathNode start, PathNode destination, Vector2d startPosition, Vector2d destinationPosition) {
 		this.start = start;
 		this.destination = destination;
+		this.startPosition = startPosition;
+		this.destinationPosition = destinationPosition;
+
 		//System.out.println(start.x + " " + start.z + "||" + destination.x + " " + destination.z);
 		find();
 		cleanup();
@@ -32,7 +40,7 @@ public class Path {
 
 		if (!start.walkable || !destination.walkable) {
 			goalFound = true;
-			calcFinalPath(start);
+			//calcFinalPath(start);
 			System.out.println("Konnte keinen Weg finden");
 		} else if (start == destination) {
 			goalFound = true;
@@ -196,6 +204,21 @@ public class Path {
 			node = tempNode;
 		}
 		finalPath.add(node);
+
+		finalPathDisances = new float[finalPath.size() > 1 ? finalPath.size() : 2];
+
+		finalPathPositions = new Vector2d[finalPathDisances.length];
+		finalPathPositions[0] = startPosition;
+		finalPathPositions[finalPathPositions.length - 1] = destinationPosition;
+
+		for (int i = 1; i < finalPathPositions.length - 1; i++) {
+			finalPathPositions[finalPathPositions.length - i - 1] = finalPath.get(i).getCenter();
+		}
+
+		for (int i = 1; i < finalPathPositions.length; i++) {
+			finalPathDisances[i] = (float) Vector2d.subtract(finalPathPositions[i - 1], finalPathPositions[i]).getValue() + finalPathDisances[i - 1];
+			//System.out.println(i + ": " + finalPath.get(i) + " : " + finalPathDisances[i]);
+		}
 	}
 
 	private void cleanup() {

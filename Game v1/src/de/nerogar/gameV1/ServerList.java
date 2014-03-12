@@ -1,8 +1,9 @@
 package de.nerogar.gameV1;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.DNFileSystem.DNFile;
+import de.nerogar.DNFileSystem.DNFile;
 
 public class ServerList {
 	private DNFile file;
@@ -18,27 +19,31 @@ public class ServerList {
 	}
 
 	public void load() {
-		file = new DNFile(filename);
-		if (file.load()) {
-			adresses = new ArrayList<String>();
-			String[] adressesA = file.getStringArray("adresses");
-			if (adressesA != null) {
-				for (String s : adressesA) {
-					adresses.add(s);
+		file = new DNFile();
+		try {
+			if (file.load(filename)) {
+				adresses = new ArrayList<String>();
+				String[] adressesA = file.getStringArray("adresses");
+				if (adressesA != null) {
+					for (String s : adressesA) {
+						adresses.add(s);
+					}
+
+					ports = new ArrayList<Integer>();
+					int[] portsA = file.getIntArray("ports");
+					for (int i : portsA) {
+						ports.add(i);
+					}
 				}
 
-				ports = new ArrayList<Integer>();
-				int[] portsA = file.getIntArray("ports");
-				for (int i : portsA) {
-					ports.add(i);
-				}
 			}
-
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void save() {
-		file = new DNFile(filename);
+		file = new DNFile();
 
 		String[] adressesA = new String[adresses.size()];
 		for (int i = 0; i < adresses.size(); i++) {
@@ -50,9 +55,13 @@ public class ServerList {
 			portsA[i] = ports.get(i);
 		}
 
-		file.addNode("adresses", adressesA);
-		file.addNode("ports", portsA);
-		file.save();
+		file.addString("adresses", adressesA);
+		file.addInt("ports", portsA);
+		try {
+			file.save(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String[] getAsStringArray() {

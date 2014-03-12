@@ -2,18 +2,17 @@ package de.nerogar.gameV1.level;
 
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.network.PacketClickEntity;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.network.EntityPacket;
+import de.nerogar.gameV1.network.EntityPacketClick;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityTree extends Entity {
+public class EntityTree extends EntityFighting {
 
-	//private int size = 3;
+	public int size = 3;
+
 	//private ALSource sound = null;
 	//private float elapsedTime;
 
@@ -24,20 +23,20 @@ public class EntityTree extends Entity {
 
 	@Override
 	public void init(World world) {
-		setObject("tree", "tree.png");
+		setObject("entities/tree/mesh", "entities/tree/texture.png");
 		//setSprite(1, "houses/test1-1.png");
 	}
 
 	@Override
-	public void saveProperties(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
+	public void saveProperties(DNNodePath folder) {
+		folder.addInt("size", size);
 
 	}
 
 	@Override
-	public void loadProperties(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
-
+	public void loadProperties(DNNodePath folder) {
+		size = folder.getInt("size");
+		matrix.setScaling(new Vector3d(size / 3f, size / 3f, size / 3f));
 	}
 
 	public void interact() {
@@ -57,21 +56,16 @@ public class EntityTree extends Entity {
 	}
 
 	@Override
-	public String getNameTag() {
-		return "Tree";
-	}
-
-	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
-		for (PacketEntity packet : packets) {
-			if (packet instanceof PacketClickEntity) {
-				System.out.println(((PacketClickEntity) packet).mouseButton);
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketClick) {
+				System.out.println(((EntityPacketClick) packet).mouseButton);
 			}
 		}
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 		/*elapsedTime += time;
 				int rand = 1;
 				if (elapsedTime > 1) {
@@ -89,6 +83,16 @@ public class EntityTree extends Entity {
 						}
 					}
 				}*/
+	}
+
+	@Override
+	public String getNameTag() {
+		return "tree";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return -1;
 	}
 
 }

@@ -2,16 +2,16 @@ package de.nerogar.gameV1.level;
 
 import java.util.ArrayList;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.network.PacketEntity;
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.ai.AILogicChopWood;
+import de.nerogar.gameV1.ai.AILogicGoToPosition;
+import de.nerogar.gameV1.network.EntityPacket;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.BoundingAABB;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class EntityTestSoldier extends EntityFighting {
+public class EntityTestSoldier extends EntityMobile {
 
 	public EntityTestSoldier(Game game, World world, ObjectMatrix matrix) {
 		super(game, world, matrix);
@@ -20,16 +20,29 @@ public class EntityTestSoldier extends EntityFighting {
 
 	@Override
 	public void init(World world) {
-		setSprite(1, "Entities/peter.png");
+		//setSprite(1, "entities/peter/texture.png");
+		setObject("entities/worker/mesh", "entities/worker/texture.png");
 		health = 20;
+		moveSpeed = 5;
 	}
 
 	@Override
-	public void updateServer(float time, ArrayList<PacketEntity> packets) {
-		for (PacketEntity packet : packets) {
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
 			if (packet instanceof PacketSetTarget) {
+
 				PacketSetTarget setTargetPacket = (PacketSetTarget) packet;
-				target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
+
+				if (setTargetPacket.targetPosition == null) {
+					target = (EntityFighting) world.getEntityByID(setTargetPacket.targetID);
+
+					if (target instanceof EntityTree) {
+						aiContainer.addLogic(new AILogicChopWood(this, (EntityTree) target, 5, new AILogicGoToPosition(this, target.matrix.getPosition())));
+					}
+				} else {
+					aiContainer.addLogic(new AILogicGoToPosition(this, setTargetPacket.targetPosition));
+				}
+
 			}
 		}
 
@@ -41,20 +54,20 @@ public class EntityTestSoldier extends EntityFighting {
 	}
 
 	@Override
-	public void updateClient(float time, ArrayList<PacketEntity> packets) {
+	public void updateClient(float time, ArrayList<EntityPacket> packets) {
 
 	}
 
 	@Override
-	public void load(DNFile chunkFile, String folder) {
+	public void load(DNNodePath folder) {
 		// TODO Auto-generated method stub
-		super.load(chunkFile, folder);
+		super.load(folder);
 	}
 
 	@Override
-	public void save(DNFile chunkFile, String folder) {
+	public void save(DNNodePath folder) {
 		// TODO Auto-generated method stub
-		super.save(chunkFile, folder);
+		super.save(folder);
 	}
 
 	@Override
@@ -64,14 +77,12 @@ public class EntityTestSoldier extends EntityFighting {
 	}
 
 	@Override
-	public void saveProperties(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
+	public void saveProperties(DNNodePath folder) {
 
 	}
 
 	@Override
-	public void loadProperties(DNFile chunkFile, String folder) {
-		// TODO Auto-generated method stub
+	public void loadProperties(DNNodePath folder) {
 
 	}
 
@@ -84,5 +95,10 @@ public class EntityTestSoldier extends EntityFighting {
 	@Override
 	public String getNameTag() {
 		return "testSoldier";
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return 20;
 	}
 }

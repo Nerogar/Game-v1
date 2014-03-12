@@ -30,13 +30,13 @@ public class GuiMultiplayer extends Gui {
 
 		float nameY = 0.2f;
 		addGElement(new GElementTextLabel(genNewID(), 0.1f, nameY, 0.2f, 0.1f, "name:", FontRenderer.LEFT));
-		playerNameText = new GElementTextField(0.3f, nameY, 0.3f, 0.1f, GameOptions.instance.getOption("playerName"), "Buttons/textField.png");
+		playerNameText = new GElementTextField(0.3f, nameY, 0.3f, 0.1f, GameOptions.instance.getOption("playerName"), "buttons/textField.png");
 		
-		createGameButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.35f, 0.1f, "create Game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		createGameButton = new GElementButton(genNewID(), 0.1f, 0.7f, 0.35f, 0.1f, "create Game", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		joinGameButton = new GElementButton(genNewID(), 0.6f, 0.7f, 0.35f, 0.1f, "join Game", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		joinGameButton = new GElementButton(genNewID(), 0.6f, 0.7f, 0.35f, 0.1f, "join Game", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
-		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.1f, 0.85f, 0.3f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 
 		addGElement(playerNameText);
 		addGElement(createGameButton);

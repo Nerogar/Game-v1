@@ -5,17 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.nerogar.gameV1.Game;
-import de.nerogar.gameV1.GameOptions;
-import de.nerogar.gameV1.Vector3d;
-import de.nerogar.gameV1.World;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.network.PacketEntity;
-import de.nerogar.gameV1.network.PacketMoveEntity;
-import de.nerogar.gameV1.network.PacketRemoveEntity;
-import de.nerogar.gameV1.object.Object3D;
-import de.nerogar.gameV1.object.Object3DBank;
-import de.nerogar.gameV1.object.ObjectSprite;
+import de.nerogar.DNFileSystem.DNNodePath;
+import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.network.*;
+import de.nerogar.gameV1.object.*;
 import de.nerogar.gameV1.physics.*;
 
 public abstract class Entity {
@@ -72,7 +65,7 @@ public abstract class Entity {
 		return world;
 	}
 
-	public void update(float time, ArrayList<PacketEntity> packets) {
+	public void update(float time, ArrayList<EntityPacket> packets) {
 		if (world.serverWorld) {
 			updateServer(time, packets);
 		} else {
@@ -80,9 +73,9 @@ public abstract class Entity {
 		}
 	}
 
-	public abstract void updateServer(float time, ArrayList<PacketEntity> packets);
+	public abstract void updateServer(float time, ArrayList<EntityPacket> packets);
 
-	public abstract void updateClient(float time, ArrayList<PacketEntity> packets);
+	public abstract void updateClient(float time, ArrayList<EntityPacket> packets);
 
 	public Bounding getBoundingBox() {
 
@@ -113,42 +106,49 @@ public abstract class Entity {
 
 	private void broadcastObjectMatrix() {
 		if (world.serverWorld) {
-			PacketMoveEntity moveEntityPacket = new PacketMoveEntity();
+			EntityPacketMove moveEntityPacket = new EntityPacketMove();
 			moveEntityPacket.objectMatrix = matrix;
 			moveEntityPacket.entityID = id;
 			world.server.broadcastData(moveEntityPacket);
 		}
 	}
 
-	public void load(DNFile chunkFile, String folder) {
-		matrix.position.setX(chunkFile.getDouble(folder + ".position.x"));
-		matrix.position.setY(chunkFile.getDouble(folder + ".position.y"));
-		matrix.position.setZ(chunkFile.getDouble(folder + ".position.z"));
-		id = chunkFile.getInt(folder + ".id");
+	public void load(DNNodePath folder) {
+		matrix.fromFloatArray(folder.getFloatArray("om"));
+		id = folder.getInt("id");
 
-		loadProperties(chunkFile, folder);
+		loadProperties(folder);
 	}
 
-	public void save(DNFile chunkFile, String folder) {
-		chunkFile.addNode(folder + ".type", getNameTag());
-		chunkFile.addNode(folder + ".position.x", matrix.position.getX());
-		chunkFile.addNode(folder + ".position.y", matrix.position.getY());
-		chunkFile.addNode(folder + ".position.z", matrix.position.getZ());
-		chunkFile.addNode(folder + ".id", id);
+	public void save(DNNodePath folder) {
+		folder.addString("type", getNameTag());
+		folder.addFloat("om", matrix.toFloatArray());
+		folder.addInt("id", id);
 
-		saveProperties(chunkFile, folder);
+		saveProperties(folder);
 	}
 
-	public abstract void saveProperties(DNFile chunkFile, String folder);
+	public abstract void saveProperties(DNNodePath folder);
 
-	public abstract void loadProperties(DNFile chunkFile, String folder);
+	public abstract void loadProperties(DNNodePath folder);
+
+	public void broadcastPropertyUpdates() {
+		if (world.serverWorld) {
+			EntityPacketUpdate updateEntityPacket = new EntityPacketUpdate();
+			DNNodePath entityData = new DNNodePath(EntityPacketUpdate.ENTITY_DATA_PATHNAME);
+			saveProperties(entityData);
+			updateEntityPacket.entityData = entityData;
+			updateEntityPacket.entityID = id;
+			world.server.broadcastData(updateEntityPacket);
+		}
+	}
 
 	public void render() {
 		// BoundingRender.renderAABB((BoundingAABB)getBoundingBox(), 0x00FF00);
 		if (GameOptions.instance.getBoolOption("debug")) {
 			displayBoundingBox(getBoundingBox(), 0x00FF00);
-
 		}
+
 		if (object != null) {
 			object.render(matrix, texture, opacity);
 		}
@@ -161,6 +161,10 @@ public abstract class Entity {
 
 		// renderOBB fehlt
 
+	}
+
+	public boolean isDistanceSmaller(Entity target, float distance) {
+		return Vector3d.subtract(matrix.getPosition(), target.matrix.getPosition()).getSquaredValue() < distance * distance;
 	}
 
 	public abstract void interact(); // wenn andere entities oder objekte mit dieser entity interagieren
@@ -210,6 +214,9 @@ public abstract class Entity {
 		registerEntity(new EntityTestparticle(game, null, objectMatrix));
 		registerEntity(new EntityHut(game, null, objectMatrix));
 		registerEntity(new EntityTestSoldier(game, null, objectMatrix));
+		registerEntity(new EntitySpawnPlatform(game, null, objectMatrix));
+		registerEntity(new EntityEnergyTower(game, null, objectMatrix));
+		registerEntity(new EntityWood(game, null, objectMatrix));
 	}
 
 }

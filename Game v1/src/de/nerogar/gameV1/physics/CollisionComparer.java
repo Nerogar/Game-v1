@@ -145,7 +145,7 @@ public class CollisionComparer {
 
 		emptyGrid();
 
-		for (Entity e: world.entityList.entities.values()) {
+		for (Entity e : world.entityList.entities.values()) {
 			BoundingAABB bound = (world.entityList.entities.get(e.id).getAABB());
 
 			for (int j = (int) (bound.a.getX() + shift.x) / GRIDSIZE; j <= (int) (bound.b.getX() + shift.x) / GRIDSIZE; j++) {
@@ -176,6 +176,7 @@ public class CollisionComparer {
 	}
 
 	public void renderGrid() {
+		if (!BoundingRender.shellRenderOutlines()) return;
 		for (int i = 0; i < max.x; i++) {
 			for (int j = 0; j < max.z; j++) {
 				if (grid[i][j].size() > 0) {
@@ -186,14 +187,12 @@ public class CollisionComparer {
 	}
 
 	private int maxMinGridPosX(int pos) {
-		if (pos < 0)
-			pos = 0;
+		if (pos < 0) pos = 0;
 		else if (pos > max.x) pos = max.x;
 		return pos;
 	}
 
-	@SuppressWarnings("unused")
-	private void renderBox(int x, int z) {
+	public void renderBox(int x, int z) {
 		BoundingRender.renderAABB(new BoundingAABB(new Vector3d(x * GRIDSIZE, 0, z * GRIDSIZE), new Vector3d((x + 1) * GRIDSIZE, 10, (z + 1) * GRIDSIZE)), 0xff00ff);
 	}
 
@@ -351,6 +350,26 @@ public class CollisionComparer {
 
 		return intersection;
 
+	}
+
+	public ArrayList<Position> getGridPositionsInRay2(Ray ray) {
+		ArrayList<Position> positions = new ArrayList<Position>();
+		Vector3d dir = ray.getDirection().clone();
+		float xStep = (float) (dir.getX() / dir.getZ());
+		for (int i = 0; i < 10; i++) {
+			Vector3d intersectPos = new Vector3d(xStep * i, 0, i);
+			intersectPos.add(Vector3d.multiply(ray.getStart(), 1 / GRIDSIZE));
+			positions.add(intersectPos.toVector2d().toPosition());
+		}
+
+		float zStep = (float) (dir.getZ() / dir.getX());
+		for (int i = 0; i < 10; i++) {
+			Vector3d intersectPos = new Vector3d(i, 0, zStep * i);
+			intersectPos.add(Vector3d.multiply(ray.getStart(), 1 / GRIDSIZE));
+			positions.add(intersectPos.toVector2d().toPosition());
+		}
+
+		return positions;
 	}
 
 	public ArrayList<Position> getGridPositionsInRay(Ray ray) {

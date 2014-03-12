@@ -6,11 +6,11 @@ public class BuildingBank {
 
 	public static HashMap<Integer, String> buildings = new HashMap<Integer, String>();
 	static {
-		buildings.put(0, "HouseBlue");
-		buildings.put(1, "HouseGreen");
-		buildings.put(2, "HouseOrange");
-		buildings.put(3, "HousePink");
-		buildings.put(4, "HouseRed");
+		buildings.put(0, "houseBlue");
+		buildings.put(1, "houseGreen");
+		buildings.put(2, "houseOrange");
+		buildings.put(3, "housePink");
+		buildings.put(4, "houseRed");
 	}
 
 	/*public static EntityBuilding getNewInstance(int id, Object... ctorArgument) {

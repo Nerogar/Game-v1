@@ -1,5 +1,8 @@
 package de.nerogar.gameV1;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -20,7 +23,7 @@ public class Camera {
 
 	private final float MAXSCROLLBACK = 20f;
 	private final float MINSCROLLUP = 10f;
-	private final float MAXSCROLLUP = 80f;
+	private final float MAXSCROLLUP = 20f;
 	private final float MINROTDOWN = 35f;
 
 	private int mouseX = Mouse.getX();
@@ -31,9 +34,18 @@ public class Camera {
 	//private World world;
 	private Timer timer;
 
+	//eye space matrix
+	public Vector3d xInWorld;
+	public Vector3d yInWorld;
+	public Vector3d zInWorld;
+	public FloatBuffer matBuffer;
+
 	public Camera(World world) {
 		//this.world = world;
 		timer = world.game.timer;
+		xInWorld = new Vector3d();
+		yInWorld = new Vector3d();
+		zInWorld = new Vector3d();
 	}
 
 	public void init() {
@@ -59,7 +71,7 @@ public class Camera {
 		float sR = 0;
 		float sU = 0;
 		float sD = 0;
-		float sY = 0;
+		//float sY = 0;
 		float rY;
 
 		//position mouseGrab
@@ -75,10 +87,10 @@ public class Camera {
 			dragMoving = false;
 		}
 
-		if (dragRotate) rotation += timer.delta / 100f * (Mouse.getX() - mouseX);
+		if (dragRotate) rotation += timer.delta * 10f * (Mouse.getX() - mouseX);
 		if (dragMoving) {
-			sL += (Mouse.getX() - mouseX) / 5f;
-			sD += (Mouse.getY() - mouseY) / 5f;
+			sL += (Mouse.getX() - mouseX) * 200f;
+			sD += (Mouse.getY() - mouseY) * 200f;
 		}
 
 		mouseX = Mouse.getX();
@@ -138,9 +150,9 @@ public class Camera {
 		scrollYLoc += scrollYLoc < targetScrollY ? 2 : -2;
 		if (scrollYLoc < 0) scrollYLoc = 0;
 		if (scrollYLoc > MAXSCROLLUP) scrollYLoc = MAXSCROLLUP;
-		
+
 		scrollY = scrollYLoc + MINSCROLLUP;
-		
+
 		float temp;
 
 		temp = (float) Math.sqrt(scrollYLoc) * 8;
@@ -153,6 +165,45 @@ public class Camera {
 
 		scrollX = (float) (scrollXLoc - Math.sin((rotation / 360) * 3.1415927 * 2) * scrollBack);
 		scrollZ = (float) (scrollZLoc + Math.cos((rotation / 360) * 3.1415927 * 2) * scrollBack);
+
+		calcEyeSpaceInWorld();
+	}
+
+	private void calcEyeSpaceInWorld() {
+		float camRotSin = (float) Math.sin(rotation / 180f * Math.PI);
+		float camRotCos = (float) Math.cos(rotation / 180f * Math.PI);
+		float camRotDownSin = (float) Math.sin(rotationDown / 180f * Math.PI);
+		float camRotDownCos = (float) Math.cos(rotationDown / 180f * Math.PI);
+
+		xInWorld.setX(-camRotCos);
+		xInWorld.setY(-camRotDownSin * camRotSin);
+		xInWorld.setZ(camRotSin * camRotDownCos);
+
+		yInWorld.setX(0);
+		yInWorld.setY(-camRotDownCos);
+		yInWorld.setZ(-camRotDownSin);
+
+		zInWorld.setX(camRotSin);
+		zInWorld.setY(camRotDownSin * -camRotCos);
+		zInWorld.setZ(camRotCos * camRotDownCos);
+
+		matBuffer = BufferUtils.createFloatBuffer(9);
+
+		float[] matArray = new float[9];
+		matArray[0] = xInWorld.getXf();
+		matArray[1] = xInWorld.getYf();
+		matArray[2] = xInWorld.getZf();
+
+		matArray[3] = yInWorld.getXf();
+		matArray[4] = yInWorld.getYf();
+		matArray[5] = yInWorld.getZf();
+
+		matArray[6] = zInWorld.getXf();
+		matArray[7] = zInWorld.getYf();
+		matArray[8] = zInWorld.getZf();
+
+		matBuffer.put(matArray);
+		matBuffer.flip();
 	}
 
 	public Vector2d getCamCenter() {

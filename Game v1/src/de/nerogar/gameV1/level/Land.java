@@ -30,7 +30,6 @@ public class Land {
 	public Game game;
 	public World world;
 	public LevelGenerator levelGenerator;
-	private Vector3d mousePosition;
 	private Shader terrainShader;
 
 	//private Entity buildableEntity = null;
@@ -135,7 +134,7 @@ public class Land {
 	public void addChunk(Chunk chunk) {
 		chunks.add(chunk);
 		rebuildChunkGrid();
-		updateWalkMapNodeNeighbors(chunk);
+		if (world.serverWorld) updateWalkMapNodeNeighbors(chunk);
 		world.collisionComparer.newGrid();
 	}
 
@@ -154,6 +153,7 @@ public class Land {
 		rebuildChunkGrid();
 		updateWalkMapNodeNeighbors(chunk);
 		world.collisionComparer.newGrid();
+		world.recalcFactionEntities();
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {
@@ -206,7 +206,7 @@ public class Land {
 		chunkGrid[chunkPosition.x - chunkGridMinX][chunkPosition.z - chunkGridMinZ] = null;
 		rebuildChunkList();
 		updateWalkMapNodeNeighbors(tempChunk);
-
+		world.recalcFactionEntities();
 	}
 
 	public void updateWalkMapNodeNeighbors(Chunk chunk) {
@@ -425,7 +425,7 @@ public class Land {
 		}
 	}
 
-	public void render(Position loadPosition, int maxChunkRenderDistance) {
+	public void render(double time, Position loadPosition, int maxChunkRenderDistance) {
 
 		TextureBank.instance.bindTexture("terrainSheet");
 		Position chunkLoadPosition = getChunkPosition(loadPosition);
@@ -536,14 +536,6 @@ public class Land {
 		}*/
 	}
 
-	public void setMousePos(Vector3d pos) {
-		this.mousePosition = pos;
-	}
-
-	public Vector3d getMousePos() {
-		return this.mousePosition;
-	}
-
 	private void updateTerrainShader() {
 		//setupShaders();
 		glUniform1f(terrainShader.uniforms.get("time"), (System.nanoTime() / 1000000000f));
@@ -551,8 +543,7 @@ public class Land {
 
 	public void setupShaders() {
 		ShaderBank.instance.createShaderProgramm("terrain");
-		Shader terrainShader = ShaderBank.instance.getShader("terrain");
-		this.terrainShader = terrainShader;
+		terrainShader = ShaderBank.instance.getShader("terrain");
 
 		terrainShader.setVertexShader("res/shaders/terrainShader.vert");
 		terrainShader.setFragmentShader("res/shaders/terrainShader.frag");

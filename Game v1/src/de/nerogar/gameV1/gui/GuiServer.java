@@ -32,7 +32,7 @@ public class GuiServer extends Gui {
 	public void init() {
 		setTitel("Server");
 
-		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "Buttons/button.png", false, "");
+		backButton = new GElementButton(genNewID(), 0.3f, 0.8f, 0.4f, 0.1f, "back", FontRenderer.CENTERED, "buttons/button.png", false, "");
 		recievedText = new GElementTextLabel(genNewID(), 0.1f, 0.7f, 0.8f, 0.1f, "", FontRenderer.CENTERED);
 		clientArea = new GElementTextArea(genNewID(), 0.2f, 0.2f, 0.6f, 0.5f, 20, FontRenderer.LEFT);
 

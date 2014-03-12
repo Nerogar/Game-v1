@@ -6,26 +6,19 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 
-import de.nerogar.gameV1.level.*;
-import de.nerogar.gameV1.network.Client;
-import de.nerogar.gameV1.network.Packet;
-import de.nerogar.gameV1.network.PacketBuildHouse;
-import de.nerogar.gameV1.network.PacketChunkData;
-import de.nerogar.gameV1.network.PacketExitGame;
-import de.nerogar.gameV1.network.PacketRemoveEntity;
-import de.nerogar.gameV1.network.PacketSpawnEntity;
-import de.nerogar.gameV1.network.Server;
-import de.nerogar.gameV1.physics.CollisionComparer;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
-import de.nerogar.gameV1.ai.Path;
-import de.nerogar.gameV1.ai.PathNode;
-import de.nerogar.gameV1.ai.Pathfinder;
+import de.nerogar.DNFileSystem.DNFile;
+import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
-import de.nerogar.gameV1.gui.GuiMain;
-import de.nerogar.gameV1.gui.GuiPauseMenu;
+import de.nerogar.gameV1.graphics.RenderScene;
+import de.nerogar.gameV1.gui.*;
+import de.nerogar.gameV1.internalServer.Faction;
 import de.nerogar.gameV1.internalServer.InternalServer;
+import de.nerogar.gameV1.level.*;
+import de.nerogar.gameV1.network.*;
+import de.nerogar.gameV1.physics.CollisionComparer;
+import de.nerogar.gameV1.physics.Ray;
 
-public class World {
+public class World extends RenderScene{
 	public Game game;
 	public EntityList entityList;
 	public int maxEntityID = 0;
@@ -39,12 +32,11 @@ public class World {
 	public Client client;
 	public InternalServer internalServer;
 	public boolean serverWorld;
+	public Faction[] factions;
 	public Player player;
 
 	public Pathfinder pathfinder;
-	public Path path;
-	public PathNode pathEnd;
-	public PathNode pathStart;
+	private PathNode testNode;
 
 	public World(Game game, boolean serverWorld) {
 		this.game = game;
@@ -56,24 +48,24 @@ public class World {
 		if (serverWorld) {
 
 		} else {
-			player = new Player(game, this);
+
 		}
-		pathfinder = new Pathfinder(land);
 	}
 
-	public void initiateWorld(String levelName, long seed) {
+	public void initiateWorld(String levelName, long seed, Faction[] factions) {
 		worldData = new WorldData(this, levelName);
 		worldData.seed = seed;
-		initiateWorld(levelName);
+		initiateWorld(levelName, factions);
 	}
 
-	public void initiateWorld(String levelName) {
-		if (!serverWorld) RenderHelper.renderLoadingScreen("Lade Welt...");
+	public void initiateWorld(String levelName, Faction[] factions) {
 		if (worldData == null) {
 			worldData = new WorldData(this, levelName);
 			worldData.load();
 		}
 
+		this.factions = factions;
+		pathfinder = new Pathfinder(land);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
 		land.levelGenerator = new LevelGenerator(land);
@@ -93,25 +85,17 @@ public class World {
 
 		isLoaded = true;
 		//land.loadAllAroundXZ(loadPosition);
+
+		recalcFactionEntities();
+
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
-		//ab hier kommt nur temporärer code zum hinzufügen von test-entities
-		/*
-				entityList.addEntity(new EntityBlockDebug(game, new ObjectMatrix(new Vector3(6, 5, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10, 1F));
-
-				for (int i = 0; i < 10; i++) {
-					for (int j = 0; j < 10; j++) {
-						entityList.addEntity(new EntityHouse(game, new ObjectMatrix(new Vector3(i * 1 - 10, 0, j * 1 - 10), new Vector3(0, 0, 0), new Vector3(1, 1, 1))));
-					}
-				}
-
-				entityList.addEntity(new EntityBlock(game, new ObjectMatrix(new Vector3(-6, 10, 1), new Vector3(0, 0, 0), new Vector3(1, 1, 1)), 10f, 1f));
-				*/
-		// Der letzte, zusätzliche Parameter ist Testweise die Skalierung (Der AABB)
 	}
 
-	public void initiateClientWorld(Client client) {
+	public void initiateClientWorld(Client client, Faction faction) {
 		isLoaded = true;
 		this.client = client;
+		player = new Player(game, this, faction);
+		game.guiList.addGui(new GuiIngameOverlay(game, player));
 		player.camera.init();
 		loadPosition = player.camera.getCamCenter().toPosition();
 	}
@@ -133,6 +117,8 @@ public class World {
 		land.unloadAll(save);
 		entityList.unloadAll();
 		collisionComparer.cleanup();
+		game.guiList.removeGui(new GuiIngameOverlay(game, player));
+
 		if (save) {
 			worldData.save();
 			worldData = null;
@@ -155,6 +141,21 @@ public class World {
 		}
 
 		land.loadChunksAroundXZ(loadPosition);
+
+		//test pathfinder:
+
+		/*PathNode node1 = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());
+		PathNode node2 = pathfinder.getNode(new Vector2d(-6.51, 20.48).toPosition());
+
+		Path np = new Path(node1, node2, new Vector2d(-6.62, 19.66), new Vector2d(-6.51, 20.48));
+		testNode = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());*/
+		/*System.out.println("--");
+		for (PathNode pn : np.finalPath) {
+			for (PathNode neighbor : pn.neighbors) {
+				System.out.println(pn.size + "|" + pn + "|" + pn.locX + " " + pn.locZ + " : " + neighbor + "|" + neighbor.locX + " " + neighbor.locZ + "|" + neighbor.size);
+			}
+			System.out.println();
+		}*/
 	}
 
 	private void processServerPackets(Client connectionClient, Packet packet) {
@@ -164,10 +165,12 @@ public class World {
 			server.broadcastData(exitGame);
 
 			internalServer.stopServer();
-		} else if (packet instanceof PacketBuildHouse) {
-			PacketBuildHouse buildingData = (PacketBuildHouse) packet;
+		} else if (packet instanceof FactionPacketBuildHouse) {
+			FactionPacketBuildHouse buildingData = (FactionPacketBuildHouse) packet;
 
-			Entity newBuilding = Entity.getEntity(game, this, BuildingBank.getBuildingName(buildingData.buildingID));
+			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, buildingData.buildingID);
+			newBuilding.faction = Faction.getFaction(buildingData.factionID);
+			System.out.println(buildingData.factionID);
 
 			Position buildPosition = buildingData.buildPos;
 			newBuilding.matrix.position = new Vector3d(buildPosition.x, game.world.land.getHeight(new Position(buildPosition.x, buildPosition.z)), buildPosition.z);
@@ -184,6 +187,7 @@ public class World {
 				processClientPackets(packet);
 			}
 		}
+		//testNode = pathfinder.getNode(new Vector2d(-6.62, 19.66).toPosition());
 	}
 
 	private void processClientPackets(Packet packet) {
@@ -199,7 +203,7 @@ public class World {
 		} else if (packet instanceof PacketSpawnEntity) {
 			PacketSpawnEntity entityData = (PacketSpawnEntity) packet;
 			Entity newEntity = Entity.getEntity(game, this, entityData.tagName);
-			newEntity.load(entityData.entityData, "");
+			newEntity.load(entityData.entityData);
 			spawnEntity(newEntity);
 		} else if (packet instanceof PacketRemoveEntity) {
 			PacketRemoveEntity entityData = (PacketRemoveEntity) packet;
@@ -210,7 +214,7 @@ public class World {
 		}
 	}
 
-	public void update() {
+	public void update(float time) {
 		if (!isLoaded) return;
 
 		if (serverWorld) {
@@ -228,7 +232,7 @@ public class World {
 			loadPosition = player.camera.getCamCenter().toPosition();
 
 			ArrayList<Packet> receivedPackets = client.getData(Packet.ENTITY_CHANNEL);
-			entityList.update(game, receivedPackets);
+			entityList.update(game, receivedPackets, time);
 		} else {
 
 			ArrayList<Packet> receivedPackets = new ArrayList<Packet>();
@@ -246,20 +250,16 @@ public class World {
 				}
 			}
 
-			entityList.update(game, receivedPackets);
+			entityList.update(game, receivedPackets, time);
 		}
 
 		if (!serverWorld) {
 			player.update();
 		}
 
-		/*PathNode start = pathfinder.getNode(new Position(36, 16));
-		PathNode pathEnd = pathfinder.getNode(new Position(0, 8));
-		path = new Path(start, pathEnd, pathfinder);*/
-
 	}
 
-	public void render() {
+	public void render(double time) {
 		if (!isLoaded) return;
 
 		maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
@@ -275,15 +275,19 @@ public class World {
 		glTranslatef(-player.camera.scrollX, -player.camera.scrollY, -player.camera.scrollZ);//position anpassen
 
 		//land.renderOverlay();
-		land.render(loadPosition, maxChunkRenderDistance);
-		entityList.render(loadPosition, maxChunkRenderDistance);
+		land.render(time, loadPosition, maxChunkRenderDistance);
+		entityList.render(time, loadPosition, maxChunkRenderDistance);
 		game.debugFelk.additionalRender();
 		game.debugNerogar.additionalRender();
 
 		collisionComparer.renderGrid();
-		//InputHandler.renderMouseRay();
+		InputHandler.renderMouseRay();
+		ArrayList<Position> temppositions = collisionComparer.getGridPositionsInRay2(new Ray(InputHandler.get3DmouseStart(), InputHandler.get3DmouseDirection()));
+		for (Position p : temppositions) {
+			collisionComparer.renderBox(p.x, p.z);
+		}
 
-		if (path != null) {
+		/*if (path != null) {
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			for (int i = 1; i < path.finalPath.size(); i++) {
@@ -301,6 +305,13 @@ public class World {
 			}
 			pathStart.draw(0.5f, 0.5f, 1.0f);
 			pathEnd.draw(0.8f, 0.8f, 1.0f);
+		}*/
+
+		if (testNode != null) {
+			testNode.draw(0.5f, 0.0f, 0.0f);
+			/*for(PathNode neighbors:testNode.neighbors){
+				neighbors.draw(0.0f, 0.5f, 0.0f);
+			}*/
 		}
 
 		if (player != null) player.renderInWorld(this);
@@ -319,13 +330,15 @@ public class World {
 				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
 
+					recalcFactionEntities();
+
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
 
-					DNFile entityData = new DNFile("");
-					entity.save(entityData, "");
-					entityPacket.entityData = entityData;
+					DNFile entityData = new DNFile();
 
+					entity.save(entityData);
+					entityPacket.entityData = entityData;
 					server.broadcastData(entityPacket);
 				}
 			}
@@ -348,10 +361,20 @@ public class World {
 	}
 
 	public void despawnEntity(Entity entity) {
-		if (isLoaded) entityList.entities.remove(entity);
+		if (isLoaded) {
+			entityList.entities.remove(entity);
+
+			recalcFactionEntities();
+		}
 	}
 
 	public Entity getEntityByID(int id) {
 		return entityList.entities.get(id);
+	}
+
+	public void recalcFactionEntities() {
+		for (Faction f : factions) {
+			f.recalcFactionEntities(entityList);
+		}
 	}
 }

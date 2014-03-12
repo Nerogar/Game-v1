@@ -137,7 +137,7 @@ public final class MathHelper {
 		}
 		return dH;
 	}
-	
+
 	public static double getHightest(double... d) {
 		double dH = d[0];
 		for (int i = 0; i < d.length; i++) {
@@ -161,7 +161,7 @@ public final class MathHelper {
 		}
 		return dH;
 	}
-	
+
 	public static double getLowest(double... d) {
 		double dH = d[0];
 		for (int i = 0; i < d.length; i++) {
@@ -176,6 +176,13 @@ public final class MathHelper {
 			if (d[i] < dH) dH = d[i];
 		}
 		return dH;
+	}
+
+	public static double clamp(double value, double min, double max) {
+		if (value < min) return min;
+		else if (value > max) return max;
+		else return value;
+
 	}
 
 	public static double DegToRad(double deg) {

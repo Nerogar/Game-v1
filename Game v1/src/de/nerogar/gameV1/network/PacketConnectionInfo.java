@@ -1,8 +1,10 @@
 package de.nerogar.gameV1.network;
 
+import java.io.IOException;
+
+import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.Game;
 import de.nerogar.gameV1.GameOptions;
-import de.nerogar.gameV1.DNFileSystem.DNFile;
 
 public class PacketConnectionInfo extends Packet {
 	public String version;
@@ -10,20 +12,24 @@ public class PacketConnectionInfo extends Packet {
 
 	@Override
 	public void pack() {
-		data = new DNFile("");
+		data = new DNFile();
 		version = Game.version;
 		username = GameOptions.instance.getOption("playerName");
 
-		data.addNode("version", version);
-		data.addNode("username", username);
+		data.addString("version", version);
+		data.addString("username", username);
 
 		packedData = data.toByteArray();
 	}
 
 	@Override
 	public void unpack() {
-		data = new DNFile("");
-		data.fromByteArray(packedData);
+		data = new DNFile();
+		try {
+			data.fromByteArray(packedData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		version = data.getString("version");
 		username = data.getString("username");

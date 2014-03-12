@@ -40,30 +40,38 @@ public abstract class Gui {
 		return lastID;
 	}
 
-	public final void update() {
+	public final boolean update() {
 		updateGui();
-		handleClicks();
+		boolean clickedButton = handleClicks();
 		if (activeTextField != -1) {
 			if (elements.get(activeTextField) instanceof GElementTextField) {
 				((GElementTextField) elements.get(activeTextField)).handleKeyboardInput();
 			}
 
 		}
+		return clickedButton;
 	}
 
 	public void updateGui() {
 
 	}
 
-	private void handleClicks() {
+	private boolean handleClicks() {
 		boolean leftClicked = InputHandler.isMouseButtonPressed(0);
 		boolean leftReleased = InputHandler.isMouseButtonReleased(0);
 		boolean rightClicked = InputHandler.isMouseButtonPressed(1);
+		boolean clickedButton = false;
 
 		int[] hoveredButtons = getHoveredButtons();
 		for (int button : hoveredButtons) {
-			if (leftClicked) clickButton(button, 0);
-			if (rightClicked) clickButton(button, 1);
+			if (leftClicked) {
+				clickButton(button, 0);
+				clickedButton = true;
+			}
+			if (rightClicked) {
+				clickButton(button, 1);
+				clickedButton = true;
+			}
 		}
 
 		boolean clickedTextField = false;
@@ -84,6 +92,8 @@ public abstract class Gui {
 
 			index++;
 		}
+
+		return clickedButton || clickedTextField;
 	}
 
 	public void clickButton(int id, int mouseButton) {
