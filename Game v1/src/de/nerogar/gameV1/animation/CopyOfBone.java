@@ -7,11 +7,13 @@ import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.Line;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
-public class Bone {
+public class CopyOfBone {
 
 	public static final int NO_BONE = -1;
 
-	public Bone parent;
+	public CopyOfBone parent;
+
+	public float length;
 
 	public final ObjectMatrix defaults;
 	public ObjectMatrix relative;
@@ -27,20 +29,21 @@ public class Bone {
 
 	public Matrix44 spaceTransfo;
 
-	public Bone(Bone parent) {
-		this(parent, null);
+	public CopyOfBone(CopyOfBone parent, float length) {
+		this(parent, length, null);
 	}
 
-	public Bone(Bone parent, Matrix44 space) {
-		this(parent, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), space);
+	public CopyOfBone(CopyOfBone parent, float length, Matrix44 space) {
+		this(parent, length, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), space);
 	}
 
-	public Bone(Bone parent, Vector3d pos, Vector3d sca, Vector3d rot) {
-		this(parent, pos, sca, rot, null);
+	public CopyOfBone(CopyOfBone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot) {
+		this(parent, length, pos, sca, rot, null);
 	}
 
-	public Bone(Bone parent, Vector3d pos, Vector3d sca, Vector3d rot, Matrix44 space) {
+	public CopyOfBone(CopyOfBone parent, float length, Vector3d pos, Vector3d sca, Vector3d rot, Matrix44 space) {
 		this.parent = parent;
+		this.length = length;
 		this.defaults = new ObjectMatrix(pos, rot, sca);
 		this.relative = new ObjectMatrix();
 		this.spaceTransfo = space;
@@ -50,7 +53,7 @@ public class Bone {
 
 	private void updateLocalTransformationMatrix(boolean withDefault) {
 		ObjectMatrix summed = relative.clone();
-		float l = (parent == null) ? 0 : 1;
+		float l = (parent == null) ? 0 : parent.length;
 
 		if (withDefault) {
 			summed.position.add(defaults.position);
@@ -59,7 +62,7 @@ public class Bone {
 		}
 
 		Matrix44 transformation = MatrixHelperR3.getTransformationMatrix(summed);
-		Matrix44 lengthTranslation = MatrixHelperR3.getTranslationMatrix(0, 0, l);
+		Matrix44 lengthTranslation = MatrixHelperR3.getTranslationMatrix(l, 0, 0);
 
 		if (withDefault)
 			boneTransformationMatrixWithDefault = lengthTranslation.multiply(transformation);
@@ -108,7 +111,7 @@ public class Bone {
 	public void renderBone() {
 		if (parent != null) {
 			//RenderHelper.drawLine(locXAxis.getStart(), parent.locXAxis.getStart(), 0xffffffff, 5);
-			RenderHelper.drawLine(transform(new Vector3d(0, 0, 1), true), transform(new Vector3d(0, 0, 0), true), 0xffffffff, 5);
+			RenderHelper.drawLine(transform(new Vector3d(length, 0, 0), true), transform(new Vector3d(0, 0, 0), true), 0xffffffff, 5);
 		} else {
 			RenderHelper.drawPoint(transform(new Vector3d(0, 0, 0)), 0xbbdd44ff, 15);
 		}

@@ -4,12 +4,12 @@ import de.nerogar.gameV1.Vector3d;
 import de.nerogar.gameV1.matrix.Matrix;
 import de.nerogar.gameV1.matrix.Matrix44;
 
-public class Skeleton {
+public class Armature {
 
 	public Bone[] bones;
 	public Bone rootBone;
 
-	public Skeleton(Bone rootBone, Bone[] bones) {
+	public Armature(Bone rootBone, Bone[] bones) {
 		this.rootBone = rootBone;
 		this.bones = bones;
 	}
@@ -36,7 +36,7 @@ public class Skeleton {
 		meshVertex.transformationMatrix = m;
 	}
 
-	public void drawSkeleton() {
+	public void drawArmature() {
 		rootBone.renderBone();
 		for (Bone bone : bones) {
 			bone.renderBone();

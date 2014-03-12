@@ -14,7 +14,7 @@ import de.nerogar.gameV1.animation.Bone;
 import de.nerogar.gameV1.animation.Keyframe;
 import de.nerogar.gameV1.animation.KeyframeSet;
 import de.nerogar.gameV1.animation.MeshVertex;
-import de.nerogar.gameV1.animation.Skeleton;
+import de.nerogar.gameV1.animation.Armature;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
@@ -27,7 +27,7 @@ public class DebugFelk {
 
 	private Game game;
 	public ALSource sound;
-	public Skeleton testSkelett;
+	public Armature testSkelett;
 	public Animation testAnimation = new Animation();
 	public MeshVertex testVertex, testVertex1, testVertexA, testVertexB, testVertex2;
 
@@ -48,30 +48,30 @@ public class DebugFelk {
 		//SoundManager.setListener(new Vector3d(0,0,0), new Vector3d(0,0,0), new Vector3d(0,0,-1), new Vector3d(0,1,0));
 		sound = SoundManager.instance.create("forecast.ogg", ALSource.PRIORITY_MODERATE, new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), true, false, .4f, 1f);
 
-		Bone rootBone = new Bone(null, 0, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), MatrixHelperR3.getTransformationMatrix(1, 1, 1, 0, 0, 0, 5, 5, 0));
+		Bone rootBone = new Bone(null, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0, 0), MatrixHelperR3.getTransformationMatrix(1, 1, 1, 0, 0, 0, 5, 5, 0));
 
-		Bone arm1 = new Bone(rootBone, 3);
-		Bone arm2 = new Bone(arm1, 3);
-		Bone wrist = new Bone(arm2, 1);
-		Bone thumbsplit = new Bone(wrist, 0.6f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(1, -1.1, 0));
-		Bone fingersplit1 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.45, 0));
-		Bone fingersplit2 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.15, 0));
-		Bone fingersplit3 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.15, 0));
-		Bone fingersplit4 = new Bone(wrist, 0.8f, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.45, 0));
-		Bone thumbA = new Bone(thumbsplit, 0.6f);
-		Bone thumbB = new Bone(thumbA, 0.6f);
-		Bone finger1A = new Bone(fingersplit1, 0.8f);
-		Bone finger1B = new Bone(finger1A, 0.8f);
-		Bone finger2A = new Bone(fingersplit2, 0.8f);
-		Bone finger2B = new Bone(finger2A, 0.8f);
-		Bone finger3A = new Bone(fingersplit3, 0.8f);
-		Bone finger3B = new Bone(finger3A, 0.8f);
-		Bone finger4A = new Bone(fingersplit4, 0.8f);
-		Bone finger4B = new Bone(finger4A, 0.8f);
+		Bone arm1 = new Bone(rootBone);
+		Bone arm2 = new Bone(arm1);
+		Bone wrist = new Bone(arm2);
+		Bone thumbsplit = new Bone(wrist, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(1, -1.1, 0));
+		Bone fingersplit1 = new Bone(wrist, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.45, 0));
+		Bone fingersplit2 = new Bone(wrist, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, -0.15, 0));
+		Bone fingersplit3 = new Bone(wrist, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.15, 0));
+		Bone fingersplit4 = new Bone(wrist, new Vector3d(0, 0, 0), new Vector3d(1, 1, 1), new Vector3d(0, 0.45, 0));
+		Bone thumbA = new Bone(thumbsplit);
+		Bone thumbB = new Bone(thumbA);
+		Bone finger1A = new Bone(fingersplit1);
+		Bone finger1B = new Bone(finger1A);
+		Bone finger2A = new Bone(fingersplit2);
+		Bone finger2B = new Bone(finger2A);
+		Bone finger3A = new Bone(fingersplit3);
+		Bone finger3B = new Bone(finger3A);
+		Bone finger4A = new Bone(fingersplit4);
+		Bone finger4B = new Bone(finger4A);
 
 		Bone[] bones = new Bone[] { arm1, arm2, wrist, thumbsplit, fingersplit1, fingersplit2, fingersplit3, fingersplit4, thumbA, thumbB, finger1A, finger1B, finger2A, finger2B, finger3A, finger3B, finger4A, finger4B };
 
-		testSkelett = new Skeleton(rootBone, bones);
+		testSkelett = new Armature(rootBone, bones);
 		testSkelett.update();
 
 		KeyframeSet kfSet0 = new KeyframeSet();
@@ -216,7 +216,7 @@ public class DebugFelk {
 		glUniformMatrix4(glGetUniformLocation(animationShader.shaderHandle, "transformationMatrix"), true, testVertex.transformationMatrix.asFloatBuffer());
 		testVertex.vector.render();
 		animationShader.deactivate();
-		testSkelett.drawSkeleton();
+		testSkelett.drawArmature();
 		//testVector.render();
 		RenderHelper.drawTriangle(testSkelett.translateMeshVertex(testVertex1), testSkelett.translateMeshVertex(testVertexA), testSkelett.translateMeshVertex(testVertexB), 0xFE33BA99);
 		RenderHelper.drawTriangle(testSkelett.translateMeshVertex(testVertex1), testSkelett.translateMeshVertex(testVertexB), testSkelett.translateMeshVertex(testVertexA), 0xFE33BA99);

@@ -16,7 +16,7 @@ public class Mesh {
 		vertexCount = vectors.length / 3;
 	}
 
-	public float[] getTranslatedVectors(Skeleton skeleton) {
+	public float[] getTranslatedVectors(Armature skeleton) {
 		float[] translated = new float[vertexCount * 3];
 		MeshVertex helperVertex = new MeshVertex(null, new int[4], new float[4]);
 		Vector3d helperVector = new Vector3d(0, 0, 0);
