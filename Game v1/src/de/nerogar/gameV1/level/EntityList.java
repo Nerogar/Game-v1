@@ -166,7 +166,6 @@ public class EntityList {
 	}
 
 	public void render(double time, Position loadPosition, int maxChunkRenderDistance) {
-		setupShaders();
 		entityShader.activate();
 		updateEntityShader();
 

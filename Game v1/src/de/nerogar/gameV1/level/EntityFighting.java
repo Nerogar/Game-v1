@@ -41,7 +41,11 @@ public abstract class EntityFighting extends Entity {
 	@Override
 	public void load(DNNodePath folder) {
 		super.load(folder);
-		faction = Faction.getFaction(folder.getInt("fID"));
+		if(world.serverWorld){
+			faction = Faction.getServerFaction(folder.getInt("fID"));
+		}else{
+			faction = Faction.getClientFaction(folder.getInt("fID"));
+		}
 	}
 
 	@Override

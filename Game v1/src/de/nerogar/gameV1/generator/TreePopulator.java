@@ -22,7 +22,7 @@ public class TreePopulator extends Populator {
 
 				float rotation = (float) (Math.random() * 360f);
 				EntityTree tree = new EntityTree(chunk.world.game, chunk.world, new ObjectMatrix(new Vector3d(x, y, z), new Vector3d(0, rotation, 0), new Vector3d(1, 1, 1)));
-				tree.faction = Faction.factionNone;
+				tree.faction = Faction.factionNoneServer;
 				chunk.spawnEntityLocal(tree);
 			}
 		}

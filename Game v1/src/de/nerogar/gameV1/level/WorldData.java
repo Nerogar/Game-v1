@@ -41,7 +41,7 @@ public class WorldData {
 
 			for (int i = 0; i < factionIDs.length; i++) {
 				DNNodePath factionFolder = worldData.getPath("factions." + factionIDs[i]);
-				Faction f = Faction.getFaction(factionIDs[i]);
+				Faction f = Faction.getServerFaction(factionIDs[i]);
 				f.load(factionFolder);
 				world.factions[i] = f;
 			}

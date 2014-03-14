@@ -63,7 +63,7 @@ public class Player {
 				buildingOnCursor.matrix.setPosition(null);
 			}
 		}
-
+		
 	}
 
 	private void renderEntityOnCursor(World world) {

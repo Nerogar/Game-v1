@@ -7,6 +7,7 @@ import de.nerogar.DNFileSystem.DNFile;
 public class PacketExitMultiplayerLobby extends Packet {
 
 	public int factionID;
+	public int[] factionIDs;
 
 	public PacketExitMultiplayerLobby() {
 		channel = LOBBY_CHANNEL;
@@ -16,6 +17,7 @@ public class PacketExitMultiplayerLobby extends Packet {
 	public void pack() {
 		data = new DNFile();
 		data.addInt("fID", factionID);
+		data.addInt("fIDs", factionIDs);
 		packedData = data.toByteArray();
 	}
 
@@ -29,6 +31,7 @@ public class PacketExitMultiplayerLobby extends Packet {
 		}
 
 		factionID = data.getInt("fID");
+		factionIDs = data.getIntArray("fIDs");
 	}
 
 	@Override

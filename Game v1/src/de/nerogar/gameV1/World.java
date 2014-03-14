@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import de.nerogar.DNFileSystem.DNFile;
 import de.nerogar.gameV1.ai.*;
 import de.nerogar.gameV1.generator.LevelGenerator;
+import de.nerogar.gameV1.graphics.LightningEffectContainer;
 import de.nerogar.gameV1.graphics.RenderScene;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.Faction;
@@ -18,11 +19,12 @@ import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.CollisionComparer;
 import de.nerogar.gameV1.physics.Ray;
 
-public class World extends RenderScene{
+public class World extends RenderScene {
 	public Game game;
 	public EntityList entityList;
 	public int maxEntityID = 0;
 	public Land land;
+	public LightningEffectContainer lightningEffectContainer;
 	public WorldData worldData;
 	public boolean isLoaded = false;
 	public Position loadPosition;
@@ -42,8 +44,9 @@ public class World extends RenderScene{
 		this.game = game;
 		this.serverWorld = serverWorld;
 		entityList = new EntityList(game, this);
-		this.land = new Land(game, this);
-		this.collisionComparer = new CollisionComparer(this);
+		land = new Land(game, this);
+		lightningEffectContainer = new LightningEffectContainer(game, this);
+		collisionComparer = new CollisionComparer(this);
 		entityList.setCollisionComparer(collisionComparer);
 		if (serverWorld) {
 
@@ -91,13 +94,15 @@ public class World extends RenderScene{
 		System.out.println("Initiated Level: " + worldData.levelName + " / seed: " + worldData.seed);
 	}
 
-	public void initiateClientWorld(Client client, Faction faction) {
+	public void initiateClientWorld(Client client, Faction ownFaction, Faction[] factions) {
 		isLoaded = true;
 		this.client = client;
-		player = new Player(game, this, faction);
+		player = new Player(game, this, ownFaction);
+		this.factions = factions;
 		game.guiList.addGui(new GuiIngameOverlay(game, player));
 		player.camera.init();
 		loadPosition = player.camera.getCamCenter().toPosition();
+		recalcFactionEntities();
 	}
 
 	public void closeWorld() {
@@ -169,8 +174,7 @@ public class World extends RenderScene{
 			FactionPacketBuildHouse buildingData = (FactionPacketBuildHouse) packet;
 
 			EntityBuilding newBuilding = (EntityBuilding) Entity.getEntity(game, this, buildingData.buildingID);
-			newBuilding.faction = Faction.getFaction(buildingData.factionID);
-			System.out.println(buildingData.factionID);
+			newBuilding.faction = Faction.getServerFaction(buildingData.factionID);
 
 			Position buildPosition = buildingData.buildPos;
 			newBuilding.matrix.position = new Vector3d(buildPosition.x, game.world.land.getHeight(new Position(buildPosition.x, buildPosition.z)), buildPosition.z);
@@ -259,24 +263,29 @@ public class World extends RenderScene{
 
 	}
 
-	public void render(double time) {
-		if (!isLoaded) return;
-
-		maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
-		RenderEngine.instance.setOrtho();
-		RenderHelper.renderDefaultWorldBackground();
-
-		RenderEngine.instance.setPerspective();
-
+	public void pushMatrix() {
 		glPushMatrix();
 
 		glRotatef(player.camera.rotationDown, 1.0f, 0.0f, 0.0f);//blick nach unten drehen
 		glRotatef(player.camera.rotation, 0.0f, 1.0f, 0.0f);//drehen
 		glTranslatef(-player.camera.scrollX, -player.camera.scrollY, -player.camera.scrollZ);//position anpassen
+	}
 
+	public void popMatrix() {
+		glPopMatrix();
+	}
+
+	public void render(double time) {
+		maxChunkRenderDistance = GameOptions.instance.getIntOption("renderdistance");
+		RenderEngine.instance.setOrtho();
+		RenderHelper.renderDefaultWorldBackground();
+
+		RenderEngine.instance.setPerspective();
+		pushMatrix();
 		//land.renderOverlay();
 		land.render(time, loadPosition, maxChunkRenderDistance);
 		entityList.render(time, loadPosition, maxChunkRenderDistance);
+
 		game.debugFelk.additionalRender();
 		game.debugNerogar.additionalRender();
 
@@ -315,7 +324,8 @@ public class World extends RenderScene{
 		}
 
 		if (player != null) player.renderInWorld(this);
-		glPopMatrix();
+
+		popMatrix();
 	}
 
 	public void spawnEntity(Entity entity) {
@@ -330,8 +340,6 @@ public class World extends RenderScene{
 				if (entity.saveEntity) {
 					entityList.addEntity(entity, this);
 
-					recalcFactionEntities();
-
 					PacketSpawnEntity entityPacket = new PacketSpawnEntity();
 					entityPacket.tagName = entity.getNameTag();
 
@@ -342,6 +350,8 @@ public class World extends RenderScene{
 					server.broadcastData(entityPacket);
 				}
 			}
+
+			recalcFactionEntities();
 
 			/*
 			if (!serverWorld || entity.saveEntity) { //don't spawn temp-entities on serverworld
@@ -373,8 +383,15 @@ public class World extends RenderScene{
 	}
 
 	public void recalcFactionEntities() {
-		for (Faction f : factions) {
-			f.recalcFactionEntities(entityList);
+		if (factions != null) {
+			for (Faction f : factions) {
+				f.recalcFactionEntities(entityList);
+			}
+		}
+
+		if (player != null && player.ownFaction != null) {
+			player.ownFaction.recalcFactionEntities(entityList);
+
 		}
 	}
 }

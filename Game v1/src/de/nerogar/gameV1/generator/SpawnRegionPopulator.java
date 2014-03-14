@@ -29,7 +29,7 @@ public class SpawnRegionPopulator extends Populator {
 				Vector3d position = (new Vector3d(MathHelper.sin((float) angle), 0, MathHelper.cos(angle))).multiply(radius);
 
 				EntityEnergyTower tower = new EntityEnergyTower(chunk.world.game, chunk.world, new ObjectMatrix(Vector3d.add(new Vector3d(32, 1, 32), position)));
-				tower.faction = Faction.factionBlue;
+				tower.faction = Faction.factionBlueServer;
 				chunk.spawnEntityLocal(tower);
 			}
 		}

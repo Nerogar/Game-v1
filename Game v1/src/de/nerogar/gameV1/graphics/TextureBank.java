@@ -10,22 +10,23 @@ import javax.imageio.ImageIO;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL13.*;
 
 import org.lwjgl.BufferUtils;
 
 public class TextureBank {
-	//private HashMap<String, Texture> textures;
-	private HashMap<String, Integer> TextureIDs;
+	private HashMap<String, Integer> textureIDs;
 
 	public static TextureBank instance = new TextureBank();
+	private static int[] texturePositions;
 
 	public TextureBank() {
 		//textures = new HashMap<String, Texture>();
-		TextureIDs = new HashMap<String, Integer>();
+		textureIDs = new HashMap<String, Integer>();
 	}
 
 	public void loadTexture(String filename) {
-		if (TextureIDs.get(filename) == null) {
+		if (textureIDs.get(filename) == null) {
 			/*BufferedImage image = null;
 			try {
 				InputStream in=TextureBank.class.getResourceAsStream("/" + filename);
@@ -81,24 +82,35 @@ public class TextureBank {
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, intBuffer);
 
-		TextureIDs.put(name, id);
+		textureIDs.put(name, id);
 	}
 
 	public void bindTexture(String textureName) {
-		if (!TextureIDs.containsKey(textureName)) {
-			loadTexture(textureName);
-		}
-		glBindTexture(GL_TEXTURE_2D, TextureIDs.get(textureName));
+		bindTexture(textureName, 0);
 	}
 
-	/*public Texture getTexture(String filename) {
-		Texture retTexture = textures.get(filename);
-		if (retTexture != null) { return retTexture; }
+	public void bindTexture(String textureName, int position) {
+		if (!textureIDs.containsKey(textureName)) {
+			loadTexture(textureName);
+		}
 
-		loadTexture(filename);
+		bindTexture(textureIDs.get(textureName), position);
+	}
 
-		retTexture = textures.get(filename);
+	public void bindTexture(int textureId, int position) {
+		glActiveTexture(texturePositions[position]);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glActiveTexture(texturePositions[0]);
+	}
 
-		return retTexture;
-	}*/
+	static {
+		texturePositions = new int[5];
+
+		texturePositions[0] = GL_TEXTURE0;
+		texturePositions[1] = GL_TEXTURE1;
+		texturePositions[2] = GL_TEXTURE2;
+		texturePositions[3] = GL_TEXTURE3;
+		texturePositions[4] = GL_TEXTURE4;
+
+	}
 }

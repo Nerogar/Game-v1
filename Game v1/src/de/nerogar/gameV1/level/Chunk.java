@@ -68,6 +68,8 @@ public class Chunk {
 		} else if (!serverChunk) {
 			updateVbo();
 		}
+		
+		world.recalcFactionEntities();
 	}
 
 	public void updateWalkableMap() {

@@ -71,8 +71,8 @@ public class SaveProvider {
 
 		InternalServer internalServer = new InternalServer(game, server);
 		game.internalServer = internalServer;
-		internalServer.initiateWorld(saves[index].getName(), new Faction[] { Faction.factionBlue });
-		game.world.initiateClientWorld(client, Faction.factionBlue);
+		internalServer.initiateWorld(saves[index].getName(), new Faction[] { Faction.factionBlueServer });
+		game.world.initiateClientWorld(client, Faction.factionBlueClient, null);
 	}
 
 	public void loadWorld(Game game, String name, long seed) {
@@ -83,8 +83,8 @@ public class SaveProvider {
 
 		InternalServer internalServer = new InternalServer(game, server);
 		game.internalServer = internalServer;
-		internalServer.initiateWorld(name, seed, new Faction[] { Faction.factionBlue });
-		game.world.initiateClientWorld(client, Faction.factionBlue);
+		internalServer.initiateWorld(name, seed, new Faction[] { Faction.factionBlueServer });
+		game.world.initiateClientWorld(client, Faction.factionBlueClient, null);
 	}
 
 	public void renameWorld(int index, String newName) {

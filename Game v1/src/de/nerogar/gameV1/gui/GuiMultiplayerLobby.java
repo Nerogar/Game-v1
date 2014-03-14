@@ -124,7 +124,7 @@ public class GuiMultiplayerLobby extends Gui {
 			} else if (packet instanceof PacketExitMultiplayerLobby) {
 				PacketExitMultiplayerLobby exitPacket = (PacketExitMultiplayerLobby) packet;
 				game.guiList.removeGui(getName());
-				game.world.initiateClientWorld(client, Faction.getFaction(exitPacket.factionID));
+				game.world.initiateClientWorld(client, Faction.getClientFaction(exitPacket.factionID), Faction.getClientFactions(exitPacket.factionIDs));
 			}
 		}
 	}
@@ -177,10 +177,16 @@ public class GuiMultiplayerLobby extends Gui {
 			game.internalServer = internalServer;
 
 			Faction[] playingFactions = new Faction[Faction.getMaxFactionCount() < server.getClients().size() ? Faction.getMaxFactionCount() : server.getClients().size()];
+			int[] playingFactionIDs = new int[playingFactions.length];
 			for (int i = 0; i < playingFactions.length; i++) {
-				playingFactions[i] = Faction.getFaction(i);
+				playingFactions[i] = Faction.getServerFaction(i);
+				playingFactionIDs[i] = playingFactions[i].id;
+			}
+
+			for (int i = 0; i < playingFactions.length; i++) {
 				PacketExitMultiplayerLobby exitPacket = new PacketExitMultiplayerLobby();
 				exitPacket.factionID = i;
+				exitPacket.factionIDs = playingFactionIDs;
 				server.getClients().get(i).sendPacket(exitPacket);
 			}
 

@@ -119,7 +119,7 @@ public class GuiVideoSettings extends Gui {
 		} else if (id == okButton.id && mouseButton == 0) {
 			if (resSlider.position != displayMode) {
 				renderEngine.setDisplayMode(resSlider.position);
-				game.setSceneResolutions();
+				game.renderSceneContainer.setSceneResolutions();
 			}
 			RenderEngine.instance.setVSync();
 			GameOptions.instance.setIntOption("fps", (int) fpsSlider.position);

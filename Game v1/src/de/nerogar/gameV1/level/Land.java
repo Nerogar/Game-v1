@@ -153,7 +153,7 @@ public class Land {
 		rebuildChunkGrid();
 		updateWalkMapNodeNeighbors(chunk);
 		world.collisionComparer.newGrid();
-		world.recalcFactionEntities();
+		//world.recalcFactionEntities();
 	}
 
 	public void loadAllAroundXZ(Position blockPosition) {

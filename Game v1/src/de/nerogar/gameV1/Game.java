@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
 
 import de.nerogar.gameV1.debug.DebugFelk;
 import de.nerogar.gameV1.debug.DebugNerogar;
-import de.nerogar.gameV1.graphics.RenderSceneFinal;
+import de.nerogar.gameV1.graphics.RenderSceneContainer;
 import de.nerogar.gameV1.gui.*;
 import de.nerogar.gameV1.internalServer.InternalServer;
 import de.nerogar.gameV1.level.Entity;
@@ -28,7 +28,7 @@ public class Game {
 	public World world;
 	public GuiList guiList = new GuiList();
 	public RenderEngine renderEngine = RenderEngine.instance;
-	public RenderSceneFinal renderSceneFinal;
+	public RenderSceneContainer renderSceneContainer;
 
 	private long[] stressTimes = new long[4];
 	public long stressTimeMainloop = 0;
@@ -129,22 +129,18 @@ public class Game {
 		guiList.update();
 		if (!guiList.pauseGame()) {
 			world.update(timer.delta);
+			world.lightningEffectContainer.update(timer.time);
 		}
 	}
 
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		//world.render(timer.time);
-		world.renderScene(timer.time);
-		guiList.renderScene(timer.time);
 
-		renderSceneFinal.render(timer.time);
+		renderSceneContainer.render(timer.time);
 	}
 
 	private void init() {
 		RenderHelper.renderLoadingScreen("Starte Spiel...");
-		renderSceneFinal = new RenderSceneFinal();
-		renderSceneFinal.game = this;
 
 		timer = new Timer();
 		timer.init();
@@ -165,12 +161,8 @@ public class Game {
 			e.printStackTrace();
 		}
 
-		setSceneResolutions();
-	}
-
-	public void setSceneResolutions() {
-		guiList.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
-		world.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
+		renderSceneContainer = new RenderSceneContainer(this);
+		renderSceneContainer.setSceneResolutions();
 	}
 
 	public static void main(String[] args) {

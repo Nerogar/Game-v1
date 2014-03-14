@@ -126,6 +126,8 @@ public class Shader {
 			e.printStackTrace();
 		}
 
+		System.out.println("loaded shader: " + filename);
+		
 		return text.toString();
 	}
 

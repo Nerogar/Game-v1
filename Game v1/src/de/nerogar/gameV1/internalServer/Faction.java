@@ -9,18 +9,26 @@ import de.nerogar.gameV1.network.Client;
 public class Faction {
 
 	//factions
-	public static Faction factionNone; // factionless
-	public static Faction factionBlue;
-	public static Faction factionRed;
-	public static Faction factionGreen;
-	public static Faction factionYellow;
-	private static ArrayList<Faction> factions;
+	public static Faction factionNoneServer; // factionless
+	public static Faction factionBlueServer;
+	public static Faction factionRedServer;
+	public static Faction factionGreenServer;
+	public static Faction factionYellowServer;
+	private static ArrayList<Faction> factionsServer;
+
+	public static Faction factionNoneClient; // factionless
+	public static Faction factionBlueClient;
+	public static Faction factionRedClient;
+	public static Faction factionGreenClient;
+	public static Faction factionYellowClient;
+	private static ArrayList<Faction> factionsClient;
 	//end factions
 
 	private static final int TOWER_BUILDING_RADIUS = 10;
 
 	public int id;
 	public Client client;
+	public boolean serverFaction;
 
 	public int maxUnits;
 	public ArrayList<EntityFighting> factionEntities;
@@ -37,7 +45,7 @@ public class Faction {
 		for (Entity e : entityList.entities.values()) {
 			if (e instanceof EntityFighting) {
 				EntityFighting entityFighting = (EntityFighting) e;
-				if (entityFighting.faction == this) {
+				if (entityFighting.faction.id == id) {
 					factionEntities.add(entityFighting);
 				}
 			}
@@ -46,7 +54,7 @@ public class Faction {
 		for (Entity e : entityList.newEntities) {
 			if (e instanceof EntityFighting) {
 				EntityFighting entityFighting = (EntityFighting) e;
-				if (entityFighting.faction == this) {
+				if (entityFighting.faction.id == id) {
 					factionEntities.add(entityFighting);
 				}
 			}
@@ -70,6 +78,7 @@ public class Faction {
 	}
 
 	public boolean isEntityInTowerRange(EntityFighting target) {
+		if (target instanceof EntityEnergyTower) return true;
 
 		for (EntityFighting ef : factionEntities) {
 			if (ef.isDistanceSmaller(target, TOWER_BUILDING_RADIUS)) { return true; }
@@ -85,27 +94,71 @@ public class Faction {
 
 	}
 
-	public static Faction getFaction(int factionID) {
-		if (factionID == -1) return factionNone;
-		return factions.get(factionID);
+	public static Faction getServerFaction(int factionID) {
+		if (factionID == -1) return factionNoneServer;
+		return factionsServer.get(factionID);
+	}
+
+	public static Faction getClientFaction(int factionID) {
+		if (factionID == -1) return factionNoneClient;
+		return factionsClient.get(factionID);
+	}
+
+	public static Faction[] getClientFactions(int[] factionIDs) {
+		Faction[] factions = new Faction[factionIDs.length];
+
+		for (int i = 0; i < factionIDs.length; i++) {
+			factions[i] = getClientFaction(factionIDs[i]);
+		}
+
+		return factions;
+	}
+
+	public static Faction[] getServerFactions(int[] factionIDs) {
+		Faction[] factions = new Faction[factionIDs.length];
+
+		for (int i = 0; i < factionIDs.length; i++) {
+			factions[i] = getServerFaction(factionIDs[i]);
+		}
+
+		return factions;
 	}
 
 	public static int getMaxFactionCount() {
-		return factions.size();
+		return factionsServer.size();
 	}
 
 	static {
-		factionNone = new Faction(-1);
+		//server
+		factionNoneServer = new Faction(-1);
+		factionBlueServer = new Faction(0);
+		factionRedServer = new Faction(1);
+		factionGreenServer = new Faction(2);
+		factionYellowServer = new Faction(3);
 
-		factionBlue = new Faction(0);
-		factionRed = new Faction(1);
-		factionGreen = new Faction(2);
-		factionYellow = new Faction(3);
+		factionsServer = new ArrayList<Faction>();
+		factionsServer.add(factionBlueServer);
+		factionsServer.add(factionRedServer);
+		factionsServer.add(factionGreenServer);
+		factionsServer.add(factionYellowServer);
 
-		factions = new ArrayList<Faction>();
-		factions.add(factionBlue);
-		factions.add(factionRed);
-		factions.add(factionGreen);
-		factions.add(factionYellow);
+		factionNoneServer.serverFaction = true;
+		factionBlueServer.serverFaction = true;
+		factionRedServer.serverFaction = true;
+		factionGreenServer.serverFaction = true;
+		factionYellowServer.serverFaction = true;
+
+		//client
+		factionNoneClient = new Faction(-1);
+		factionBlueClient = new Faction(0);
+		factionRedClient = new Faction(1);
+		factionGreenClient = new Faction(2);
+		factionYellowClient = new Faction(3);
+
+		factionsClient = new ArrayList<Faction>();
+		factionsClient.add(factionBlueClient);
+		factionsClient.add(factionRedClient);
+		factionsClient.add(factionGreenClient);
+		factionsClient.add(factionYellowClient);
 	}
 }
