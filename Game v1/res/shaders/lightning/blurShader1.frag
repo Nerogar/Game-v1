@@ -1,3 +1,4 @@
+#resolution
 uniform sampler2D effectColorTex;
 
 varying vec4 verpos;
@@ -6,7 +7,7 @@ varying vec2 varyingTexCoord0;
 vec4 blur(){
 	vec4 sum = vec4(0,0,0,0);
 	//float dist = 0.0015;
-	float dist = 1.0 / 1280.0;
+	float dist = 1.0 / resolution.x;
 
 /*
     sum += texture2D(effectColorTex, vec2(varyingTexCoord0.x - 4.0 * dist, varyingTexCoord0.y)) * 0.05;

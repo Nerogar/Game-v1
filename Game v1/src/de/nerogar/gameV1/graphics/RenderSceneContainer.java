@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.gui.GuiList;
@@ -116,11 +117,15 @@ public class RenderSceneContainer {
 	}
 
 	public void setSceneResolutions() {
-		guiList.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
-		world.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
-		world.lightningEffectContainer.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
-		lightningMask.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
-		lightningBlur.setResolution(RenderEngine.instance.getDisplayMode().getWidth(), RenderEngine.instance.getDisplayMode().getHeight());
+		DisplayMode displayMode = RenderEngine.instance.getDisplayMode();
+		guiList.setResolution(displayMode.getWidth(), displayMode.getHeight());
+		world.setResolution(displayMode.getWidth(), displayMode.getHeight());
+		world.lightningEffectContainer.setResolution(displayMode.getWidth(), displayMode.getHeight());
+		lightningMask.setResolution(displayMode.getWidth(), displayMode.getHeight());
+		lightningBlur.setResolution(displayMode.getWidth(), displayMode.getHeight());
+
+		lightningBlur.blurShader.setResolution(displayMode.getWidth(), displayMode.getHeight());
+		compositionShader.setResolution(displayMode.getWidth(), displayMode.getHeight());
 	}
 
 }

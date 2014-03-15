@@ -116,9 +116,11 @@ public class Shader {
 							String newFilename = tempFile.getName();
 							readFile(dirPath, newFilename, text);
 						}
+					} else if (line.startsWith("#resolution")) {
+						text.append("uniform vec2 resolution;\n");
 					}
 				} else {
-					text.append(line).append('\n');
+					text.append(line).append("\n");
 				}
 			}
 			fileReader.close();
@@ -127,7 +129,7 @@ public class Shader {
 		}
 
 		System.out.println("loaded shader: " + filename);
-		
+
 		return text.toString();
 	}
 
@@ -148,5 +150,14 @@ public class Shader {
 			active = false;
 			glUseProgram(0);
 		}
+	}
+
+	public void setResolution(float x, float y) {
+		activate();
+
+		glUniform2f(glGetUniformLocation(shaderHandle, "resolution"), x, y);
+		System.out.println(glGetUniformLocation(shaderHandle, "resolution"));
+
+		deactivate();
 	}
 }

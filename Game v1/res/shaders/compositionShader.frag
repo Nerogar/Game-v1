@@ -1,3 +1,4 @@
+#resolution
 uniform sampler2D worldColorTex;
 uniform sampler2D effectColorTex;
 
@@ -19,7 +20,7 @@ float linearize(in float color){
 
 vec4 blur(){
 	vec4 sum = vec4(0,0,0,0);
-	float dist = 1.0 / 1280.0;
+	float dist = 1.0 / resolution.y;
 /*
 	sum += texture2D(effectColorTex, vec2(varyingTexCoord0.x, varyingTexCoord0.y - 4.0 * dist)) * 0.05;
 	sum += texture2D(effectColorTex, vec2(varyingTexCoord0.x, varyingTexCoord0.y - 3.0 * dist)) * 0.09;
