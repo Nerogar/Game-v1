@@ -156,7 +156,6 @@ public class Shader {
 		activate();
 
 		glUniform2f(glGetUniformLocation(shaderHandle, "resolution"), x, y);
-		System.out.println(glGetUniformLocation(shaderHandle, "resolution"));
 
 		deactivate();
 	}
