@@ -62,8 +62,8 @@ public class RenderSceneContainer {
 		compositionShader.activate();
 
 		TextureBank.instance.bindTexture(world.colorTextureID, 0);
-		//TextureBank.instance.bindTexture(lightningBlur.colorTextureID, 1);
 		TextureBank.instance.bindTexture(lightningBlur.colorTextureID, 1);
+		//TextureBank.instance.bindTexture(lightningMask.colorTextureID, 1);
 		TextureBank.instance.bindTexture(guiList.colorTextureID, 2);
 
 		glUniform1i(glGetUniformLocation(compositionShader.shaderHandle, "worldColorTex"), 0);
