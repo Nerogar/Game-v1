@@ -68,6 +68,9 @@ public class World extends RenderScene {
 		}
 
 		this.factions = factions;
+		for (int i = 0; i < factions.length; i++) {
+			factions[i].client = server.getClients().get(i);
+		}
 		pathfinder = new Pathfinder(land);
 		land.saveName = worldData.saveName;
 		land.seed = worldData.seed;
@@ -239,6 +242,7 @@ public class World extends RenderScene {
 			entityList.update(game, receivedPackets, time);
 		} else {
 
+			//entity packets
 			ArrayList<Packet> receivedPackets = new ArrayList<Packet>();
 
 			ArrayList<Client> clients = server.getClients();
@@ -248,7 +252,9 @@ public class World extends RenderScene {
 					ArrayList<Packet> receivedPacketsClient = connectionClient.getData(Packet.ENTITY_CHANNEL);
 					if (receivedPacketsClient != null) {
 						for (Packet packet : receivedPacketsClient) {
-							receivedPackets.add(packet);
+							if (connectionClient == Faction.getServerFaction(((EntityPacket) packet).factionID).client) {
+								receivedPackets.add(packet);
+							}
 						}
 					}
 				}

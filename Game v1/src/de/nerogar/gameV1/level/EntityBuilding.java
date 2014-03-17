@@ -1,6 +1,9 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.gameV1.*;
+import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityBuilding extends EntityFighting {
@@ -16,22 +19,11 @@ public abstract class EntityBuilding extends EntityFighting {
 	}
 
 	@Override
-	public abstract void init(World world);
-
-	//setObject("houses/test1", "houses/test1-1.png");
-
-	//public void update(float time) {
-	//	matrix.getPosition().y = game.world.land.getHeight(matrix.getPosition().x, matrix.getPosition().z);
-	//}
-
-	@Override
-	public abstract void interact();
-
-	@Override
-	public abstract String getNameTag();
-
-	@Override
-	public abstract void click(int key);
-	//if(key == 1)	markToRemove = true;
-
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		for (EntityPacket packet : packets) {
+			if (packet instanceof EntityPacketRemoveHouse) {
+				remove();
+			}
+		}
+	}
 }

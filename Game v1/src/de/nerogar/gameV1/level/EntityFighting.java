@@ -4,6 +4,7 @@ import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.ai.AIContainer;
 import de.nerogar.gameV1.internalServer.Faction;
+import de.nerogar.gameV1.network.EntityPacketRemoveHouse;
 import de.nerogar.gameV1.network.PacketSetTarget;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
@@ -38,12 +39,21 @@ public abstract class EntityFighting extends Entity {
 		}
 	}
 
+	public void sendRemoveBuilding() {
+		if (this instanceof EntityBuilding) {
+			EntityPacketRemoveHouse removeHousePacket = new EntityPacketRemoveHouse();
+			removeHousePacket.entityID = id;
+			removeHousePacket.factionID = faction.id;
+			world.client.sendPacket(removeHousePacket);
+		}
+	}
+
 	@Override
 	public void load(DNNodePath folder) {
 		super.load(folder);
-		if(world.serverWorld){
+		if (world.serverWorld) {
 			faction = Faction.getServerFaction(folder.getInt("fID"));
-		}else{
+		} else {
 			faction = Faction.getClientFaction(folder.getInt("fID"));
 		}
 	}

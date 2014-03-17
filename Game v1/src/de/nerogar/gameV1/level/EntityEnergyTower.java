@@ -50,6 +50,7 @@ public class EntityEnergyTower extends EntityBuilding {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		for (EntityFighting factionEntity : faction.factionEntities) {
 			if (isDistanceSmaller(factionEntity, 20f)) {
 				factionEntity.energy = factionEntity.getMaxEnergy();

@@ -66,19 +66,25 @@ public class EntityList {
 	}
 
 	public void removeNullEntities() {
+		boolean removed = false;
+
 		Iterator<Entry<Integer, Entity>> iterator = entities.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<Integer, Entity> entry = iterator.next();
 			if (entry.getValue() == null || entry.getValue().markToRemove) {
 				iterator.remove();
+				removed = true;
 			}
 		}
 
 		for (int i = tempEntities.size() - 1; i >= 0; i--) {
 			if (tempEntities.get(i) == null || tempEntities.get(i).markToRemove) {
 				tempEntities.remove(i);
+				removed = true;
 			}
 		}
+
+		if (removed) world.recalcFactionEntities();
 	}
 
 	public Entity[] getEntitiesInSight(Ray ray) {

@@ -46,7 +46,7 @@ public class EntityHut extends EntityBuilding {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
-
+		super.updateServer(time, packets);
 	}
 
 	@Override

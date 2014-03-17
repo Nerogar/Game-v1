@@ -4,8 +4,4 @@ public abstract class FactionPacket extends Packet {
 
 	public int factionID = 0;
 
-	public FactionPacket() {
-
-	}
-
 }

@@ -63,7 +63,7 @@ public class Player {
 				buildingOnCursor.matrix.setPosition(null);
 			}
 		}
-		
+
 	}
 
 	private void renderEntityOnCursor(World world) {
@@ -107,70 +107,6 @@ public class Player {
 		if (game.guiList.usedGui) return;
 		Entity[] clickedEntities = world.entityList.getEntitiesInSight(sightRay);
 
-		/*if (clickedEntities.length > 0) {
-			Entity clickedEntity = clickedEntities[0];
-
-			if (clickedEntity instanceof EntityFighting) {
-				if (InputHandler.isMouseButtonPressed(1)) {
-					selectedUnit = (EntityFighting) clickedEntity;
-					System.out.println("entitySelected");
-				} else if (InputHandler.isMouseButtonPressed(0)) {
-					if (selectedUnit != null) selectedUnit.sendStartAttack((EntityFighting) clickedEntity);
-					System.out.println("entityTargeted");
-				}
-
-			}
-			if (InputHandler.isMouseButtonPressed(0)) {
-				EntityPacketClick clickPacket = new EntityPacketClick();
-				clickPacket.entityID = clickedEntity.id;
-				clickPacket.mouseButton = 0;
-				world.client.sendPacket(clickPacket);
-			} else if (InputHandler.isMouseButtonPressed(1)) {
-				EntityPacketClick clickPacket = new EntityPacketClick();
-				clickPacket.entityID = clickedEntity.id;
-				clickPacket.mouseButton = 1;
-				world.client.sendPacket(clickPacket);
-			}
-
-		} else {
-			if (InputHandler.isMouseButtonPressed(1)) selectedUnit = null;
-
-			if (InputHandler.get3DmousePosition() != null) {
-				if (InputHandler.isMouseButtonPressed(0)) {
-					if (selectedUnit != null) {
-						selectedUnit.sendStartMoving(InputHandler.get3DmousePosition());
-					}
-
-					//world.land.click(0, floorIntersection);
-					//ObjectMatrix om = new ObjectMatrix(new Vector3d(Math.floor(floorIntersection.getX()), floorIntersection.getY(), Math.floor(floorIntersection.getZ())));
-					//spawnEntity(new EntityHouse(game, om));
-					// wtf, warum machst du das hierhin?
-				}
-
-				if (InputHandler.isMouseButtonPressed(1)) {
-					world.land.click(1, InputHandler.get3DmousePosition());
-				}
-
-				if (InputHandler.isMouseButtonPressed(2)) {
-					world.land.click(2, InputHandler.get3DmousePosition());
-				}
-
-				if (InputHandler.isMouseButtonPressed(0) && isbuildingOnCursorBuildable) {
-					if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
-						FactionPacketBuildHouse packetBuildHouse = new FactionPacketBuildHouse();
-						packetBuildHouse.factionID = ownFaction.id;
-						packetBuildHouse.buildingID = buildingOnCursor.getNameTag();
-						packetBuildHouse.buildPos = new Position(MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getX(), 1), MathHelper.roundDownToInt(buildingOnCursor.matrix.position.getZ(), 1));
-
-						world.client.sendPacket(packetBuildHouse);
-
-						//world.spawnEntity(buildingOnCursor);
-						buildingOnCursor = null;
-					}
-				}
-			}
-		}*/
-
 		if (buildingOnCursor != null) {
 			if (InputHandler.isMouseButtonPressed(1)) {
 				buildingOnCursor = null;
@@ -190,10 +126,18 @@ public class Player {
 			if (clickedEntities.length > 0) {
 				Entity clickedEntity = clickedEntities[0];
 
-				if (clickedEntity instanceof EntityFighting) {
+				if (clickedEntity instanceof EntityBuilding) {
 					if (InputHandler.isMouseButtonPressed(1)) {
-						selectedUnit = (EntityFighting) clickedEntity;
-						System.out.println("entitySelected");
+						if (((EntityFighting) clickedEntity).faction.equals(ownFaction)) {
+							((EntityBuilding) clickedEntity).sendRemoveBuilding();
+						}
+					} 
+				} else if (clickedEntity instanceof EntityFighting) {
+					if (InputHandler.isMouseButtonPressed(1)) {
+						if (((EntityFighting) clickedEntity).faction.equals(ownFaction)) {
+							selectedUnit = (EntityFighting) clickedEntity;
+							System.out.println("entitySelected");
+						}
 					} else if (InputHandler.isMouseButtonPressed(0)) {
 						if (selectedUnit != null) {
 							selectedUnit.sendStartAttack((EntityFighting) clickedEntity);
