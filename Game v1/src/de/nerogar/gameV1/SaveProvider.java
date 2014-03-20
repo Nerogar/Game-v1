@@ -68,7 +68,6 @@ public class SaveProvider {
 
 		Server server = new Server(GameOptions.instance.STANDARDPORT);
 		Client client = new Client("localhost", server.port);
-		Faction.factionBlueServer.client = server.getClients().get(0);
 		
 		InternalServer internalServer = new InternalServer(game, server);
 		game.internalServer = internalServer;

@@ -38,14 +38,8 @@ public class EntitySpawnPlatform extends EntityBuilding {
 	}
 
 	@Override
-	public void click(int key) {
-		// TODO Auto-generated method stub
-		if (key == 1) remove();
-	}
-
-	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
-
+		super.updateServer(time, packets);
 	}
 
 	@Override

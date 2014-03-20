@@ -376,14 +376,6 @@ public class World extends RenderScene {
 		}
 	}
 
-	public void despawnEntity(Entity entity) {
-		if (isLoaded) {
-			entityList.entities.remove(entity);
-
-			recalcFactionEntities();
-		}
-	}
-
 	public Entity getEntityByID(int id) {
 		return entityList.entities.get(id);
 	}
@@ -397,7 +389,6 @@ public class World extends RenderScene {
 
 		if (player != null && player.ownFaction != null) {
 			player.ownFaction.recalcFactionEntities(entityList);
-
 		}
 	}
 }

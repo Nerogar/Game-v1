@@ -28,6 +28,7 @@ public class EntityTestSoldier extends EntityMobile {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		for (EntityPacket packet : packets) {
 			if (packet instanceof PacketSetTarget) {
 
@@ -68,12 +69,6 @@ public class EntityTestSoldier extends EntityMobile {
 	public void save(DNNodePath folder) {
 		// TODO Auto-generated method stub
 		super.save(folder);
-	}
-
-	@Override
-	public void click(int key) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

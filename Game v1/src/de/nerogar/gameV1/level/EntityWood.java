@@ -22,7 +22,7 @@ public class EntityWood extends Entity {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
-		
+
 	}
 
 	@Override
@@ -40,12 +40,6 @@ public class EntityWood extends Entity {
 	public void save(DNNodePath folder) {
 		// TODO Auto-generated method stub
 		super.save(folder);
-	}
-
-	@Override
-	public void click(int key) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

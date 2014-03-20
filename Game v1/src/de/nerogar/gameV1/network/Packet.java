@@ -85,5 +85,6 @@ public abstract class Packet {
 		registerPacket(EntityPacketMove.class);
 		registerPacket(EntityPacketUpdate.class);
 		registerPacket(EntityPacketRemoveHouse.class);
+		registerPacket(EntityPacketEffect.class);
 	}
 }

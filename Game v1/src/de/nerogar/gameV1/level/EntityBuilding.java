@@ -11,7 +11,7 @@ public abstract class EntityBuilding extends EntityFighting {
 	public Position size;
 	public Position centerPosition;
 
-	public GameResources resourceCost = new GameResources(0, 0, 0);
+	public GameResources resourceCost;
 
 	public EntityBuilding(Game game, World world, ObjectMatrix matrix) {
 		//super(game, matrix, data, "houses/cone");
@@ -20,6 +20,7 @@ public abstract class EntityBuilding extends EntityFighting {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		for (EntityPacket packet : packets) {
 			if (packet instanceof EntityPacketRemoveHouse) {
 				remove();

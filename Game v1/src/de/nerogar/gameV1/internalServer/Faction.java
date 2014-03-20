@@ -77,7 +77,7 @@ public class Faction {
 		return maxUnits;
 	}
 
-	public boolean isEntityInTowerRange(EntityFighting target) {
+	public boolean isEntityInVillageRange(EntityFighting target) {
 		if (target instanceof EntityEnergyTower) return true;
 
 		for (EntityFighting ef : factionEntities) {

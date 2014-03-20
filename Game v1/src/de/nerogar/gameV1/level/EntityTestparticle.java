@@ -26,6 +26,7 @@ public class EntityTestparticle extends EntityParticle {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		//this is a client entity
 	}
 
@@ -52,11 +53,6 @@ public class EntityTestparticle extends EntityParticle {
 
 	@Override
 	public void interact() {
-		return;
-	}
-
-	@Override
-	public void click(int key) {
 		return;
 	}
 

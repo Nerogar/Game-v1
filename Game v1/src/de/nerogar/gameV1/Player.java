@@ -33,6 +33,10 @@ public class Player {
 	}
 
 	public void renderInWorld(World world) {
+		renderEntityOnCursorGround();
+	}
+
+	public void renderInEntityList() {
 		renderEntityOnCursor(world);
 	}
 
@@ -58,7 +62,7 @@ public class Player {
 				floorPos.subtract(buildingOnCursor.centerPosition);
 				isbuildingOnCursorBuildable = world.land.isBuildable(buildingOnCursor, floorPos);
 
-				isbuildingOnCursorBuildable = isbuildingOnCursorBuildable && ownFaction.isEntityInTowerRange(buildingOnCursor);
+				isbuildingOnCursorBuildable = isbuildingOnCursorBuildable && ownFaction.isEntityInVillageRange(buildingOnCursor);
 			} else {
 				buildingOnCursor.matrix.setPosition(null);
 			}
@@ -67,9 +71,6 @@ public class Player {
 	}
 
 	private void renderEntityOnCursor(World world) {
-		Shader terrainShader = ShaderBank.instance.getShader("terrain");
-		terrainShader.activate();
-
 		if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
 			//buildingOnCursor.opacity = 0.5f;
 			//buildingOnCursor.render();
@@ -79,6 +80,18 @@ public class Player {
 				buildingOnCursor.render();
 			}
 			RenderHelper.disableAlpha();
+
+		}
+
+	}
+
+	private void renderEntityOnCursorGround() {
+		Shader terrainShader = ShaderBank.instance.getShader("terrain");
+		terrainShader.activate();
+
+		if (buildingOnCursor != null && buildingOnCursor.matrix.position != null) {
+			//buildingOnCursor.opacity = 0.5f;
+			//buildingOnCursor.render();
 
 			if (isbuildingOnCursorBuildable) {
 				//RenderHelper.drawQuad(a, b, c, d, 0x00ff0066);
@@ -111,7 +124,7 @@ public class Player {
 			if (InputHandler.isMouseButtonPressed(1)) {
 				buildingOnCursor = null;
 			} else if (InputHandler.isMouseButtonPressed(0)) {
-				if (isbuildingOnCursorBuildable) {
+				if (isbuildingOnCursorBuildable && buildingOnCursor.matrix.position != null) {
 					FactionPacketBuildHouse packetBuildHouse = new FactionPacketBuildHouse();
 					packetBuildHouse.factionID = ownFaction.id;
 					packetBuildHouse.buildingID = buildingOnCursor.getNameTag();
@@ -131,7 +144,7 @@ public class Player {
 						if (((EntityFighting) clickedEntity).faction.equals(ownFaction)) {
 							((EntityBuilding) clickedEntity).sendRemoveBuilding();
 						}
-					} 
+					}
 				} else if (clickedEntity instanceof EntityFighting) {
 					if (InputHandler.isMouseButtonPressed(1)) {
 						if (((EntityFighting) clickedEntity).faction.equals(ownFaction)) {

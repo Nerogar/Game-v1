@@ -183,6 +183,8 @@ public class EntityList {
 			renderEntity(loadPosition, maxChunkRenderDistance, entity);
 		}
 
+		if (world.player != null) world.player.renderInEntityList();
+		
 		entityShader.deactivate();
 	}
 

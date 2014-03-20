@@ -45,18 +45,8 @@ public class EntityTree extends EntityFighting {
 	}
 
 	@Override
-	public void click(int key) {
-		if (key == 0) {
-			matrix.getPosition().add(new Vector3d(0, 1, 0));
-			//ALSource sound2 = SoundManager.instance.create("forecast_elevator.ogg", ALSource.PRIORITY_LOW, matrix.position, new Vector3d(0, 0, 0), false, true, 1, 1);
-			//if (sound2 != null) sound2.play();
-		} else if (key == 1) {
-			matrix.getPosition().add(new Vector3d(0, -1, 0));
-		}
-	}
-
-	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		for (EntityPacket packet : packets) {
 			if (packet instanceof EntityPacketClick) {
 				System.out.println(((EntityPacketClick) packet).mouseButton);

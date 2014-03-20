@@ -15,7 +15,7 @@ public class EntityHouseOrange extends EntityBuilding {
 		super(game, world, matrix);
 		size = new Position(2, 2);
 		centerPosition = new Position(1, 1);
-		resourceCost = new GameResources(200, 100, 100);
+		resourceCost = new GameResources(2, 0);
 		boundingBox = new BoundingAABB(new Vector3d(-size.x / 2, 0, -size.z / 2), new Vector3d(size.x / 2, 1, size.z / 2));
 	}
 
@@ -40,12 +40,8 @@ public class EntityHouseOrange extends EntityBuilding {
 	}
 
 	@Override
-	public void click(int key) {
-		if (key == 1) remove();
-	}
-
-	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		if (Math.random() < 0.01f) {
 			EntityTestSoldier testSoldier = new EntityTestSoldier(game, world, new ObjectMatrix());
 			double posX = matrix.position.getX() + Math.random() * 10 - 5;

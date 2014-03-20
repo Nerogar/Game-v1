@@ -1,11 +1,12 @@
 package de.nerogar.gameV1.level;
 
+import java.util.ArrayList;
+
 import de.nerogar.DNFileSystem.DNNodePath;
 import de.nerogar.gameV1.*;
 import de.nerogar.gameV1.ai.AIContainer;
 import de.nerogar.gameV1.internalServer.Faction;
-import de.nerogar.gameV1.network.EntityPacketRemoveHouse;
-import de.nerogar.gameV1.network.PacketSetTarget;
+import de.nerogar.gameV1.network.*;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 
 public abstract class EntityFighting extends Entity {
@@ -14,6 +15,7 @@ public abstract class EntityFighting extends Entity {
 	public Faction faction;
 	public int health;
 	public int energy;
+	public float energyPulseCooldown;
 	public float moveSpeed = 1;
 	public AIContainer aiContainer;
 
@@ -49,6 +51,12 @@ public abstract class EntityFighting extends Entity {
 	}
 
 	@Override
+	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		energyPulseCooldown -= time;
+		energy--;
+	}
+
+	@Override
 	public void load(DNNodePath folder) {
 		super.load(folder);
 		if (world.serverWorld) {
@@ -69,9 +77,14 @@ public abstract class EntityFighting extends Entity {
 
 	}
 
-	@Override
-	public void click(int key) {
+	public boolean fillEnergy() {
+		if (energyPulseCooldown <= 0 && energy != getMaxEnergy() && getMaxEnergy() >= 0) {
+			energy = getMaxEnergy();
+			energyPulseCooldown = 5f;
+			return true;
+		}
 
+		return false;
 	}
 
 	public abstract int getMaxEnergy();

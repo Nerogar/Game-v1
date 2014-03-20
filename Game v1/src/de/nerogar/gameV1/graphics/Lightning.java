@@ -22,7 +22,7 @@ public class Lightning {
 		float amplifier = (float) (Math.random() * 1.2f);
 
 		Vector3d direction = Vector3d.subtract(end, start);
-		vertices = new Vector3d[(int) direction.getValue()+ 2];
+		vertices = new Vector3d[(int) direction.getValue() + 2];
 		direction.multiply(1f / vertices.length);
 
 		vertices[0] = start;
@@ -31,6 +31,8 @@ public class Lightning {
 			Vector3d dirMult = Vector3d.multiply(direction, i);
 			vertices[i] = dirMult.add(start).add((new Vector3d(Math.random(), Math.random(), Math.random())).subtract(halfVector).multiply(amplifier));
 		}
+
+		vertices[vertices.length - 1] = end;
 	}
 
 	public void update(double time) {

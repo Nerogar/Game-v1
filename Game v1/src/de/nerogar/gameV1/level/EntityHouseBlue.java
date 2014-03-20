@@ -15,7 +15,7 @@ public class EntityHouseBlue extends EntityBuilding {
 		super(game, world, matrix);
 		size = new Position(2, 2);
 		centerPosition = new Position(1, 1);
-		resourceCost = new GameResources(200, 100, 100);
+		resourceCost = new GameResources(2, 0);
 		boundingBox = new BoundingAABB(new Vector3d(-size.x / 2, 0, -size.z / 2), new Vector3d(size.x / 2, 1, size.z / 2));
 	}
 
@@ -26,6 +26,7 @@ public class EntityHouseBlue extends EntityBuilding {
 
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
+		super.updateServer(time, packets);
 		for (EntityPacket packet : packets) {
 			if (packet instanceof EntityPacketClick) {
 				int mouseButton = ((EntityPacketClick) packet).mouseButton;
@@ -55,12 +56,6 @@ public class EntityHouseBlue extends EntityBuilding {
 	@Override
 	public void loadProperties(DNNodePath folder) {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void click(int key) {
-		// TODO Auto-generated method stub
-		if (key == 1) remove();
 	}
 
 	@Override

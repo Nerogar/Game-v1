@@ -169,8 +169,6 @@ public abstract class Entity {
 
 	public abstract void interact(); // wenn andere entities oder objekte mit dieser entity interagieren
 
-	public abstract void click(int key);// klick mit der maus, macht sinn, oder?
-
 	public abstract String getNameTag();
 
 	public abstract void init(World world);
@@ -204,7 +202,6 @@ public abstract class Entity {
 	public static void initEntityList(Game game) {
 		ObjectMatrix objectMatrix = new ObjectMatrix();
 		registerEntity(new EntityTree(game, null, objectMatrix));
-		registerEntity(new EntityHouse(game, null, objectMatrix));
 		registerEntity(new EntityHouseBlue(game, null, objectMatrix));
 		registerEntity(new EntityHouseGreen(game, null, objectMatrix));
 		registerEntity(new EntityHouseOrange(game, null, objectMatrix));
