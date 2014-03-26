@@ -17,6 +17,7 @@ import de.nerogar.gameV1.animation.MeshVertex;
 import de.nerogar.gameV1.animation.Armature;
 import de.nerogar.gameV1.graphics.Shader;
 import de.nerogar.gameV1.graphics.ShaderBank;
+import de.nerogar.gameV1.matrix.Matrix;
 import de.nerogar.gameV1.matrix.MatrixHelperR3;
 import de.nerogar.gameV1.physics.ObjectMatrix;
 import de.nerogar.gameV1.sound.ALBufferBank;
@@ -145,6 +146,8 @@ public class DebugFelk {
 
 		//if (sound != null) sound.play();
 		//AL10.alDopplerVelocity(320f);
+		
+		
 	}
 
 	public void run() {
@@ -195,6 +198,33 @@ public class DebugFelk {
 		
 		if (InputHandler.isKeyPressed(Keyboard.KEY_V)) {
 			sound.uncrash();
+		}
+		
+		if (InputHandler.isKeyPressed(Keyboard.KEY_B)) {
+			Matrix m = new Matrix(3, 5);
+			m.set(0, 0, 0);
+			m.set(0, 1, 1);
+			m.set(0, 2, -1);
+			m.set(0, 3, -1);
+			m.set(0, 4, 1);
+			m.set(1, 0, 1);
+			m.set(1, 1, 0);
+			m.set(1, 2, -1);
+			m.set(1, 3, 1);
+			m.set(1, 4, 0);
+			m.set(2, 0, 0);
+			m.set(2, 1, 0);
+			m.set(2, 2, -1);
+			m.set(2, 3, -1);
+			m.set(2, 4, 1);
+			
+			System.out.println("Matrix: "+m.toString());
+			Matrix solution = Matrix.solveLinearSystem(m);
+			if (solution == null) {
+				System.out.println("Keine Lösung!");
+			} else {
+				System.out.println("Lösung: "+solution.toString());
+			}
 		}
 
 		testAnimation.update();
