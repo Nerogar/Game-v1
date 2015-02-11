@@ -15,6 +15,9 @@ public final class MathHelper {
 	private static final double TAU = 2 * Math.PI;
 	private static final double degToRad = (double) TAU / 360;
 	private static final double radToDeg = (double) 360 / TAU;
+	
+	private static final float floatEqualsLimit = 0.000001f;
+	private static final float doubleEqualsLimit = 0.0000000001f;
 
 	static {
 
@@ -191,6 +194,14 @@ public final class MathHelper {
 
 	public static double RadToDeg(double rad) {
 		return radToDeg * rad;
+	}
+	
+	public static boolean floatEquals(float a, float b) {
+		return abs(a - b) < floatEqualsLimit;
+	}
+	
+	public static boolean doubleEquals(double a, double b) {
+		return abs(a - b) < doubleEqualsLimit;
 	}
 
 }

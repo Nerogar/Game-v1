@@ -5,7 +5,7 @@ import de.nerogar.gameV1.Vector2d;
 import de.nerogar.gameV1.Vector3d;
 
 public class GeometryHelper {
-
+	
 	public static Vector3d getLineLineIntersection(Line line1, Line line2) {
 
 		if (line1.isParallelTo(line2)) return null;
@@ -64,8 +64,7 @@ public class GeometryHelper {
 		sxz = (nenner2 == 0) ? value : sxz;
 		syz = (nenner3 == 0) ? value : syz;
 
-		double tolerance = 0.0000000001;
-		if (Math.abs(sxy - sxz) > tolerance || Math.abs(sxz - syz) > tolerance) return null;
+		if (MathHelper.doubleEquals(sxy, sxz) || MathHelper.doubleEquals(sxz, syz)) return null;
 
 		Vector3d candidate = Vector3d.add(s2, Vector3d.multiply(d2, sxy));
 		if (line1 instanceof Ray) {
