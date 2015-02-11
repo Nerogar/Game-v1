@@ -64,6 +64,9 @@ public abstract class EntityFighting extends Entity {
 		} else {
 			faction = Faction.getClientFaction(folder.getInt("fID"));
 		}
+
+		energy = folder.getInt("en");
+		energyPulseCooldown = folder.getFloat("enC");
 	}
 
 	@Override
@@ -74,6 +77,8 @@ public abstract class EntityFighting extends Entity {
 		}
 
 		folder.addInt("fID", faction.id);
+		folder.addInt("en", energy);
+		folder.addFloat("enC", energyPulseCooldown);
 
 	}
 

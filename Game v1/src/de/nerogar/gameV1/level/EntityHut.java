@@ -30,14 +30,24 @@ public class EntityHut extends EntityBuilding {
 
 	@Override
 	public void saveProperties(DNNodePath folder) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void loadProperties(DNNodePath folder) {
-		// TODO Auto-generated method stub
+
 	}
 
+	@Override
+	public void save(DNNodePath folder) {
+		super.save(folder);
+	}
+	
+	@Override
+	public void load(DNNodePath folder) {
+		super.load(folder);
+	}
+	
 	@Override
 	public void updateServer(float time, ArrayList<EntityPacket> packets) {
 		super.updateServer(time, packets);
